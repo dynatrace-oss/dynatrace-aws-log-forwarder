@@ -126,9 +126,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Azure Functions artifacts
-bin
-obj
-appsettings.json
-local.settings.json
-.python_packages
+# AWS 
+*.zip
