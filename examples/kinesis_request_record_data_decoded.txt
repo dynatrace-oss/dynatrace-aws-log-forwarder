@@ -1,0 +1,87 @@
+Example of decoded record.data:
+{
+    "messageType": "DATA_MESSAGE",
+    "owner": "908047316593",
+    "logGroup": "API-Gateway-Execution-Logs_5yovajvoxb/test",
+    "logStream": "15ca218e19e3cc840982bd5eef291ac5",
+    "subscriptionFilters": [
+        "dynatrace-aws-logs"
+    ],
+    "logEvents": [
+        {
+            "id": "36087517972431502014426473109326117315093986384517267456",
+            "timestamp": 1618220272514,
+            "message": "(9d88505f-58b0-4e08-9522-40331d1f2f58) Extended Request Id: dqg1mFfmoAMF9lA="
+        },
+        {
+            "id": "36087517972453802759625003732467653033366634746023247873",
+            "timestamp": 1618220272515,
+            "message": "(9d88505f-58b0-4e08-9522-40331d1f2f58) Verifying Usage Plan for request: 9d88505f-58b0-4e08-9522-40331d1f2f58. API Key:  API Stage: 5yovajvoxb/test"
+        },
+        {
+            "id": "36087517972476103504823534355609188751639283107529228290",
+            "timestamp": 1618220272516,
+            "message": "(9d88505f-58b0-4e08-9522-40331d1f2f58) API Key  authorized because method 'GET /' does not require API Key. Request will not contribute to throttle or quota limits"
+        },
+        {
+            "id": "36087517972476103504823534355609188751639283107529228291",
+            "timestamp": 1618220272516,
+            "message": "(9d88505f-58b0-4e08-9522-40331d1f2f58) Usage Plan check succeeded for API Key  and API Stage 5yovajvoxb/test"
+        },
+        {
+            "id": "36087517972498404250022064978750724469911931469035208708",
+            "timestamp": 1618220272517,
+            "message": "(9d88505f-58b0-4e08-9522-40331d1f2f58) Starting execution for request: 9d88505f-58b0-4e08-9522-40331d1f2f58"
+        },
+        {
+            "id": "36087517972498404250022064978750724469911931469035208709",
+            "timestamp": 1618220272517,
+            "message": "(9d88505f-58b0-4e08-9522-40331d1f2f58) HTTP Method: GET, Resource Path: /"
+        },
+        {
+            "id": "36087517972498404250022064978750724469911931469035208710",
+            "timestamp": 1618220272517,
+            "message": "(9d88505f-58b0-4e08-9522-40331d1f2f58) Method request path: {}"
+        },
+        {
+            "id": "36087517972498404250022064978750724469911931469035208711",
+            "timestamp": 1618220272517,
+            "message": "(9d88505f-58b0-4e08-9522-40331d1f2f58) Method request query string: {}"
+        },
+        {
+            "id": "36087517972498404250022064978750724469911931469035208712",
+            "timestamp": 1618220272517,
+            "message": "(9d88505f-58b0-4e08-9522-40331d1f2f58) Method request headers: {sec-fetch-mode=navigate, referer=https://console.aws.amazon.com/, sec-fetch-site=cross-site, accept-language=en-US,en;q=0.9, User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36 Edg/89.0.774.68, X-Forwarded-Proto=https, Host=5yovajvoxb.execute-api.us-east-1.amazonaws.com, sec-fetch-user=?1, X-Forwarded-Port=443, X-Amzn-Trace-Id=Root=1-607414f0-3b69a8e847e719f77f49a8f7, accept=text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9, upgrade-insecure-requests=1, X-Forwarded-For=157.25.19.100, cache-control=max-age=0, accept-encoding=gzip, deflate, br, sec-fetch-dest=document}"
+        },
+        {
+            "id": "36087517972498404250022064978750724469911931469035208713",
+            "timestamp": 1618220272517,
+            "message": "(9d88505f-58b0-4e08-9522-40331d1f2f58) Method request body before transformations: "
+        },
+        {
+            "id": "36087517972498404250022064978750724469911931469035208714",
+            "timestamp": 1618220272517,
+            "message": "(9d88505f-58b0-4e08-9522-40331d1f2f58) Method response body after transformations: <html>\n    <head>\n        <style>\n        body {\n            color: #333;\n            font-family: Sans-serif;\n            max-width: 800px;\n            margin: auto;\n        }\n        </style>\n    </head>\n    <body>\n        <h1>Welcome to your Pet Store API</h1>\n        <p>\n            You have successfully deployed your first API. You are seeing this HTML page because the <code>GET</code> method to the root resource of your API returns this content as a Mock integration.\n        </p>\n        <p>\n            The Pet Store API contains the <code>/pets</code> and <code>/pets/{petId}</code> resources. By making a <a href=\"/test/pets/\" target=\"_blank\"><code>GET</code> request</a> to <code>/pets</code> you can retrieve a list of Pets in your API. If you are looking for a specific pet, for example the pet with ID 1, you can make a <a href=\"/test/pets/1\" target=\"_blank\"><code>GET</code> request</a> to <code>/pets/1</code>.\n        </p>\n        <p>\n            You can use  [TRUNCATED]"
+        },
+        {
+            "id": "36087517972498404250022064978750724469911931469035208715",
+            "timestamp": 1618220272517,
+            "message": "(9d88505f-58b0-4e08-9522-40331d1f2f58) Method response headers: {Content-Type=text/html}"
+        },
+        {
+            "id": "36087517972498404250022064978750724469911931469035208716",
+            "timestamp": 1618220272517,
+            "message": "(9d88505f-58b0-4e08-9522-40331d1f2f58) Successfully completed execution"
+        },
+        {
+            "id": "36087517972498404250022064978750724469911931469035208717",
+            "timestamp": 1618220272517,
+            "message": "(9d88505f-58b0-4e08-9522-40331d1f2f58) Method completed with status: 200"
+        }
+    ]
+}
+
+How to decode record.data manually:
+RECORD_DATA="H4sIAAAAAAAAA6WQwWrDMBBE7/0KobMN0kpre30zxAk95OTQSxuC44jUYFvGkhtKyL9XadpCKRRKrzOz7Js5M94b5+qj2byOhud8UWyK3bqsqmJV8ohxexrMFHStdYKQKRAornpnj6vJzmOwms7Oh1Ptm+ddMztv++B9RCo/mboPGRAgYwGx0HGQ3U0OGTfvXTO1o2/tsGw7bybH80fG93H1wxGxvBeLEtdFsXzAFWfb25PyxQz+/ezMeHsI3xQSZkhSkyBMUyCRqkwlWYIaQ4s0JUQJEkWidApAmpQCIrgS+TYM4us+NJOJBK1ICJIqi76W+laHSci1ypV88gGFfUbYJfovjfqFhv5EAwGHbdnl7g0EPBgs7gEAAA=="
+echo $RECORD_DATA | base64 -d | gunzip
+

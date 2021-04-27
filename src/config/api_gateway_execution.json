@@ -1,0 +1,32 @@
+{
+  "name": "API_GATEWAY",
+  "displayName": "API Gateway Execution Logs",
+  "rules": [
+    {
+      "aws": {
+        "logGroup": "API-Gateway-Execution-Logs_%{DATA:api_id}/%{GREEDYDATA:stage_name}"
+      },
+      "sources": [
+        {
+          "sourceType": "logs",
+          "source": "log_group",
+          "condition": "$prefix('API-Gateway-Execution-Logs')"
+        }
+      ],
+      "attributes": [
+        {
+          "key": "aws.service",
+          "pattern": "'apigateway'"
+        },
+        {
+          "key": "aws.resource.id",
+          "pattern": "api_id"
+        },
+        {
+          "key": "aws.arn",
+          "pattern": "format('arn:{}:apigateway:{}::/restapis/{}', [partition, region, api_id])"
+        }
+      ]
+    }
+  ]
+}

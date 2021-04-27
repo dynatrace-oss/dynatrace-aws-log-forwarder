@@ -1,0 +1,7 @@
+{
+  "log_group": "API-Gateway-Execution-Logs_8zcb3dxf4l/DEV",
+  "region": "us-east-1",
+  "partition": "aws",
+  "account_id": "1234567890",
+  //  + VARIABLES EXTRACTED FROM aws.log_group
+}

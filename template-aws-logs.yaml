@@ -1,0 +1,155 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Dynatrace - AWS Logs Ingest
+
+Parameters:
+  DynatraceEnvironmentUrl:
+    Description: URL to Dynatrace environment
+    Type: String
+  DynatraceApiKey:
+    Description: Dynatrace API key
+    Type: String
+    NoEcho: true
+  VerifySSLTargetActiveGate:
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Default: 'false'
+    Description: "If false, expect target ActiveGate to have a self-signed SSL certificate and do not verify its validity"
+    Type: String
+
+Resources:
+  Lambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        ZipFile: |
+          def handler(event, context):
+            raise Exception("Dynatrace Logs Lambda has not been uploaded")
+      Handler: index.handler
+      Runtime: python3.8
+      MemorySize: 256
+      Timeout: 60
+      Environment:
+        Variables:
+          DEBUG: 'false'
+          DYNATRACE_API_KEY: !Ref DynatraceApiKey
+          DYNATRACE_ENV_URL: !Ref DynatraceEnvironmentUrl
+          VERIFY_SSL: !Ref VerifySSLTargetActiveGate
+      Role: !GetAtt LambdaRole.Arn
+
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: 'lambda.amazonaws.com'
+            Action:
+              - 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+
+  FirehoseLogStreams:
+    Type: AWS::KinesisFirehose::DeliveryStream
+    Properties:
+      DeliveryStreamType: DirectPut
+      ExtendedS3DestinationConfiguration:
+        BucketARN: !GetAtt DeliveryBucket.Arn
+        BufferingHints:
+          IntervalInSeconds: 60
+          SizeInMBs: 5
+        CompressionFormat: GZIP
+        ErrorOutputPrefix: 'error-'
+        Prefix: 'success-'
+        ProcessingConfiguration:
+          Enabled: 'true'
+          Processors:
+            - Parameters:
+                - ParameterName: LambdaArn
+                  ParameterValue: !GetAtt Lambda.Arn
+              Type: Lambda
+        RoleARN: !GetAtt DeliveryStreamRole.Arn
+
+  DeliveryBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      LifecycleConfiguration:
+        Rules:
+          - ExpirationInDays: '7'
+            Status: 'Enabled'
+
+  DeliveryStreamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: ''
+            Effect: Allow
+            Principal:
+              Service: firehose.amazonaws.com
+            Action: 'sts:AssumeRole'
+      Policies:
+        - PolicyName: firehose_delivery_policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 's3:AbortMultipartUpload'
+                  - 's3:GetBucketLocation'
+                  - 's3:GetObject'
+                  - 's3:ListBucket'
+                  - 's3:ListBucketMultipartUploads'
+                  - 's3:PutObject'
+                Resource:
+                  - !GetAtt DeliveryBucket.Arn
+                  - !Join [ '/', [ !GetAtt DeliveryBucket.Arn, '*' ] ]
+        - PolicyName: firehose_lambda_invocation_policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'lambda:InvokeFunction'
+                  - 'lambda:GetFunctionConfiguration'
+                Resource:
+                  - !GetAtt Lambda.Arn
+
+  RoleForSubscriptionFilters:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: !Sub "logs.${AWS::Region}.amazonaws.com"
+            Action:
+              - 'sts:AssumeRole'
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'firehose:PutRecord'
+                  - 'firehose:PutRecordBatch'
+                Resource: !GetAtt FirehoseLogStreams.Arn
+      Description: Role for Subscription Filters (to write to Firehose)
+
+Outputs:
+  LambdaArn:
+    Description: "Lambda ARN"
+    Value: !GetAtt Lambda.Arn
+
+  FirehoseArn:
+    Description: "Firehose ARN"
+    Value: !GetAtt FirehoseLogStreams.Arn
+
+  RoleForSubscriptionFiltersArn:
+    Description: "Subscription Filters Role ARN"
+    Value: !GetAtt RoleForSubscriptionFilters.Arn
