@@ -1,0 +1,10 @@
+{
+  "name": "default",
+  "displayName": "Default",
+  "rules": [
+    {
+      "sources": [],
+      "attributes": []
+    }
+  ]
+}

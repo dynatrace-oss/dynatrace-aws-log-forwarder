@@ -1,0 +1,40 @@
+{
+  "name": "LAMBDA",
+  "displayName": "Amazon Lambda",
+  "rules": [
+    {
+      "aws": {
+        "logGroup": "/aws/lambda/%{GREEDYDATA:function_name}"
+      },
+      "sources": [
+        {
+          "sourceType": "logs",
+          "source": "log_group",
+          "condition": "$prefix('/aws/lambda/')"
+        }
+      ],
+      "attributes": [
+        {
+          "key": "aws.service",
+          "pattern": "'lambda'"
+        },
+        {
+          "key": "aws.resource.id",
+          "pattern": "function_name"
+        },
+        {
+          "key": "aws.arn",
+          "pattern": "format('arn:{}:lambda:{}:{}:function:{}', [partition, region, account_id, function_name])"
+        },
+        {
+          "key": "dt.source_entity",
+          "pattern": "dt_meid_md5('AWS_LAMBDA_FUNCTION', format('{}{}_{}', [function_name, region, account_id]))"
+        },
+        {
+          "key": "dt.source_entity_type",
+          "pattern": "'AWS_LAMBDA_FUNCTION'"
+        }
+      ]
+    }
+  ]
+}
