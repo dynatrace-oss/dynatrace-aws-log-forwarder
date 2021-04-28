@@ -31,9 +31,9 @@ def perform_http_request_for_json(url, encoded_body_bytes, method, headers, veri
     duration = round(duration, 2)
 
     try:
-        response = urllib.request.urlopen(req, context=ssl_context, timeout=TIMEOUT_SEC)
-        status = response.code
-        body = response.read().decode("utf-8")
+        with urllib.request.urlopen(req, context=ssl_context, timeout=TIMEOUT_SEC) as response:
+            status = response.code
+            body = response.read().decode("utf-8")
     except urllib.error.HTTPError as e:
         status = e.code
         # body = e.read().decode("utf-8")

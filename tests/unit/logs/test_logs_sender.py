@@ -116,6 +116,32 @@ class Test(TestCase):
 
         self.assertGreater(batches_total_length, logs_total_length)
 
+    def test_trim_fields(self):
+        string_with_900_chars = log_message
+
+        logs_sender.DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH = 600
+        # sanity checks
+        self.assertTrue(len(string_with_900_chars) > logs_sender.DYNATRACE_LOG_INGEST_ATTRIBUTE_MAX_LENGTH)
+        self.assertTrue(len(string_with_900_chars) > logs_sender.DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH)
+
+        log_entry = create_log_entry_with_random_len_msg()
+        log_entry["timestamp"] = string_with_900_chars
+        log_entry["content"] = string_with_900_chars
+        log_entry["severity"] = string_with_900_chars
+        log_entry["cloud.provider"] = string_with_900_chars
+        log_entry["aws.service"] = string_with_900_chars
+        log_entry["someMetadataYetUnknown"] = string_with_900_chars
+
+        # test
+        logs_sender.ensure_fields_length(log_entry)
+
+        self.assertTrue(log_entry["timestamp"] == string_with_900_chars)
+        self.assertTrue(log_entry["severity"] == string_with_900_chars)
+        self.assertTrue(len(log_entry["content"]) == logs_sender.DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH)
+        self.assertTrue(len(log_entry["cloud.provider"]) == logs_sender.DYNATRACE_LOG_INGEST_ATTRIBUTE_MAX_LENGTH)
+        self.assertTrue(len(log_entry["aws.service"]) == logs_sender.DYNATRACE_LOG_INGEST_ATTRIBUTE_MAX_LENGTH)
+        self.assertTrue(len(log_entry["someMetadataYetUnknown"]) == logs_sender.DYNATRACE_LOG_INGEST_ATTRIBUTE_MAX_LENGTH)
+
 
     def test_prepare_full_url(self):
 

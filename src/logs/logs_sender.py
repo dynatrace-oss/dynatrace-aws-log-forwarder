@@ -9,6 +9,7 @@ ENCODING = "utf-8"
 LOGS_API_PATH = "/api/v2/logs/ingest"
 
 DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH = 8192
+DYNATRACE_LOG_INGEST_ATTRIBUTE_MAX_LENGTH = 250
 DYNATRACE_LOG_INGEST_REQUEST_MAX_SIZE = 1048576 # 1MB
 DYNATRACE_LOG_INGEST_MAX_RECORD_AGE = 86340 # 1 day
 DYNATRACE_LOG_INGEST_MAX_ENTRIES_COUNT = 5000
@@ -64,7 +65,7 @@ def prepare_serialized_batches(logs: List[Dict]) -> List[str]:
 
         new_batch_len = logs_for_next_batch_total_len + brackets_len + commas_len
 
-        ensure_content_length(log_entry)
+        ensure_fields_length(log_entry)
 
         next_entry_serialized = json.dumps(log_entry)
         next_entry_serialized_len = len(next_entry_serialized.encode(ENCODING))
@@ -97,6 +98,18 @@ def prepare_serialized_batches(logs: List[Dict]) -> List[str]:
     return batches
 
 
+def ensure_fields_length(log_entry):
+    for key, value in log_entry.items():
+        if key == "content":
+            ensure_content_length(log_entry)
+        elif key == "severity":
+            pass
+        elif key == "timestamp":
+            pass
+        else:
+            ensure_attribute_length(log_entry, key, value)
+
+
 def ensure_content_length(log_entry):
     log_content = log_entry.get("content", "")
     log_content_len = len(log_content)
@@ -106,6 +119,12 @@ def ensure_content_length(log_entry):
         # self_monitoring.too_long_content_size.append(log_content_len)
 
         log_entry["content"] = log_content[0: DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH]
+
+
+def ensure_attribute_length(log_entry, key, value):
+    attribute_value_len = len(value)
+    if attribute_value_len > DYNATRACE_LOG_INGEST_ATTRIBUTE_MAX_LENGTH:
+        log_entry[key] = value[0: DYNATRACE_LOG_INGEST_ATTRIBUTE_MAX_LENGTH]
 
 
 class CallThrottlingException(Exception):
