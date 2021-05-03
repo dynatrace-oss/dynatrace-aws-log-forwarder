@@ -15,10 +15,13 @@ class RecordMetadata:
 
 
 def extract_dt_logs_from_single_record(record_data_decoded: str, batch_metadata: BatchMetadata) -> List[Dict]:
-    logs = []
     record = json.loads(record_data_decoded)
 
+    if record.get('messageType') == 'CONTROL_MESSAGE':
+        return []
+
     record_metadata = RecordMetadata(record["logGroup"], record["logStream"])
+    logs = []
 
     for log_event in record["logEvents"]:
         log_entry = transform_single_log_entry(log_event, batch_metadata, record_metadata)
