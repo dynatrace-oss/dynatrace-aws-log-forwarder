@@ -42,3 +42,25 @@ def test_metadata_engine_input(metadata_engine_apply_mock):
         "partition": "aws",
         "account_id": "444000444",
     }
+
+
+def test_control_message():
+    control_record = json.dumps({
+        "messageType": "CONTROL_MESSAGE",
+        "owner": "CloudwatchLogs",
+        "logGroup": "",
+        "logStream": "",
+        "subscriptionFilters": [],
+        "logEvents": [
+            {
+                "id": "",
+                "timestamp": "1619427317539",
+                "message": "CWL CONTROL MESSAGE: Checking health of destination Firehose.",
+            },
+        ],
+    })
+
+    batch_metadata = BatchMetadata("444000444", "us-east-1", "aws")
+    parsed_logs = logs.transformation.extract_dt_logs_from_single_record(control_record, batch_metadata)
+
+    assert len(parsed_logs) == 0
