@@ -1,6 +1,6 @@
 # Dynatrace AWS Log Forwarder
 
-> ### Dynatrace Log Monitoring and generic log ingest is coming soon. If you are part of the Preview program you can already use dynatrace-aws-log-forwarder to ingest AWS logs. If you are waiting for General Availability please star this repository to get notified when Log Monitoring is ready.
+> ### ⚠️ Dynatrace Log Monitoring and generic log ingest is coming soon. If you are part of the Preview program you can already use dynatrace-aws-log-forwarder to ingest AWS logs. If you are waiting for General Availability please star this repository to get notified when Log Monitoring is ready.
 
 ## Overview
 This project provides mechanism that allows to stream logs from AWS CloudWatch into Dynatrace Logs via existing ActiveGate. All the necessary AWS infrastructure between those two (Firehose, Lambda, Log Group Subscription Filters) can be deployed and configured by the user through the deployment script provided here (see the *Deployment* section).
