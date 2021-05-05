@@ -34,7 +34,7 @@ jobs:
       language: shell
       before_deploy:
         - chmod +x build-release-package.sh
-        - chmod +x version.sh
+#        - chmod +x version.sh
         - ./build-release-package.sh
         - mv dynatrace-aws-logs-release.zip dynatrace-aws-log-forwarder.zip
 #        - sed -i -e "s@$RELEASE_REPO_TO_FIND@$RELEASE_REPO_TO_REPLACE@g" ./deployment/dynatrace-aws-logs.sh
