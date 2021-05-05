@@ -1,0 +1,48 @@
+language: shell
+notifications:
+  email:
+    on_success: never
+stages:
+- tests
+- deployment
+env:
+  global:
+    - RELEASE_REPO_TO_FIND="https://github.com/dynatrace-oss/dynatrace-aws-log-forwarder/releases/download/latest/"
+    - RELEASE_REPO_TO_REPLACE="https://github.com/dynatrace-oss/dynatrace-aws-log-forwarder/releases/download/$TRAVIS_TAG/"
+jobs:
+  include:
+    - stage: tests
+      name: Tests & Linting
+      language: python
+      python:
+        - "3.8"
+      install:
+        - pip install -r src/requirements.txt
+        - pip install -r src/requirements-dev.txt
+      addons:
+        apt:
+          packages:
+            - default-jre
+      script:
+        - python3 -m pylint --rcfile=pipeline/pylint.cfg $(find . -name "*.py")
+        - python3 -m pytest -v tests/unit
+    - stage: deployment
+      name: Github Release Deployment
+      if: tag =~ /^release.*$/
+      language: shell
+      before_deploy:
+        - chmod +x build-release-package.sh
+        - chmod +x version.sh
+        - ./build-release-package.sh
+        - mv dynatrace-aws-logs-release.zip dynatrace-aws-log-forwarder.zip
+#        - sed -i -e "s@$RELEASE_REPO_TO_FIND@$RELEASE_REPO_TO_REPLACE@g" ./deployment/dynatrace-aws-logs.sh
+      deploy:
+        provider: releases
+        api_key: $GITHUB_RELEASE_API_KEY
+        file:
+          - ./dynatrace-aws-log-forwarder.zip
+          - ./template-aws-logs.yaml
+          - ./dynatrace-aws-logs.sh
+        skip_cleanup: true
+        on:
+          tags: true
