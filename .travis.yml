@@ -23,9 +23,11 @@ jobs:
         apt:
           packages:
             - default-jre
+      before_script:
+        - cd src
       script:
-        - python3 -m pylint --rcfile=pipeline/pylint.cfg $(find . -name "*.py")
-        - python3 -m pytest -v tests/unit
+        - python3 -m pylint --rcfile=../pipeline/pylint.cfg $(find . -name "*.py")
+        - python3 -m pytest -v ../tests/unit
     - stage: deployment
       name: Github Release Deployment
       if: tag =~ /^release.*$/
