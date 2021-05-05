@@ -21,7 +21,7 @@ mkdir $LAMBDA_BUILD_DIR
 cp -r src/* $LAMBDA_BUILD_DIR
 
 # add dependencies
-pip3 install -r src/requirements.txt --target $LAMBDA_BUILD_DIR
+python3 -m pip install -r src/requirements.txt --target $LAMBDA_BUILD_DIR
 
 # create lambda ZIP
 cd $LAMBDA_BUILD_DIR

@@ -17,8 +17,8 @@ jobs:
       python:
         - "3.8"
       install:
-        - pip install -r src/requirements.txt
-        - pip install -r src/requirements-dev.txt
+        - python3 -m pip install -r src/requirements.txt
+        - python3 -m pip install -r src/requirements-dev.txt
       addons:
         apt:
           packages:
