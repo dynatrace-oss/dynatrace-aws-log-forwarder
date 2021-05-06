@@ -30,8 +30,8 @@ jobs:
       language: python
       python:
         - "3.8"
-      install:
-        - python3 -m pip install -r src/requirements.txt
+      install: skip
+#        - python3 -m pip install -r src/requirements.txt
       before_deploy:
         - chmod +x build-release-package.sh
 #        - chmod +x version.sh
