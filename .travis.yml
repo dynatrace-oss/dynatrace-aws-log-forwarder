@@ -35,7 +35,7 @@ jobs:
       # https://docs.travis-ci.com/user/languages/python/#default-build-script
       script:
         - chmod +x build-release-package.sh
-#        - chmod +x version.sh
+        - chmod +x version.sh
         - ./build-release-package.sh # needs Python environment internally
       deploy:
         provider: releases
