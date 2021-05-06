@@ -17,8 +17,8 @@ jobs:
       python:
         - "3.8"
       install:
-        - python3 -m pip install -r src/requirements.txt
-        - python3 -m pip install -r src/requirements-dev.txt
+        - pip3 install -r src/requirements.txt
+        - pip3 install -r src/requirements-dev.txt
       before_script:
         - cd src
       script:
@@ -31,19 +31,19 @@ jobs:
       python:
         - "3.8"
       install: skip
-#        - python3 -m pip install -r src/requirements.txt
+      # using 'script' instead of 'before_deploy' because it's unskippable in Python environment
+      # https://docs.travis-ci.com/user/languages/python/#default-build-script
       script:
         - chmod +x build-release-package.sh
 #        - chmod +x version.sh
-        - ./build-release-package.sh
-        - mv dynatrace-aws-logs-release.zip dynatrace-aws-log-forwarder.zip
+        - ./build-lambda-package.sh # needs Python environment internally
 #        - sed -i -e "s@$RELEASE_REPO_TO_FIND@$RELEASE_REPO_TO_REPLACE@g" ./deployment/dynatrace-aws-logs.sh
       deploy:
         provider: releases
         api_key: $GITHUB_RELEASE_API_KEY
         file:
           - ./dynatrace-aws-log-forwarder.zip
-          - ./template-aws-logs.yaml
+          - ./dynatrace-aws-log-forwarder.yaml
           - ./dynatrace-aws-logs.sh
         skip_cleanup: true
         on:
