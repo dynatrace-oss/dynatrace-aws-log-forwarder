@@ -34,17 +34,13 @@ jobs:
       # using 'script' instead of 'before_deploy' because it's unskippable in Python environment
       # https://docs.travis-ci.com/user/languages/python/#default-build-script
       script:
-        - chmod +x build-lambda-package.sh
+        - chmod +x build-release-package.sh
 #        - chmod +x version.sh
-        - ./build-lambda-package.sh # needs Python environment internally
-#        - sed -i -e "s@$RELEASE_REPO_TO_FIND@$RELEASE_REPO_TO_REPLACE@g" ./deployment/dynatrace-aws-logs.sh
+        - ./build-release-package.sh # needs Python environment internally
       deploy:
         provider: releases
         api_key: $GITHUB_RELEASE_API_KEY
-        file:
-          - ./dynatrace-aws-log-forwarder.zip
-          - ./dynatrace-aws-log-forwarder.yaml
-          - ./dynatrace-aws-logs.sh
+        file: ./dynatrace-aws-log-forwarder.zip
         skip_cleanup: true
         on:
           tags: true

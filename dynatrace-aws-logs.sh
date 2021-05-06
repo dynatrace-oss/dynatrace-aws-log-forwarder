@@ -1,6 +1,6 @@
 #!/bin/bash
-readonly TEMPLATE_FILE="dynatrace-aws-log-forwarder.yaml"
-readonly LAMBDA_ZIP_NAME="dynatrace-aws-log-forwarder.zip"
+readonly TEMPLATE_FILE="dynatrace-aws-log-forwarder-template.yaml"
+readonly LAMBDA_ZIP_NAME="dynatrace-aws-log-forwarder-lambda.zip"
 
 readonly DEFAULT_STACK_NAME="dynatrace-aws-logs"
 

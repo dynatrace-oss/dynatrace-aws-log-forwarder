@@ -1,8 +1,10 @@
 #!/bin/bash
-TEMPLATE_FILE="dynatrace-aws-log-forwarder.yaml"
 
 LAMBDA_BUILD_DIR="temp-package-build"
-LAMBDA_ZIP_NAME="dynatrace-aws-log-forwarder.zip"
+LAMBDA_ZIP_NAME="dynatrace-aws-log-forwarder-lambda.zip"
+
+PACKAGE_BUILD_DIR="dynatrace-aws-logs"
+PACKAGE_ZIP_NAME="dynatrace-aws-log-forwarder.zip"
 
 set -ex
 
@@ -25,3 +27,13 @@ cd $LAMBDA_BUILD_DIR
 zip -r ../$LAMBDA_ZIP_NAME *
 cd ..
 rm -rf $LAMBDA_BUILD_DIR
+
+
+# PREPARE WHOLE PACKAGE ZIP
+
+mkdir $PACKAGE_BUILD_DIR
+
+cp README.md dynatrace-aws-logs.sh $LAMBDA_ZIP_NAME dynatrace-aws-log-forwarder-template.yaml $PACKAGE_BUILD_DIR
+zip $PACKAGE_ZIP_NAME $PACKAGE_BUILD_DIR/*
+
+rm -rf $PACKAGE_BUILD_DIR
