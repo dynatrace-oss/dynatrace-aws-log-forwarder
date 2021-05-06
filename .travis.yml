@@ -32,7 +32,7 @@ jobs:
         - "3.8"
       install: skip
 #        - python3 -m pip install -r src/requirements.txt
-      before_deploy:
+      script:
         - chmod +x build-release-package.sh
 #        - chmod +x version.sh
         - ./build-release-package.sh
