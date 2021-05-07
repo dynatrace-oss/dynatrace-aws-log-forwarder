@@ -36,6 +36,7 @@ jobs:
       script:
         - chmod +x build-release-package.sh
         - chmod +x version.sh
+        - chmod +x dynatrace-aws-logs.sh
         - ./build-release-package.sh # needs Python environment internally
       deploy:
         provider: releases
