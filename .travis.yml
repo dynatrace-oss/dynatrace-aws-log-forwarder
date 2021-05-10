@@ -22,17 +22,11 @@ jobs:
     - stage: deployment
       name: Github Release Deployment
       if: tag =~ /^release.*$/
-      language: python
-      python:
-        - "3.8"
-      install: skip
-      # using 'script' instead of 'before_deploy' because it's unskippable in Python environment
-      # https://docs.travis-ci.com/user/languages/python/#default-build-script
-      script:
-        - chmod +x build-release-package.sh
-        - chmod +x version.sh
-        - chmod +x dynatrace-aws-logs.sh
-        - ./build-release-package.sh # needs Python environment internally
+      language: shell
+      services: docker
+      script: >
+        docker run --rm -v `pwd`:/var/task amazon/aws-sam-cli-build-image-python3.8 bash -c
+        'chmod +x build-release-package.sh && chmod +x version.sh && chmod +x dynatrace-aws-logs.sh && ./build-release-package.sh'
       deploy:
         provider: releases
         api_key: $GITHUB_RELEASE_API_KEY
