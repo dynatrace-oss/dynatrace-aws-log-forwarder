@@ -24,6 +24,7 @@ _SOURCE_VALUE_EXTRACTOR_MAP = {
     "log_group".casefold(): lambda record, parsed_record: record.get("log_group", ""),
 }
 
+Grok.DEFAULT_PATTERNS_DIRS = []
 
 @dataclass(frozen=True)
 class Attribute:
