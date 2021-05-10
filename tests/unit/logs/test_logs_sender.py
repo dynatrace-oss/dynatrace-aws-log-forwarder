@@ -29,7 +29,7 @@ class Test(TestCase):
         how_many_logs = 20000
         logs = [create_log_entry_with_random_len_msg() for x in range(how_many_logs)]
 
-        batches = logs_sender.prepare_serialized_batches(logs)
+        batches = logs_sender.prepare_batches(logs)
 
         self.assertGreaterEqual(len(batches), 1)
 
@@ -55,7 +55,7 @@ class Test(TestCase):
 
         logs_sender.DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH = 50
         logs_sender.DYNATRACE_LOG_INGEST_REQUEST_MAX_SIZE = 115
-        batches = logs_sender.prepare_serialized_batches(logs)
+        batches = logs_sender.prepare_batches(logs)
 
         self.assertGreaterEqual(len(batches), 1)
 
@@ -93,7 +93,7 @@ class Test(TestCase):
 
         logs_sender.DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH = 500
         logs_sender.DYNATRACE_LOG_INGEST_MAX_ENTRIES_COUNT = 2
-        batches = logs_sender.prepare_serialized_batches(logs)
+        batches = logs_sender.prepare_batches(logs)
 
         self.assertGreaterEqual(len(batches), 1)
 

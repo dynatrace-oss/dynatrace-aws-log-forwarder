@@ -3,12 +3,13 @@ import time
 import urllib.error
 import urllib.request
 
+from util.context import Context
 from util.logging import log_multiline_message
 
 TIMEOUT_SEC = 10
 
 
-def perform_http_request_for_json(url, encoded_body_bytes, method, headers, verify_SSL: bool):
+def perform_http_request_for_json(url, encoded_body_bytes, method, headers, verify_SSL: bool, context: Context):
     start_time = time.time()
 
     print(f"Performing {method} call for URL {url}")
@@ -19,6 +20,8 @@ def perform_http_request_for_json(url, encoded_body_bytes, method, headers, veri
         ssl_context.verify_mode = ssl.CERT_REQUIRED
     else:
         ssl_context.verify_mode = ssl.CERT_NONE
+
+    context.sfm.request_sent()
 
     req = urllib.request.Request(
         url,
@@ -38,6 +41,11 @@ def perform_http_request_for_json(url, encoded_body_bytes, method, headers, veri
         status = e.code
         # body = e.read().decode("utf-8")
         body = e.read().decode()
+    except Exception as e:
+        context.sfm.issue("request_failed_without_status_code")
+        raise e
+
+    context.sfm.request_finished_with_status_code(status, duration)
 
     log_multiline_message(f"Response: call duration {duration}s, status code {status}, body '{body}'")
     return status, body

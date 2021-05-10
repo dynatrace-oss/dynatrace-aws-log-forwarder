@@ -25,22 +25,28 @@ def handler(event, lambda_context):
                       verify_SSL=verify_SSL)
 
     try:
-        is_logs, plaintext_records = input_records_decoder.check_records_list_if_logs_end_decode(records)
+        is_logs, plaintext_records = input_records_decoder.check_records_list_if_logs_end_decode(records, context)
 
         if not is_logs:
             raise Exception("Input not recognized as logs")
 
         main.process_log_request(plaintext_records, context, read_batch_metadata(event))
-
-        return kinesis_data_transformation_response(records, TransformationResult.Ok)
+        result = TransformationResult.Ok
 
     except CallThrottlingException:
         log_multiline_message("Call Throttling Exception, Kinesis batch will be marked as OK, but some data is dropped")
-        return kinesis_data_transformation_response(records, TransformationResult.Ok)
+        result = TransformationResult.Ok
 
     except Exception as e:
         log_error_with_stacktrace(e, "Exception caught in top-level handler")
-        return kinesis_data_transformation_response(records, TransformationResult.ProcessingFailed)
+        result = TransformationResult.ProcessingFailed
+
+    try:
+        context.sfm.push_sfm_to_cloudwatch()
+    except Exception as e:
+        log_error_with_stacktrace(e, "SelfMonitoring push to Cloudwatch failed")
+
+    return kinesis_data_transformation_response(records, result)
 
 
 def read_batch_metadata(event):
