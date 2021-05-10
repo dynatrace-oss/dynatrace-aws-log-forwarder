@@ -147,7 +147,7 @@ class SelfMonitoringContext:
 
     def push_sfm_to_cloudwatch(self):
         metrics = self._generate_metrics()
-        cloudwatch.put_metric_data(MetricData=metrics, Namespace='DT/LogsStreamingDEV2')
+        cloudwatch.put_metric_data(MetricData=metrics, Namespace='DT/LogsStreaming')
 
 
 def _prepare_cloudwatch_metric(metric_name, value: Union[int, float, list], unit, dimensions) -> dict:
