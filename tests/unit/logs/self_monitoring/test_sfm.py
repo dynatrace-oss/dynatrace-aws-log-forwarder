@@ -2,7 +2,7 @@ from logs.self_monitoring.sfm import SelfMonitoringContext
 
 
 def test_self_monitoring_context():
-    sfm = SelfMonitoringContext()
+    sfm = SelfMonitoringContext("my-lambda-function")
 
     sfm.kinesis_record_age(5000)
     sfm.kinesis_record_decoded(1000, 2000)
@@ -31,130 +31,137 @@ def test_self_monitoring_context():
 
     expected_metrics = [
         {
-            'Dimensions': [],
+            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],
             'MetricName': 'Kinesis record age',
             'Unit': 'Milliseconds',
             'Values': [5000]
         },
         {
-            'Dimensions': [],
+            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],
             'MetricName': 'Kinesis record.data compressed size',
             'Unit': 'Bytes',
             'Values': [1000]
         },
         {
-            'Dimensions': [],
+            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],
             'MetricName': 'Kinesis record.data decompressed size',
             'Unit': 'Bytes',
             'Values': [2000]
         },
         {
-            'Dimensions': [{'Name': 'log_group', 'Value': 'logGroup1'}],
+            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'},
+                           {'Name': 'log_group', 'Value': 'logGroup1'}],
             'MetricName': 'Log entries by LogGroup',
             'Unit': 'None',
             'Value': 200
         },
         {
-            'Dimensions': [{'Name': 'log_group', 'Value': 'logGroup2'}],
+            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'},
+                           {'Name': 'log_group', 'Value': 'logGroup2'}],
             'MetricName': 'Log entries by LogGroup',
             'Unit': 'None',
             'Value': 50
         },
         {
-            'Dimensions': [{'Name': 'log_group', 'Value': 'logGroup1'}],
+            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'},
+                           {'Name': 'log_group', 'Value': 'logGroup1'}],
             'MetricName': 'Log content length by LogGroup',
             'Unit': 'None',
             'Value': 2000
         },
         {
-            'Dimensions': [{'Name': 'log_group', 'Value': 'logGroup2'}],
+            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'},
+                           {'Name': 'log_group', 'Value': 'logGroup2'}],
             'MetricName': 'Log content length by LogGroup',
             'Unit': 'None',
             'Value': 2000
         },
         {
-            "MetricName": "Batches prepared",
-            "Dimensions": [],
-            "Unit": "None",
-            "Value": 2
+            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],
+            'MetricName': 'Batches prepared',
+            'Unit': 'None',
+            'Value': 2
         },
         {
-            "MetricName": "Log entries prepared",
-            "Dimensions": [],
-            "Unit": "None",
-            "Value": 200
+            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],
+            'MetricName': 'Log entries prepared',
+            'Unit': 'None',
+            'Value': 200
         },
         {
-            "MetricName": "Data volume prepared",
-            "Dimensions": [],
-            "Unit": "None",
-            "Value": 6000
+            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],
+            'MetricName': 'Data volume prepared',
+            'Unit': 'Bytes',
+            'Value': 6000
         },
         {
-            "MetricName": "Batches delivered",
-            "Dimensions": [],
-            "Unit": "None",
-            "Value": 1
+            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],
+            'MetricName': 'Batches delivered',
+            'Unit': 'None',
+            'Value': 1
         },
         {
-            "MetricName": "Log entries delivered",
-            "Dimensions": [],
-            "Unit": "None",
-            "Value": 100
+            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],
+            'MetricName': 'Log entries delivered',
+            'Unit': 'None',
+            'Value': 100
         },
         {
-            "MetricName": "Data volume delivered",
-            "Dimensions": [],
-            "Unit": "None",
-            "Value": 3000
+            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],
+            'MetricName': 'Data volume delivered',
+            'Unit': 'Bytes',
+            'Value': 3000
         },
         {
-            "MetricName": "Issues",
-            "Dimensions": [{"Name": "type", "Value": "bad_status_code"}],
-            "Unit": "None",
-            "Value": 1
+            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'},
+                           {'Name': 'type', 'Value': 'bad_status_code'}],
+            'MetricName': 'Issues',
+            'Unit': 'None',
+            'Value': 1
         },
         {
-            "MetricName": "Log content trimmed",
-            "Dimensions": [],
-            "Unit": "None",
-            "Value": 3
+            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],
+            'MetricName': 'Log content trimmed',
+            'Unit': 'None',
+            'Value': 3
         },
         {
-            "MetricName": "Log attr trimmed",
-            "Dimensions": [],
-            "Unit": "None",
-            "Value": 1
+            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],
+            'MetricName': 'Log attr trimmed',
+            'Unit': 'None',
+            'Value': 1
         },
         {
-            "MetricName": "Requests sent",
-            "Dimensions": [],
-            "Unit": "None",
-            "Value": 2
+            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],
+            'MetricName': 'Log age average',
+            'Unit': 'Milliseconds',
+            'Value': 0
         },
         {
-            "MetricName": "Requests duration",
-            "Dimensions": [],
-            "Unit": "Seconds",
-            "Values": [5, 2]
+            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],
+            'MetricName': 'Requests sent',
+            'Unit': 'None',
+            'Value': 2
         },
         {
-            "MetricName": "Requests status code count",
-            "Dimensions": [{"Name": "status_code", "Value": "200"}],
-            "Unit": "None",
-            "Value": 1
+            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],
+            'MetricName': 'Requests duration',
+            'Unit': 'Seconds',
+            'Values': [5, 2]
         },
         {
-            "MetricName": "Requests status code count",
-            "Dimensions": [{"Name": "status_code", "Value": "400"}],
-            "Unit": "None",
-            "Value": 1
+            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'},
+                           {'Name': 'status_code', 'Value': '200'}],
+            'MetricName': 'Requests status code count',
+            'Unit': 'None',
+            'Value': 1
         },
+        {
+            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'},
+                           {'Name': 'status_code', 'Value': '400'}],
+            'MetricName': 'Requests status code count',
+            'Unit': 'None',
+            'Value': 1}
     ]
 
     assert metrics == expected_metrics
-
-    # for expected_metric in expected_metrics:
-    #     assert expected_metric in metrics
-
-    # sfm.push_sfm_to_cloudwatch()

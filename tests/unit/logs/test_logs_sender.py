@@ -3,6 +3,7 @@ import random
 from unittest import TestCase
 
 from logs import logs_sender
+from util.context import Context
 
 DYNATRACE_LOG_INGEST_REQUEST_MAX_SIZE = 1048576
 
@@ -26,43 +27,45 @@ def create_log_entry_with_random_len_msg(min_length = 1, max_length = len(log_me
 class Test(TestCase):
 
     def test_prepare_serialized_batches(self):
+        context = Context("function-name", "dt-url", "dt-token", False, False)
         how_many_logs = 20000
         logs = [create_log_entry_with_random_len_msg() for x in range(how_many_logs)]
 
-        batches = logs_sender.prepare_batches(logs)
+        batches = logs_sender.prepare_batches(logs, context)
 
         self.assertGreaterEqual(len(batches), 1)
 
         entries_in_batches = 0
 
         for batch in batches:
-            self.assertTrue(len(batch) <= DYNATRACE_LOG_INGEST_REQUEST_MAX_SIZE)
-            entries_in_batches += len(json.loads(batch))
+            self.assertTrue(len(batch.serialized_json) <= DYNATRACE_LOG_INGEST_REQUEST_MAX_SIZE)
+            entries_in_batches += len(json.loads(batch.serialized_json))
 
         self.assertEqual(entries_in_batches, how_many_logs)
 
         logs_lengths = [len(log) for log in logs]
         logs_total_length = sum(logs_lengths)
 
-        batches_lengths = [len(batch) for batch in batches]
+        batches_lengths = [len(batch.serialized_json) for batch in batches]
         batches_total_length = sum(batches_lengths)
 
         self.assertGreater(batches_total_length, logs_total_length)
 
     def test_request_and_content_length(self):
+        context = Context("function-name", "dt-url", "dt-token", False, False)
         how_many_logs = 10
         logs = [create_log_entry_with_random_len_msg(750, 900) for x in range(how_many_logs)]
 
         logs_sender.DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH = 50
         logs_sender.DYNATRACE_LOG_INGEST_REQUEST_MAX_SIZE = 115
-        batches = logs_sender.prepare_batches(logs)
+        batches = logs_sender.prepare_batches(logs, context)
 
         self.assertGreaterEqual(len(batches), 1)
 
         entries_in_batches = 0
 
         for batch in batches:
-            entries = json.loads(batch)
+            entries = json.loads(batch.serialized_json)
 
             for entry in entries:
                 content_len = len(entry["content"])
@@ -70,7 +73,7 @@ class Test(TestCase):
                 self.assertTrue(content_len <= logs_sender.DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH)
                 self.assertTrue(entry["content"] == 'WALTHAM, Mass.--(BUSINESS WIRE)-- Software intelli' )
 
-            self.assertTrue(len(batch) <= logs_sender.DYNATRACE_LOG_INGEST_REQUEST_MAX_SIZE)
+            self.assertTrue(len(batch.serialized_json) <= logs_sender.DYNATRACE_LOG_INGEST_REQUEST_MAX_SIZE)
 
             entries_in_this_batch = len(entries)
             self.assertTrue(entries_in_this_batch <= 1)
@@ -82,27 +85,28 @@ class Test(TestCase):
         logs_lengths = [len(log) for log in logs]
         logs_total_length = sum(logs_lengths)
 
-        batches_lengths = [len(batch) for batch in batches]
+        batches_lengths = [len(batch.serialized_json) for batch in batches]
         batches_total_length = sum(batches_lengths)
 
         self.assertGreater(batches_total_length, logs_total_length)
 
     def test_entries_in_batch(self):
+        context = Context("function-name", "dt-url", "dt-token", False, False)
         how_many_logs = 20000
         logs = [create_log_entry_with_random_len_msg() for x in range(how_many_logs)]
 
         logs_sender.DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH = 500
         logs_sender.DYNATRACE_LOG_INGEST_MAX_ENTRIES_COUNT = 2
-        batches = logs_sender.prepare_batches(logs)
+        batches = logs_sender.prepare_batches(logs, context)
 
         self.assertGreaterEqual(len(batches), 1)
 
         entries_in_batches = 0
 
         for batch in batches:
-            self.assertTrue(len(batch) <= logs_sender.DYNATRACE_LOG_INGEST_REQUEST_MAX_SIZE)
+            self.assertTrue(len(batch.serialized_json) <= logs_sender.DYNATRACE_LOG_INGEST_REQUEST_MAX_SIZE)
 
-            entries_in_this_batch = len(json.loads(batch))
+            entries_in_this_batch = len(json.loads(batch.serialized_json))
             self.assertTrue(entries_in_this_batch <= logs_sender.DYNATRACE_LOG_INGEST_MAX_ENTRIES_COUNT)
             entries_in_batches += entries_in_this_batch
 
@@ -111,12 +115,13 @@ class Test(TestCase):
         logs_lengths = [len(log) for log in logs]
         logs_total_length = sum(logs_lengths)
 
-        batches_lengths = [len(batch) for batch in batches]
+        batches_lengths = [len(batch.serialized_json) for batch in batches]
         batches_total_length = sum(batches_lengths)
 
         self.assertGreater(batches_total_length, logs_total_length)
 
     def test_trim_fields(self):
+        context = Context("function-name", "dt-url", "dt-token", False, False)
         string_with_900_chars = log_message
 
         logs_sender.DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH = 600
@@ -133,7 +138,7 @@ class Test(TestCase):
         log_entry["someMetadataYetUnknown"] = string_with_900_chars
 
         # test
-        logs_sender.ensure_fields_length(log_entry)
+        logs_sender.ensure_fields_length(log_entry, context)
 
         self.assertTrue(log_entry["timestamp"] == string_with_900_chars)
         self.assertTrue(log_entry["severity"] == string_with_900_chars)

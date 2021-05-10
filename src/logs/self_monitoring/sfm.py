@@ -7,36 +7,35 @@ cloudwatch = boto3.client('cloudwatch')
 
 
 class SelfMonitoringContext:
-    _function_name = None
-
-    _kinesis_records_age = []
-    _record_data_compressed_size = []
-    _record_data_decompressed_size = []
-
-    _log_entries_by_log_group = defaultdict(lambda: 0)
-    _log_content_len_by_log_group = defaultdict(lambda: 0)
-
-    _batches_prepared = 0
-    _log_entries_prepared = 0
-    _data_volume_prepared = 0
-
-    _batches_delivered = 0
-    _log_entries_delivered = 0
-    _data_volume_delivered = 0
-
-    _issue_count_by_type = defaultdict(lambda: 0)
-
-    _log_content_trimmed = 0
-    _log_attr_trimmed = 0
-
-    _avg_logs_age_ms = 0
-
-    _requests_sent = 0
-    _requests_durations_sec = []
-    _requests_count_by_status_code = defaultdict(lambda: 0)
 
     def __init__(self, function_name):
         self._function_name = function_name
+
+        self._kinesis_records_age = []
+        self._record_data_compressed_size = []
+        self._record_data_decompressed_size = []
+
+        self._log_entries_by_log_group = defaultdict(lambda: 0)
+        self._log_content_len_by_log_group = defaultdict(lambda: 0)
+
+        self._batches_prepared = 0
+        self._log_entries_prepared = 0
+        self._data_volume_prepared = 0
+
+        self._batches_delivered = 0
+        self._log_entries_delivered = 0
+        self._data_volume_delivered = 0
+
+        self._issue_count_by_type = defaultdict(lambda: 0)
+
+        self._log_content_trimmed = 0
+        self._log_attr_trimmed = 0
+
+        self._avg_logs_age_ms = 0
+
+        self._requests_sent = 0
+        self._requests_durations_sec = []
+        self._requests_count_by_status_code = defaultdict(lambda: 0)
 
     def kinesis_record_age(self, age_ms):
         self._kinesis_records_age.append(age_ms)
@@ -148,7 +147,6 @@ class SelfMonitoringContext:
 
     def push_sfm_to_cloudwatch(self):
         metrics = self._generate_metrics()
-        print(metrics)
         cloudwatch.put_metric_data(MetricData=metrics, Namespace='DT/LogsStreamingDEV2')
 
 
