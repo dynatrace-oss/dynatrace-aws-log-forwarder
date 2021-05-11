@@ -50,6 +50,14 @@ Resources:
               - 'sts:AssumeRole'
       ManagedPolicyArns:
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+      Policies:
+        - PolicyName: 'CloudwatchPutMetricData'
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 'cloudwatch:PutMetricData'
+                Resource: '*'
 
   FirehoseLogStreams:
     Type: AWS::KinesisFirehose::DeliveryStream
@@ -243,7 +251,7 @@ Resources:
                       "type": "metric",
                       "properties": {
                           "metrics": [
-                              [ { "expression": "SEARCH('{DT/LogsStreaming,function_name,log_group} function_name=\"${__LambdaName__}\" MetricName=\"Log entries by LogGroup\"', 'Sum', 60)", "label": "Log entries - [${PROP('Dim.log_group')}]", "id": "e1", "region": "${__Region__}" } ]
+                              [ { "expression": "SEARCH('{DT/LogsStreaming,function_name,log_group} function_name=\"${__LambdaName__}\" MetricName=\"Log entries by LogGroup\"', 'Sum', 60)", "label": "Log entries - [${!PROP('Dim.log_group')}]", "id": "e1", "region": "${__Region__}" } ]
                           ],
                           "view": "timeSeries",
                           "stacked": false,
@@ -261,7 +269,7 @@ Resources:
                       "type": "metric",
                       "properties": {
                           "metrics": [
-                              [ { "expression": "SEARCH('{DT/LogsStreaming,function_name,log_group} function_name=\"${__LambdaName__}\" MetricName=\"Log content length by LogGroup\"', 'Sum', 60)", "label": "Log content length -  [${PROP('Dim.log_group')}]", "id": "e1", "region": "${__Region__}" } ]
+                              [ { "expression": "SEARCH('{DT/LogsStreaming,function_name,log_group} function_name=\"${__LambdaName__}\" MetricName=\"Log content length by LogGroup\"', 'Sum', 60)", "label": "Log content length -  [${!PROP('Dim.log_group')}]", "id": "e1", "region": "${__Region__}" } ]
                           ],
                           "view": "timeSeries",
                           "stacked": false,
@@ -336,7 +344,7 @@ Resources:
                       "type": "metric",
                       "properties": {
                           "metrics": [
-                              [ { "expression": "SEARCH('{DT/LogsStreaming,function_name,status_code} function_name=\"${__LambdaName__}\" MetricName=\"Requests status code count\"', 'Sum', 60)", "label": "Status code - [${PROP('Dim.status_code')}]", "id": "e1", "region": "${__Region__}" } ]
+                              [ { "expression": "SEARCH('{DT/LogsStreaming,function_name,status_code} function_name=\"${__LambdaName__}\" MetricName=\"Requests status code count\"', 'Sum', 60)", "label": "Status code - [${!PROP('Dim.status_code')}]", "id": "e1", "region": "${__Region__}" } ]
                           ],
                           "view": "timeSeries",
                           "stacked": false,
@@ -374,7 +382,7 @@ Resources:
                       "type": "metric",
                       "properties": {
                           "metrics": [
-                              [ { "expression": "SEARCH('{DT/LogsStreaming,function_name,type} function_name=\"${__LambdaName__}\" MetricName=\"Issues\"', 'Sum', 60)", "label": "Issues - [${PROP('Dim.type')}]", "id": "e1", "region": "${__Region__}" } ]
+                              [ { "expression": "SEARCH('{DT/LogsStreaming,function_name,type} function_name=\"${__LambdaName__}\" MetricName=\"Issues\"', 'Sum', 60)", "label": "Issues - [${!PROP('Dim.type')}]", "id": "e1", "region": "${__Region__}" } ]
                           ],
                           "view": "timeSeries",
                           "stacked": false,
@@ -456,7 +464,7 @@ Resources:
               ]
           }
         - __Region__: !Ref 'AWS::Region'
-          __LambdaName__: !Ref CloudWatchStreamFunction
+          __LambdaName__: !Ref Lambda
 
 Outputs:
   LambdaArn:
