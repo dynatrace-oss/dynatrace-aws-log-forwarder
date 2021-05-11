@@ -4,7 +4,7 @@ from logs.self_monitoring.sfm import SelfMonitoringContext
 def test_self_monitoring_context():
     sfm = SelfMonitoringContext("my-lambda-function")
 
-    sfm.kinesis_record_age(5000)
+    sfm.kinesis_record_age(5)
     sfm.kinesis_record_decoded(1000, 2000)
 
     sfm.single_record_transformed("logGroup1", 100, 1000)
@@ -18,6 +18,8 @@ def test_self_monitoring_context():
     sfm.log_content_trimmed()
     sfm.log_content_trimmed()
     sfm.log_content_trimmed()
+
+    sfm.logs_age(10,20,30)
 
     sfm.request_sent()
     sfm.batch_delivered(100, 3000)
@@ -33,8 +35,8 @@ def test_self_monitoring_context():
         {
             'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],
             'MetricName': 'Kinesis record age',
-            'Unit': 'Milliseconds',
-            'Values': [5000]
+            'Unit': 'Seconds',
+            'Values': [5]
         },
         {
             'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],
@@ -133,9 +135,21 @@ def test_self_monitoring_context():
         },
         {
             'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],
-            'MetricName': 'Log age average',
-            'Unit': 'Milliseconds',
-            'Value': 0
+            'MetricName': 'Log age min',
+            'Unit': 'Seconds',
+            'Value': 10
+        },
+        {
+            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],
+            'MetricName': 'Log age avg',
+            'Unit': 'Seconds',
+            'Value': 20
+        },
+        {
+            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],
+            'MetricName': 'Log age max',
+            'Unit': 'Seconds',
+            'Value': 30
         },
         {
             'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],

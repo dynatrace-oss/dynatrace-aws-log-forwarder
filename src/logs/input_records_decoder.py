@@ -57,12 +57,13 @@ def is_base64_with_gzip_header(record_data: str) -> bool:
 
 def sfm_report_kinesis_records_age(records, context):
     try:
-        timestamp_now_ms = round(time.time() * 1000)
+        timestamp_now_sec = time.time()
 
         for record in records:
             kinesis_record_timestamp_ms = record['approximateArrivalTimestamp']
-            age_ms = timestamp_now_ms - kinesis_record_timestamp_ms
-            context.sfm.kinesis_record_age(age_ms)
+            kinesis_record_timestamp_sec = int(kinesis_record_timestamp_ms / 1000)
+            age_sec = timestamp_now_sec - kinesis_record_timestamp_sec
+            context.sfm.kinesis_record_age(age_sec)
 
     except Exception as e:
         log_error_with_stacktrace(e, "Failed to calculate Kinesis Record Delay Self Monitoring")

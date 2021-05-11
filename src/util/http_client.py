@@ -30,8 +30,8 @@ def perform_http_request_for_json(url, encoded_body_bytes, method, headers, veri
         method=method
     )
 
-    duration = time.time() - start_time
-    duration = round(duration, 2)
+    duration_sec = time.time() - start_time
+    duration_ms = round(duration_sec * 1000, 2)
 
     try:
         with urllib.request.urlopen(req, context=ssl_context, timeout=TIMEOUT_SEC) as response:
@@ -45,7 +45,7 @@ def perform_http_request_for_json(url, encoded_body_bytes, method, headers, veri
         context.sfm.issue("request_failed_without_status_code")
         raise e
 
-    context.sfm.request_finished_with_status_code(status, duration)
+    context.sfm.request_finished_with_status_code(status, duration_ms)
 
-    log_multiline_message(f"Response: call duration {duration}s, status code {status}, body '{body}'")
+    log_multiline_message(f"Response: call duration {duration_ms}ms, status code {status}, body '{body}'")
     return status, body

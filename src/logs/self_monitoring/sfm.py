@@ -31,14 +31,16 @@ class SelfMonitoringContext:
         self._log_content_trimmed = 0
         self._log_attr_trimmed = 0
 
-        self._avg_logs_age_ms = 0
+        self._logs_age_min_sec = None
+        self._logs_age_avg_sec = None
+        self._logs_age_max_sec = None
 
         self._requests_sent = 0
-        self._requests_durations_sec = []
+        self._requests_durations_ms = []
         self._requests_count_by_status_code = defaultdict(lambda: 0)
 
-    def kinesis_record_age(self, age_ms):
-        self._kinesis_records_age.append(age_ms)
+    def kinesis_record_age(self, age_sec):
+        self._kinesis_records_age.append(age_sec)
 
     def kinesis_record_decoded(self, record_data_compressed_size, record_data_decompressed_size):
         self._record_data_compressed_size.append(record_data_compressed_size)
@@ -60,6 +62,7 @@ class SelfMonitoringContext:
 
     def issue(self, what_issue):
         self._issue_count_by_type[what_issue] += 1
+        print("SFM: issue registered, type " + what_issue)
 
     def log_content_trimmed(self):
         self._log_content_trimmed += 1
@@ -67,15 +70,17 @@ class SelfMonitoringContext:
     def log_attr_trimmed(self):
         self._log_attr_trimmed += 1
 
-    def avg_log_age(self, age_ms):
-        self._avg_logs_age_ms = age_ms
+    def logs_age(self, logs_age_min_sec, logs_age_avg_sec, logs_age_max_sec):
+        self._logs_age_min_sec = logs_age_min_sec
+        self._logs_age_avg_sec = logs_age_avg_sec
+        self._logs_age_max_sec = logs_age_max_sec
 
     def request_sent(self):
         self._requests_sent += 1
 
-    def request_finished_with_status_code(self, status_code, duration_sec):
+    def request_finished_with_status_code(self, status_code, duration_ms):
         self._requests_count_by_status_code[status_code] += 1
-        self._requests_durations_sec.append(duration_sec)
+        self._requests_durations_ms.append(duration_ms)
 
     def _generate_metrics(self):
         metrics = []
@@ -86,7 +91,7 @@ class SelfMonitoringContext:
         }]
 
         metrics.append(_prepare_cloudwatch_metric(
-            "Kinesis record age", self._kinesis_records_age, "Milliseconds", common_dimensions))
+            "Kinesis record age", self._kinesis_records_age, "Seconds", common_dimensions))
         metrics.append(_prepare_cloudwatch_metric(
             "Kinesis record.data compressed size", self._record_data_compressed_size, "Bytes", common_dimensions))
         metrics.append(_prepare_cloudwatch_metric(
@@ -129,13 +134,19 @@ class SelfMonitoringContext:
         metrics.append(_prepare_cloudwatch_metric(
             "Log attr trimmed", self._log_attr_trimmed, "None", common_dimensions))
 
-        metrics.append(_prepare_cloudwatch_metric(
-            "Log age average", self._avg_logs_age_ms, "Milliseconds", common_dimensions))
+        if self._logs_age_min_sec:
+            metrics.append(_prepare_cloudwatch_metric(
+                "Log age min", self._logs_age_min_sec, "Seconds", common_dimensions))
+            metrics.append(_prepare_cloudwatch_metric(
+                "Log age avg", self._logs_age_avg_sec, "Seconds", common_dimensions))
+            metrics.append(_prepare_cloudwatch_metric(
+                "Log age max", self._logs_age_max_sec, "Seconds", common_dimensions))
 
         metrics.append(_prepare_cloudwatch_metric(
             "Requests sent", self._requests_sent, "None", common_dimensions))
-        metrics.append(_prepare_cloudwatch_metric(
-            "Requests duration", self._requests_durations_sec, "Seconds", common_dimensions))
+        if self._requests_durations_ms:
+            metrics.append(_prepare_cloudwatch_metric(
+                "Requests duration", self._requests_durations_ms, "Milliseconds", common_dimensions))
 
         for status_code, count in self._requests_count_by_status_code.items():
             metrics.append(_prepare_cloudwatch_metric(
@@ -147,7 +158,10 @@ class SelfMonitoringContext:
 
     def push_sfm_to_cloudwatch(self):
         metrics = self._generate_metrics()
-        cloudwatch.put_metric_data(MetricData=metrics, Namespace='DT/LogsStreaming')
+        for i in range(0, len(metrics), 20):
+            metrics_batch = metrics[i:(i + 20)]
+            print(metrics_batch)
+            cloudwatch.put_metric_data(MetricData=metrics_batch, Namespace='DT/LogsStreaming')
 
 
 def _prepare_cloudwatch_metric(metric_name, value: Union[int, float, list], unit, dimensions) -> dict:

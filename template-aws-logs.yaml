@@ -153,7 +153,7 @@ Resources:
     Type: AWS::CloudWatch::Dashboard
     Properties:
       DashboardName: !Sub
-        - "DynatraceLogForwarder-${__Region__}-SelfMonitoring-${__StackName__}"
+        - "DynatraceLogForwarder-SelfMonitoring-${__Region__}-${__StackName__}"
         - __StackName__: !Ref 'AWS::StackName'
           __Region__: !Ref 'AWS::Region'
       DashboardBody: !Sub
@@ -419,11 +419,13 @@ Resources:
                       "type": "metric",
                       "properties": {
                           "metrics": [
-                              [ "DT/LogsStreaming", "Log age average", "function_name", "${__LambdaName__}" ]
+                              [ "DT/LogsStreaming", "Log age min", "function_name", "${__LambdaName__}", { "stat": "Minimum" }  ],
+                              [ "DT/LogsStreaming", "Log age avg", "function_name", "${__LambdaName__}" ],
+                              [ "DT/LogsStreaming", "Log age max", "function_name", "${__LambdaName__}", { "stat": "Maximum" }  ]
                           ],
                           "view": "timeSeries",
                           "stacked": false,
-                          "title": "Logs - average log age (approx)",
+                          "title": "Logs - age",
                           "region": "${__Region__}",
                           "period": 60,
                           "stat": "Average"
@@ -439,7 +441,7 @@ Resources:
                           "view": "timeSeries",
                           "stacked": false,
                           "metrics": [
-                              [ "AWS/Lambda", "Invocations", "FunctionName", "BeluAWSLogsPerformanceTest_inputLogsProducingLambda" ]
+                              [ "AWS/Lambda", "Invocations", "FunctionName", "${__LambdaName__}" ]
                           ],
                           "region": "${__Region__}",
                           "title": "Lambda - invocations"
@@ -455,7 +457,7 @@ Resources:
                           "view": "timeSeries",
                           "stacked": false,
                           "metrics": [
-                              [ "AWS/Lambda", "Duration", "FunctionName", "BeluAWSLogsPerformanceTest_inputLogsProducingLambda" ]
+                              [ "AWS/Lambda", "Duration", "FunctionName", "${__LambdaName__}" ]
                           ],
                           "region": "${__Region__}",
                           "title": "Lambda - duration"
