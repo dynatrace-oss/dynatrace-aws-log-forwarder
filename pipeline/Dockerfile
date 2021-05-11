@@ -1,4 +1,4 @@
-FROM public.ecr.aws/sam/build-python3.8
+FROM amazon/aws-sam-cli-build-image-python3.8
 
 USER root
 

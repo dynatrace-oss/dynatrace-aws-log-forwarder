@@ -5,10 +5,6 @@ notifications:
 stages:
 - tests
 - deployment
-env:
-  global:
-    - RELEASE_REPO_TO_FIND="https://github.com/dynatrace-oss/dynatrace-aws-log-forwarder/releases/download/latest/"
-    - RELEASE_REPO_TO_REPLACE="https://github.com/dynatrace-oss/dynatrace-aws-log-forwarder/releases/download/$TRAVIS_TAG/"
 jobs:
   include:
     - stage: tests
