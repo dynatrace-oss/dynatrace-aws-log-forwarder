@@ -31,7 +31,7 @@ REQUIRE_VALID_CERTIFICATE=false
 Download the script and deploy the infrastructure:
 
 ```
-DT_AWS_LOG_FORWARDER=https://dynatraceawslogforwarder.s3.amazonaws.com && wget $DT_AWS_LOG_FORWARDER/preview/dynatrace-aws-logs.sh -O dynatrace-aws-logs.sh && chmod +x ./dynatrace-aws-logs.sh && wget $DT_AWS_LOG_FORWARDER/preview/lambda-aws-logs.zip -O lambda-aws-logs.zip && wget $DT_AWS_LOG_FORWARDER/preview/template-aws-logs.yaml -O template-aws-logs.yaml && ./dynatrace-aws-logs.sh deploy --target-url $TARGET_URL --target-api-token $TARGET_API_TOKEN --require-valid-certificate $REQUIRE_VALID_CERTIFICATE
+wget -q https://github.com/dynatrace-oss/dynatrace-aws-log-forwarder/releases/latest/download/dynatrace-aws-log-forwarder.zip && unzip -q dynatrace-aws-log-forwarder.zip && cd dynatrace-aws-log-forwarder && ./dynatrace-aws-logs.sh deploy --target-url $TARGET_URL --target-api-token $TARGET_API_TOKEN --require-valid-certificate $REQUIRE_VALID_CERTIFICATE
 ```
 
 #### Usage and options reference - deploy
