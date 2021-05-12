@@ -24,6 +24,7 @@ _SOURCE_VALUE_EXTRACTOR_MAP = {
     "log_group".casefold(): lambda record, parsed_record: record.get("log_group", ""),
 }
 
+Grok.DEFAULT_PATTERNS_DIRS = []
 
 @dataclass(frozen=True)
 class Attribute:
@@ -132,9 +133,18 @@ def _apply_rule(rule, record, parsed_record):
         except Exception:
             logging.exception(f"Encountered exception when evaluating attribute {attribute} of rule for {rule.entity_type_name}")
 
+grok_by_pattern = {}
+
+def get_grok(pattern):
+    grok = grok_by_pattern.get(pattern, None)
+    if grok == None:
+        grok = Grok(pattern)
+        grok_by_pattern[pattern] = grok
+    return grok
+
 
 def parse_aws_loggroup_with_grok_pattern(loggroup, pattern) -> dict:
-    grok = Grok(pattern)
+    grok = get_grok(pattern)
     extracted_values = grok.match(loggroup)
 
     if not extracted_values:
