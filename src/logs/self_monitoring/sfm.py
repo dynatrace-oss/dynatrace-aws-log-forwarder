@@ -3,8 +3,6 @@ from typing import Union
 
 import boto3
 
-cloudwatch = boto3.client('cloudwatch')
-
 
 class SelfMonitoringContext:
 
@@ -158,6 +156,7 @@ class SelfMonitoringContext:
 
     def push_sfm_to_cloudwatch(self):
         metrics = self._generate_metrics()
+        cloudwatch = boto3.client('cloudwatch')
         for i in range(0, len(metrics), 20):
             metrics_batch = metrics[i:(i + 20)]
             print(metrics_batch)

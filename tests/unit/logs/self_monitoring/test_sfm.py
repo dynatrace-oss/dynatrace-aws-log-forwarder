@@ -160,7 +160,7 @@ def test_self_monitoring_context():
         {
             'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],
             'MetricName': 'Requests duration',
-            'Unit': 'Seconds',
+            'Unit': 'Milliseconds',
             'Values': [5, 2]
         },
         {
