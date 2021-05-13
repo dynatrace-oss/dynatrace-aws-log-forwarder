@@ -131,10 +131,6 @@ def ensure_content_length(log_entry, context):
     log_content = log_entry.get("content", "")
     log_content_len = len(log_content)
     if log_content_len > DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH:
-        # placeholder for APM-290579 Implement self-monitoring
-        # dynatrace-azure-logs-ingest/logs_ingest/main.py:117
-        # self_monitoring.too_long_content_size.append(log_content_len)
-
         context.sfm.log_content_trimmed()
         log_entry["content"] = log_content[0: DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH]
 
