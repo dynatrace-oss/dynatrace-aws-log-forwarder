@@ -170,7 +170,7 @@ def _prepare_cloudwatch_metric(metric_name, value: Union[int, float, list], unit
         'Unit': unit,
     }
 
-    if type(value) is list:
+    if isinstance(value, list):
         cw_metric["Values"] = value
     else:
         cw_metric["Value"] = value

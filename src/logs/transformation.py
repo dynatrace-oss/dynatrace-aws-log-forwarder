@@ -15,7 +15,8 @@ class RecordMetadata:
     log_stream: str
 
 
-def extract_dt_logs_from_single_record(record_data_decoded: str, batch_metadata: BatchMetadata, context: Context) -> List[Dict]:
+def extract_dt_logs_from_single_record(
+    record_data_decoded: str, batch_metadata: BatchMetadata, context: Context) -> List[Dict]:
     logs: List[Dict] = []
     record = json.loads(record_data_decoded)
 

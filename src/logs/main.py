@@ -35,7 +35,7 @@ def sfm_report_logs_age(logs, context):
             log_age_ms = int(timestamp_now_ms) - log_timestamp_ms
             log_age_sec = log_age_ms / 1000
             log_ages_sec.append(log_age_sec)
-        except Exception as e:
+        except Exception:
             pass
 
     if len(log_ages_sec) >= 1:
