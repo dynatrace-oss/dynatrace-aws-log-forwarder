@@ -5,6 +5,7 @@ import pytest
 import logs.main
 import logs.transformation
 from logs.models.batch_metadata import BatchMetadata
+from util.context import Context
 
 BATCH_METADATA = BatchMetadata("444000444", "us-east-1", "aws")
 
@@ -87,10 +88,13 @@ BATCH_METADATA = BatchMetadata("444000444", "us-east-1", "aws")
 
 ])
 def test_full_transformation(testcase: dict):
+    context = Context("function-name", "dt-url", "dt-token", False, False)
+
     record_data_decoded = testcase["record_data_decoded"]
     expect_first_log_contains = testcase["expect_first_log_contains"]
 
-    logs_sent = logs.transformation.extract_dt_logs_from_single_record(json.dumps(record_data_decoded), BATCH_METADATA)
+    logs_sent = logs.transformation.extract_dt_logs_from_single_record(
+        json.dumps(record_data_decoded), BATCH_METADATA, context)
 
     assert len(logs_sent) == len(record_data_decoded["logEvents"])
 

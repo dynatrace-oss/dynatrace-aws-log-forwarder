@@ -5,6 +5,7 @@ import logs.main
 import logs.transformation
 from logs.metadata_engine.metadata_engine import MetadataEngine
 from logs.models.batch_metadata import BatchMetadata
+from util.context import Context
 
 
 @patch.object(MetadataEngine, 'apply')
@@ -29,7 +30,8 @@ def test_metadata_engine_input(metadata_engine_apply_mock):
     })
 
     batch_metadata = BatchMetadata("444000444", "us-east-1", "aws")
-    actual_output = logs.transformation.extract_dt_logs_from_single_record(input_entry, batch_metadata)
+    actual_output = logs.transformation.extract_dt_logs_from_single_record(
+        input_entry, batch_metadata, Context("function-name", "dt-url", "dt-token", False, False))
 
     assert metadata_engine_apply_mock.call_count == 2
 
@@ -45,6 +47,8 @@ def test_metadata_engine_input(metadata_engine_apply_mock):
 
 
 def test_control_message():
+    context = Context("function-name", "dt-url", "dt-token", False, False)
+
     control_record = json.dumps({
         "messageType": "CONTROL_MESSAGE",
         "owner": "CloudwatchLogs",
@@ -61,6 +65,7 @@ def test_control_message():
     })
 
     batch_metadata = BatchMetadata("444000444", "us-east-1", "aws")
-    parsed_logs = logs.transformation.extract_dt_logs_from_single_record(control_record, batch_metadata)
+    parsed_logs = logs.transformation.extract_dt_logs_from_single_record(
+        control_record, batch_metadata, context)
 
     assert len(parsed_logs) == 0
