@@ -31,7 +31,7 @@ REQUIRE_VALID_CERTIFICATE=false
 Download the script and deploy the infrastructure:
 
 ```
-wget -q https://github.com/dynatrace-oss/dynatrace-aws-log-forwarder/releases/latest/download/dynatrace-aws-log-forwarder.zip && unzip -q dynatrace-aws-log-forwarder.zip && cd dynatrace-aws-log-forwarder && ./dynatrace-aws-logs.sh deploy --target-url $TARGET_URL --target-api-token $TARGET_API_TOKEN --require-valid-certificate $REQUIRE_VALID_CERTIFICATE
+wget https://github.com/dynatrace-oss/dynatrace-aws-log-forwarder/releases/latest/download/dynatrace-aws-log-forwarder.zip && unzip -q dynatrace-aws-log-forwarder.zip && cd dynatrace-aws-log-forwarder && ./dynatrace-aws-logs.sh deploy --target-url $TARGET_URL --target-api-token $TARGET_API_TOKEN --require-valid-certificate $REQUIRE_VALID_CERTIFICATE
 ```
 
 #### Usage and options reference - deploy
