@@ -89,7 +89,8 @@ def test_full_flow(testcase: dict):
     client_response = (200, "BODY")
 
     with patch('util.http_client.perform_http_request_for_json', return_value=client_response) as mock_http_client:
-        response = index.handler(lambda_event, lambda_context)
+        with patch('boto3.client'):
+            response = index.handler(lambda_event, lambda_context)
 
     # CHECK RESPONSE
     assert len(response["records"]) == len(lambda_event["records"])

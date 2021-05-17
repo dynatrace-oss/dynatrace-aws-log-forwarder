@@ -64,6 +64,14 @@ Resources:
               - 'sts:AssumeRole'
       ManagedPolicyArns:
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+      Policies:
+        - PolicyName: 'CloudwatchPutMetricData'
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 'cloudwatch:PutMetricData'
+                Resource: '*'
 
   FirehoseLogStreams:
     Type: AWS::KinesisFirehose::DeliveryStream
@@ -154,6 +162,325 @@ Resources:
                   - 'firehose:PutRecordBatch'
                 Resource: !GetAtt FirehoseLogStreams.Arn
       Description: Role for Subscription Filters (to write to Firehose)
+
+  SelfMonitoringDashboard:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: !Sub
+        - "DynatraceLogForwarder-SelfMonitoring-${__Region__}-${__StackName__}"
+        - __StackName__: !Ref 'AWS::StackName'
+          __Region__: !Ref 'AWS::Region'
+      DashboardBody: !Sub
+        - |
+          {
+              "widgets": [
+                  {
+                      "height": 6,
+                      "width": 12,
+                      "y": 6,
+                      "x": 12,
+                      "type": "metric",
+                      "properties": {
+                          "metrics": [
+                              [ "DT/LogsStreaming", "Kinesis record age", "function_name", "${__LambdaName__}", { "stat": "Minimum" } ],
+                              [ "...", { "stat": "Average" } ],
+                              [ "..." ]
+                          ],
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "region": "${__Region__}",
+                          "stat": "Maximum",
+                          "period": 60,
+                          "liveData": true,
+                          "setPeriodToTimeRange": true,
+                          "legend": {
+                              "position": "bottom"
+                          },
+                          "title": "Kinesis - record age"
+                      }
+                  },
+                  {
+                      "height": 6,
+                      "width": 12,
+                      "y": 12,
+                      "x": 12,
+                      "type": "metric",
+                      "properties": {
+                          "metrics": [
+                              [ "DT/LogsStreaming", "Kinesis record.data decompressed size", "function_name", "${__LambdaName__}" ],
+                              [ "...", { "stat": "Average" } ],
+                              [ "...", { "stat": "Maximum" } ]
+                          ],
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "region": "${__Region__}",
+                          "stat": "Minimum",
+                          "period": 60,
+                          "title": "Kinesis - record.data decompressed size"
+                      }
+                  },
+                  {
+                      "height": 6,
+                      "width": 12,
+                      "y": 12,
+                      "x": 0,
+                      "type": "metric",
+                      "properties": {
+                          "metrics": [
+                              [ "DT/LogsStreaming", "Kinesis record.data compressed size", "function_name", "${__LambdaName__}" ],
+                              [ "...", { "stat": "Average" } ],
+                              [ "...", { "stat": "Maximum" } ]
+                          ],
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "region": "${__Region__}",
+                          "stat": "Minimum",
+                          "period": 60,
+                          "title": "Kinesis - record.data compressed size"
+                      }
+                  },
+                  {
+                      "height": 6,
+                      "width": 12,
+                      "y": 6,
+                      "x": 0,
+                      "type": "metric",
+                      "properties": {
+                          "metrics": [
+                              [ "DT/LogsStreaming", "Kinesis record age", "function_name", "${__LambdaName__}", { "label": "Kinesis records" } ]
+                          ],
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "region": "${__Region__}",
+                          "stat": "SampleCount",
+                          "period": 60,
+                          "title": "Kinesis - records number"
+                      }
+                  },
+                  {
+                      "height": 6,
+                      "width": 12,
+                      "y": 18,
+                      "x": 0,
+                      "type": "metric",
+                      "properties": {
+                          "metrics": [
+                              [ { "expression": "SEARCH('{DT/LogsStreaming,function_name,log_group} function_name=\"${__LambdaName__}\" MetricName=\"Log entries by LogGroup\"', 'Sum', 60)", "label": "Log entries - [${!PROP('Dim.log_group')}]", "id": "e1", "region": "${__Region__}" } ]
+                          ],
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "region": "${__Region__}",
+                          "period": 300,
+                          "stat": "Average",
+                          "title": "Log Groups - log entries"
+                      }
+                  },
+                  {
+                      "height": 6,
+                      "width": 12,
+                      "y": 18,
+                      "x": 12,
+                      "type": "metric",
+                      "properties": {
+                          "metrics": [
+                              [ { "expression": "SEARCH('{DT/LogsStreaming,function_name,log_group} function_name=\"${__LambdaName__}\" MetricName=\"Log content length by LogGroup\"', 'Sum', 60)", "label": "Log content length -  [${!PROP('Dim.log_group')}]", "id": "e1", "region": "${__Region__}" } ]
+                          ],
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "region": "${__Region__}",
+                          "period": 300,
+                          "stat": "Average",
+                          "title": "Log Groups - log content length"
+                      }
+                  },
+                  {
+                      "height": 6,
+                      "width": 12,
+                      "y": 30,
+                      "x": 0,
+                      "type": "metric",
+                      "properties": {
+                          "metrics": [
+                              [ "DT/LogsStreaming", "Batches prepared", "function_name", "${__LambdaName__}" ],
+                              [ ".", "Batches delivered", ".", "." ]
+                          ],
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "region": "${__Region__}",
+                          "stat": "Sum",
+                          "period": 60,
+                          "title": "Delivery - batches"
+                      }
+                  },
+                  {
+                      "height": 6,
+                      "width": 12,
+                      "y": 30,
+                      "x": 12,
+                      "type": "metric",
+                      "properties": {
+                          "metrics": [
+                              [ "DT/LogsStreaming", "Log entries prepared", "function_name", "${__LambdaName__}" ],
+                              [ ".", "Log entries delivered", ".", "." ]
+                          ],
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "region": "${__Region__}",
+                          "stat": "Sum",
+                          "period": 60,
+                          "title": "Delivery - log entries"
+                      }
+                  },
+                  {
+                      "height": 6,
+                      "width": 12,
+                      "y": 36,
+                      "x": 0,
+                      "type": "metric",
+                      "properties": {
+                          "metrics": [
+                              [ "DT/LogsStreaming", "Data volume prepared", "function_name", "${__LambdaName__}" ],
+                              [ ".", "Data volume delivered", ".", "." ]
+                          ],
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "region": "${__Region__}",
+                          "title": "Delivery - data volume",
+                          "period": 60,
+                          "stat": "Sum"
+                      }
+                  },
+                  {
+                      "height": 6,
+                      "width": 12,
+                      "y": 42,
+                      "x": 0,
+                      "type": "metric",
+                      "properties": {
+                          "metrics": [
+                              [ { "expression": "SEARCH('{DT/LogsStreaming,function_name,status_code} function_name=\"${__LambdaName__}\" MetricName=\"Requests status code count\"', 'Sum', 60)", "label": "Status code - [${!PROP('Dim.status_code')}]", "id": "e1", "region": "${__Region__}" } ]
+                          ],
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "region": "${__Region__}",
+                          "title": "Requests - status codes",
+                          "period": 300,
+                          "stat": "Average"
+                      }
+                  },
+                  {
+                      "height": 6,
+                      "width": 12,
+                      "y": 42,
+                      "x": 12,
+                      "type": "metric",
+                      "properties": {
+                          "metrics": [
+                              [ "DT/LogsStreaming", "Requests duration", "function_name", "${__LambdaName__}", { "stat": "Minimum" } ],
+                              [ "..." ],
+                              [ "...", { "stat": "Maximum" } ]
+                          ],
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "region": "${__Region__}",
+                          "period": 60,
+                          "stat": "Average",
+                          "title": "Requests - durations"
+                      }
+                  },
+                  {
+                      "height": 6,
+                      "width": 12,
+                      "y": 36,
+                      "x": 12,
+                      "type": "metric",
+                      "properties": {
+                          "metrics": [
+                              [ { "expression": "SEARCH('{DT/LogsStreaming,function_name,type} function_name=\"${__LambdaName__}\" MetricName=\"Issues\"', 'Sum', 60)", "label": "Issues - [${!PROP('Dim.type')}]", "id": "e1", "region": "${__Region__}" } ]
+                          ],
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "region": "${__Region__}",
+                          "stat": "Sum",
+                          "period": 60,
+                          "title": "Delivery - issues"
+                      }
+                  },
+                  {
+                      "height": 6,
+                      "width": 12,
+                      "y": 24,
+                      "x": 12,
+                      "type": "metric",
+                      "properties": {
+                          "metrics": [
+                              [ "DT/LogsStreaming", "Log attr trimmed", "function_name", "${__LambdaName__}" ],
+                              [ ".", "Log content trimmed", ".", "." ]
+                          ],
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "region": "${__Region__}",
+                          "period": 60,
+                          "title": "Logs - trimmed",
+                          "stat": "Sum"
+                      }
+                  },
+                  {
+                      "height": 6,
+                      "width": 12,
+                      "y": 24,
+                      "x": 0,
+                      "type": "metric",
+                      "properties": {
+                          "metrics": [
+                              [ "DT/LogsStreaming", "Log age min", "function_name", "${__LambdaName__}", { "stat": "Minimum" }  ],
+                              [ "DT/LogsStreaming", "Log age avg", "function_name", "${__LambdaName__}" ],
+                              [ "DT/LogsStreaming", "Log age max", "function_name", "${__LambdaName__}", { "stat": "Maximum" }  ]
+                          ],
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "title": "Logs - age",
+                          "region": "${__Region__}",
+                          "period": 60,
+                          "stat": "Average"
+                      }
+                  },
+                  {
+                      "height": 6,
+                      "width": 12,
+                      "y": 0,
+                      "x": 0,
+                      "type": "metric",
+                      "properties": {
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "metrics": [
+                              [ "AWS/Lambda", "Invocations", "FunctionName", "${__LambdaName__}" ]
+                          ],
+                          "region": "${__Region__}",
+                          "title": "Lambda - invocations"
+                      }
+                  },
+                  {
+                      "height": 6,
+                      "width": 12,
+                      "y": 0,
+                      "x": 12,
+                      "type": "metric",
+                      "properties": {
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "metrics": [
+                              [ "AWS/Lambda", "Duration", "FunctionName", "${__LambdaName__}" ]
+                          ],
+                          "region": "${__Region__}",
+                          "title": "Lambda - duration"
+                      }
+                  }
+              ]
+          }
+        - __Region__: !Ref 'AWS::Region'
+          __LambdaName__: !Ref Lambda
 
 Outputs:
   LambdaArn:

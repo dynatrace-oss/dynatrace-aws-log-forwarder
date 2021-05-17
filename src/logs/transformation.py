@@ -18,6 +18,7 @@ from typing import List, Dict
 
 from logs.metadata_engine.metadata_engine import MetadataEngine
 from logs.models.batch_metadata import BatchMetadata
+from util.context import Context
 
 metadata_engine = MetadataEngine()
 
@@ -28,23 +29,29 @@ class RecordMetadata:
     log_stream: str
 
 
-def extract_dt_logs_from_single_record(record_data_decoded: str, batch_metadata: BatchMetadata) -> List[Dict]:
+def extract_dt_logs_from_single_record(
+    record_data_decoded: str, batch_metadata: BatchMetadata, context: Context) -> List[Dict]:
+    logs: List[Dict] = []
     record = json.loads(record_data_decoded)
 
     if record.get('messageType') == 'CONTROL_MESSAGE':
         return []
 
     record_metadata = RecordMetadata(record["logGroup"], record["logStream"])
-    logs = []
 
     for log_event in record["logEvents"]:
         log_entry = transform_single_log_entry(log_event, batch_metadata, record_metadata)
         logs.append(log_entry)
 
+    log_content_lens = [len(log["content"]) for log in logs]
+    log_content_lens_sum = sum(log_content_lens)
+
+    context.sfm.single_record_transformed(record_metadata.log_group, len(logs), log_content_lens_sum)
+
     return logs
 
 
-def transform_single_log_entry(log_event, batch_metadata, record_metadata):
+def transform_single_log_entry(log_event, batch_metadata, record_metadata) -> Dict:
     parsed_record = {
         'content': log_event["message"],
         'cloud.provider': 'aws',

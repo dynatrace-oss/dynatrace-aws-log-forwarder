@@ -14,6 +14,8 @@
 
 from typing import Text
 
+from logs.self_monitoring.sfm import SelfMonitoringContext
+
 
 class Context:
     def __init__(self, function_name: Text, dt_url: str, dt_token: str, debug: bool, verify_SSL: bool):
@@ -22,3 +24,4 @@ class Context:
         self.dt_token = dt_token
         self.debug: bool = debug
         self.verify_SSL: bool = verify_SSL
+        self.sfm = SelfMonitoringContext(function_name)
