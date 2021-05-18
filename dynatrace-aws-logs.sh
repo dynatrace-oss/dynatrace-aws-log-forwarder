@@ -171,7 +171,7 @@ arguments:
                         Optional. If present, allows subscribing to a filtered stream of logs. If absent, subscribes to all logs in the LogGroup.
   --role-arn ROLE_ARN
                         Optional. If not provided, this will be extracted from the Output of CloudFormation stack used in the deploy step, either the default one \"$DEFAULT_STACK_NAME\" or the one specified using --stack-name STACK_NAME option. You can set this option manually if the calls to CloudFormation are a problem due to e.g. permissions or performance reasons.
-                        The ARN of the AWS Role that allows creation of SubscriptionFilters. This role is automatically created and its ARN presented as a CloudFormation output of a deploy step of this script.
+                        The ARN of the AWS Role that allows CloudWatch to stream logs to the destination Firehose. This role is automatically created and its ARN presented as a CloudFormation output of a deploy step of this script.
   --firehose-arn FIREHOSE_ARN
                         Optional. If not provided, this will be extracted from the Output of CloudFormation stack used in the deploy step, either the default one \"$DEFAULT_STACK_NAME\" or the one specified using --stack-name STACK_NAME option. You can set this option manually if the calls to CloudFormation are a problem due to e.g. permissions or performance reasons.
                         The ARN of the AWS Kinesis Firehose to stream the logs. This Firehose is automatically created and its ARN presented as a CloudFormation output of a deploy step of this script.
