@@ -247,7 +247,7 @@ arguments:
   if [ -z "$STACK_NAME" ]; then STACK_NAME=$DEFAULT_STACK_NAME; fi
   SUBSCRIPTION_FILTER_NAME=$STACK_NAME
 
-  if [ -z "$ROLE_ARN" ]; then ROLE_ARN=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" --query "Stacks[0].Outputs[?OutputKey=='RoleForSubscriptionFiltersArn'].OutputValue | [0]" --output text); fi
+  if [ -z "$ROLE_ARN" ]; then ROLE_ARN=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" --query "Stacks[0].Outputs[?OutputKey=='CloudWatchLogsRoleArn'].OutputValue | [0]" --output text); fi
   if [ -z "$ROLE_ARN" ]; then echo "No --role-arn"; print_help_subcribe; exit 1; fi
   if [ -z "$FIREHOSE_ARN" ]; then FIREHOSE_ARN=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" --query "Stacks[0].Outputs[?OutputKey=='FirehoseArn'].OutputValue | [0]" --output text); fi
   if [ -z "$FIREHOSE_ARN" ]; then echo "No --firehose-arn"; print_help_subcribe; exit 1; fi
