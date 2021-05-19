@@ -171,7 +171,7 @@ arguments:
                         Optional. If present, allows subscribing to a filtered stream of logs. If absent, subscribes to all logs in the LogGroup.
   --role-arn ROLE_ARN
                         Optional. If not provided, this will be extracted from the Output of CloudFormation stack used in the deploy step, either the default one \"$DEFAULT_STACK_NAME\" or the one specified using --stack-name STACK_NAME option. You can set this option manually if the calls to CloudFormation are a problem due to e.g. permissions or performance reasons.
-                        The ARN of the AWS Role that allows creation of SubscriptionFilters. This role is automatically created and its ARN presented as a CloudFormation output of a deploy step of this script.
+                        The ARN of the AWS Role that allows CloudWatch to stream logs to the destination Firehose. This role is automatically created and its ARN presented as a CloudFormation output of a deploy step of this script.
   --firehose-arn FIREHOSE_ARN
                         Optional. If not provided, this will be extracted from the Output of CloudFormation stack used in the deploy step, either the default one \"$DEFAULT_STACK_NAME\" or the one specified using --stack-name STACK_NAME option. You can set this option manually if the calls to CloudFormation are a problem due to e.g. permissions or performance reasons.
                         The ARN of the AWS Kinesis Firehose to stream the logs. This Firehose is automatically created and its ARN presented as a CloudFormation output of a deploy step of this script.
@@ -247,7 +247,7 @@ arguments:
   if [ -z "$STACK_NAME" ]; then STACK_NAME=$DEFAULT_STACK_NAME; fi
   SUBSCRIPTION_FILTER_NAME=$STACK_NAME
 
-  if [ -z "$ROLE_ARN" ]; then ROLE_ARN=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" --query "Stacks[0].Outputs[?OutputKey=='RoleForSubscriptionFiltersArn'].OutputValue | [0]" --output text); fi
+  if [ -z "$ROLE_ARN" ]; then ROLE_ARN=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" --query "Stacks[0].Outputs[?OutputKey=='CloudWatchLogsRoleArn'].OutputValue | [0]" --output text); fi
   if [ -z "$ROLE_ARN" ]; then echo "No --role-arn"; print_help_subcribe; exit 1; fi
   if [ -z "$FIREHOSE_ARN" ]; then FIREHOSE_ARN=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" --query "Stacks[0].Outputs[?OutputKey=='FirehoseArn'].OutputValue | [0]" --output text); fi
   if [ -z "$FIREHOSE_ARN" ]; then echo "No --firehose-arn"; print_help_subcribe; exit 1; fi
