@@ -467,7 +467,7 @@ Resources:
               "type": "metric",
               "properties": {
                 "metrics": [
-                [ "...", "${__LambdaName__}" ]
+                [ "AWS/Lambda", "Errors", "FunctionName", "${__LambdaName__}" ]
                 ],
                 "view": "timeSeries",
                 "stacked": false,
