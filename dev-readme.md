@@ -11,7 +11,14 @@ In case of errors, try to run it in virtualenv to provide clean Python environme
 
 ### Build & deploy public release package 
 
-To build a new release, push git tag "release.*" on selected commit. It then triggers entire travis pipeline build and also creates a new release package:
+To build a new release, a git tag "release.*" on selected commit is required. 
+
+You can either:
+* push the tag manually, or 
+* use GitHub *Draft new release* UI that can create for you the tag you specify together with the release:
+https://github.com/dynatrace-oss/dynatrace-aws-log-forwarder/releases/new
+
+The tag presence then triggers entire travis pipeline build and also creates a new release package:
 
 https://github.com/dynatrace-oss/dynatrace-aws-log-forwarder/releases
 
