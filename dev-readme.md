@@ -9,14 +9,20 @@ Run
 
 In case of errors, try to run it in virtualenv to provide clean Python environment.
 
-### Build & deploy to public repo: temporarily S3
+### Build & deploy public release package 
 
-upload to:
-https://s3.console.aws.amazon.com/s3/buckets/dynatraceawslogforwarder?region=us-east-1&prefix=preview/&showversions=false
+To build a new release, a git tag "release.*" on selected commit is required. 
 
-in Dynatrace Metrics Streaming Production (534730002411)
-   localMetricsStreamDeveloperUser
+You can either:
+* push the tag manually, or 
+* use GitHub *Draft new release* UI that can create for you the tag you specify together with the release:
+https://github.com/dynatrace-oss/dynatrace-aws-log-forwarder/releases/new
 
+The tag presence then triggers entire travis pipeline build and also creates a new release package:
+
+https://github.com/dynatrace-oss/dynatrace-aws-log-forwarder/releases
+
+For deployment, use one-liner from README to use the latest release, or adapt it for a specific version.
 
 ### Run unit tests in terminal
 
