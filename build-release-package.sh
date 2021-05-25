@@ -48,6 +48,8 @@ rm -rf $LAMBDA_BUILD_DIR
 mkdir $PACKAGE_BUILD_DIR
 
 cp README.md dynatrace-aws-logs.sh $LAMBDA_ZIP_NAME dynatrace-aws-log-forwarder-template.yaml $PACKAGE_BUILD_DIR
-zip $PACKAGE_ZIP_NAME $PACKAGE_BUILD_DIR/*
+cd $PACKAGE_BUILD_DIR
+zip ../$PACKAGE_ZIP_NAME *
+cd ..
 
 rm -rf $PACKAGE_BUILD_DIR
