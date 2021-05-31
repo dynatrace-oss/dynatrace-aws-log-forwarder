@@ -171,10 +171,13 @@ class SelfMonitoringContext:
     def push_sfm_to_cloudwatch(self):
         metrics = self._generate_metrics()
         cloudwatch = boto3.client('cloudwatch')
-        for i in range(0, len(metrics), 20):
-            metrics_batch = metrics[i:(i + 20)]
-            print(metrics_batch)
-            cloudwatch.put_metric_data(MetricData=metrics_batch, Namespace='DT/LogsStreaming')
+        try:
+            for i in range(0, len(metrics), 20):
+                metrics_batch = metrics[i:(i + 20)]
+                cloudwatch.put_metric_data(MetricData=metrics_batch, Namespace='DT/LogsStreaming')
+        except Exception as e:
+            print("Print metrics on SFM push failure: " + str(metrics))
+            raise e
 
 
 def _prepare_cloudwatch_metric(metric_name, value: Union[int, float, list], unit, dimensions) -> dict:
