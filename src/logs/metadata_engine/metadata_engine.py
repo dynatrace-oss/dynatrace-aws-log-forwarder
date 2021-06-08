@@ -88,6 +88,7 @@ class ConfigRule:
     source_matchers: List[SourceMatcher]
     attributes: List[Attribute]
     aws_loggroup_pattern: Optional[str]
+    log_content_parse_type: Optional[str]
 
 
 class MetadataEngine:
@@ -139,14 +140,21 @@ def _apply_rule(rule, record, parsed_record):
     if rule.aws_loggroup_pattern and "log_group" in record:
         extracted_values = parse_aws_loggroup_with_grok_pattern(record["log_group"], rule.aws_loggroup_pattern)
         record.update(extracted_values)
+    if rule.log_content_parse_type in "json":
+        try:
+            record["log_content_parsed"] = json.loads(parsed_record.get("content", {}))
+        except Exception:
+            logging.exception(f"Encountered exception when parsing log content as json, requested by rule for {rule.entity_type_name}")
 
     for attribute in rule.attributes:
         try:
             value = jmespath.search(attribute.pattern, record, JMESPATH_OPTIONS)
             if value:
                 parsed_record[attribute.key] = value
-        except Exception:
+        except Exception as ex:
             logging.exception(f"Encountered exception when evaluating attribute {attribute} of rule for {rule.entity_type_name}")
+
+    record.pop("log_content_parsed")
 
 grok_by_pattern = {}
 
@@ -219,9 +227,10 @@ def _create_config_rule(entity_name: str, rule_json: Dict) -> Optional[ConfigRul
         aws_loggroup_pattern = rule_json["aws"]["logGroup"]
     except KeyError:
         aws_loggroup_pattern = None
+    log_content_parse_type = rule_json.get("aws", {}).get("logContentParseAs", None)
 
     return ConfigRule(entity_type_name=entity_name, source_matchers=sources, attributes=attributes,
-                      aws_loggroup_pattern=aws_loggroup_pattern)
+                      aws_loggroup_pattern=aws_loggroup_pattern, log_content_parse_type = log_content_parse_type)
 
 
 def _create_config_rules(config_json: Dict) -> List[ConfigRule]:
