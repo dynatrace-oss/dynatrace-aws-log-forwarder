@@ -1,0 +1,57 @@
+{
+  "name": "CLOUD_TRAIL",
+  "displayName": "Cloud Trail Management Events / Logs",
+  "rules": [
+    {
+      "aws": {
+        "logGroup": "aws-cloudtrail-logs-%{DATA:account_id}-%{GREEDYDATA:suffix}",
+        "logContentParseAs": "json"
+      },
+      "sources": [
+        {
+          "sourceType": "logs",
+          "source": "log_group",
+          "condition": "$prefix('aws-cloudtrail-logs')"
+        }
+      ],
+      "attributes": [
+        {
+          "key": "aws.service",
+          "pattern": "'cloudtrail'"
+        },
+        {
+          "key": "audit.action",
+          "pattern": "log_content_parsed.eventName"
+        },
+        {
+          "key": "audit.identity",
+          "pattern": "log_content_parsed.userIdentity.arn"
+        },
+        {
+          "key": "audit.status",
+          "description":  "If a field errorCode exists, then return Failure.{errorCode}, else return Succeeded. [? @!=null] filters out null values, as otherwise the join method would crash when there was no errorCode",
+
+          "pattern": "[ { condition_field: errorCode, result: [`Failure`, errorCode] | [? @!=null ] | join('.', @) }, { condition_field: `defaultValue`, result: 'Succeeded'} ] | [?condition_field != null && condition_field !=``] | [0] | result"
+        },
+
+
+        {
+          "key": "dt.source_entity_type",
+          "description": "If a field given in condition_field exists and matches the condition value, use the value from result.",
+
+          "pattern": "[ { condition: `rds.amazonaws.com`, condition_field: log_content_parsed.eventSource, result: 'RELATIONAL_DATABASE_SERVICE'} ] | [?condition_field == condition] | [0] | result"
+        },
+
+
+
+
+        {
+          "key": "dt.source_entity_type",
+          "description": "If a field given in condition_field exists and matches the condition value, use the value from result.",
+
+          "pattern": "[ { condition: `some other source of cloudTrail log event`, condition_field: log_content_parsed.eventSource, result: 'some other entity, e.g. CUSTOM_DEVICE'} ] | [?condition_field == condition] | [0] | result"
+        }
+      ]
+    }
+  ]
+}
