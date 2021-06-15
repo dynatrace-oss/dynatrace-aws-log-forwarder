@@ -30,6 +30,12 @@ def meid_murmurhash(entity_type: str, hashing_input: str) -> str:
     identifier = _encode_me_identifier(entity_type, long_id)
     return identifier
 
+def meid_murmurhash_awsseed(entity_type: str, hashing_input: str) -> str:
+    long_id = _murmurhash2_64A(hashing_input, seed = -512093083)
+
+    identifier = _encode_me_identifier(entity_type, long_id)
+    return identifier
+
 
 def _legacy_entity_id_md5(hash_input: str) -> int:
     md5_digest = hashlib.md5(hash_input.encode("UTF-8"))

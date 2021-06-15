@@ -28,7 +28,9 @@
         },
         {
           "key": "dt.source_entity",
-          "pattern": "dt_meid_md5('AWS_LAMBDA_FUNCTION', format('{}{}_{}', [function_name, region, account_id]))"
+          "description": "AWS_LAMBDA_FUNCTION is a dedicated entity type which is one of the exception (the others are EBSValoume and EC2Instance) in Dynatrace AWS entities, because its entityId uses the pattern below both for Legacy and V2 generation modes of entities Ids. It calculates the id using md5 from custom string below, whereas other entities in V2 calculate the id using murmur hash of the resource's arn",
+
+          "pattern": "dt_meid_lambda_function(function_name, region, account_id)"
         },
         {
           "key": "dt.source_entity_type",

@@ -66,4 +66,60 @@ class MappingCustomFunctions(functions.Functions):
     def _func_dt_meid_murmurhash(self, entity_type, hashing_input):
         return me_id.meid_murmurhash(entity_type, hashing_input)
 
+    #same ids across all version of aws credentials - md5
+    @functions.signature({'types': ['string']})
+    def _func_dt_meid_ebs_volume(self, volumeId): return me_id.meid_md5("EBS_VOLUME", volumeId)
+    @functions.signature({'types': ['string']})
+    def _func_dt_meid_ec2_instance(self, instanceId): return me_id.meid_md5("EC2_INSTANCE", instanceId)
+    @functions.signature({'types': ['string']})
+    def _func_dt_meid_lambda_function(self, functionName, region, accountId): return me_id.meid_md5("AWS_LAMBDA_FUNCTION", functionName+region+"_"+accountId)
+
+    # aws credentials v1 - md5
+    @functions.signature({'types': ['string']})
+    def _func_dt_meid_elb_v1(self, dnsName): return me_id.meid_md5("ELASTIC_LOAD_BALANCER", dnsName)
+    @functions.signature({'types': ['string']})
+    def _func_dt_meid_alb_v1(self, arn): return me_id.meid_md5("AWS_APPLICATION_LOAD_BALANCER", arn)
+    @functions.signature({'types': ['string']})
+    def _func_dt_meid_nlb_v1(self, arn): return me_id.meid_md5("AWS_NETWORK_LOAD_BALANCER", arn)
+    @functions.signature({'types': ['string']})
+    def _func_dt_meid_auto_scaling_group_v1(self, arn): return me_id.meid_md5("AUTO_SCALING_GROUP", arn)
+    @functions.signature({'types': ['string']}, {'types': ['string']})
+    def _func_dt_meid_dynamo_db_v1(self, tableName, region): return me_id.meid_md5("DYNAMO_DB_TABLE", tableName+region)
+    @functions.signature({'types': ['string']}, {'types': ['string']})
+    def _func_dt_meid_rds_v1(self, instanceId, region): return me_id.meid_md5("RELATIONAL_DATABASE_SERVICE", instanceId+region)
+    @functions.signature({'types': ['string']})
+    def _func_dt_meid_s3_bucket_v1(self, name): return me_id.meid_md5("S3BUCKET", name)
+
+    def _func_dt_meid_supporting_service_v1(self, supporting_service_name, region, main_dimension, name):
+        custom_device_input_string = "-".join([supporting_service_name.lower(), region, main_dimension, name])
+
+        # out.writeLong(customDeviceGroupLongId);
+        # out.write(customDeviceIdBytes);
+        # out.writeInt(customDeviceIdBytes.length);
+        #
+        # return MURMUR_128.hashBytes(byteOut.toByteArray()).asLong();
+
+        raise NotImplementedError
+
+    # aws credentials v2 - murmurhash with special hash
+    @functions.signature({'types': ['string']})
+    def _func_dt_meid_elb_v2(self, arn): return me_id.meid_murmurhash_awsseed("ELASTIC_LOAD_BALANCER", arn)
+    @functions.signature({'types': ['string']})
+    def _func_dt_meid_alb_v2(self, arn): return me_id.meid_murmurhash_awsseed("AWS_APPLICATION_LOAD_BALANCER", arn)
+    @functions.signature({'types': ['string']})
+    def _func_dt_meid_nlb_v2(self, arn): return me_id.meid_murmurhash_awsseed("AWS_NETWORK_LOAD_BALANCER", arn)
+    @functions.signature({'types': ['string']})
+    def _func_dt_meid_auto_scaling_group_v2(self, arn): return me_id.meid_murmurhash_awsseed("AUTO_SCALING_GROUP", arn)
+    @functions.signature({'types': ['string']})
+    def _func_dt_meid_dynamo_db_v2(self, arn): return me_id.meid_murmurhash_awsseed("DYNAMO_DB_TABLE", arn)
+    @functions.signature({'types': ['string']})
+    def _func_dt_meid_rds_v2(self, arn): return me_id.meid_murmurhash_awsseed("RELATIONAL_DATABASE_SERVICE", arn)
+    @functions.signature({'types': ['string']})
+    def _func_dt_meid_s3_bucket_v2(self, arn): return me_id.meid_murmurhash_awsseed("S3BUCKET", arn)
+
+    # aws credentials v2 - murmurhash with default hash
+    @functions.signature({'types': ['string']}, {'types': ['string']})
+    def _func_dt_meid_supporting_service_v2(self, supporting_service_short_name, arn): return me_id.meid_murmurhash("CUSTOM_DEVICE", supporting_service_short_name.lower() + arn)
+
+
 JMESPATH_OPTIONS = jmespath.Options(custom_functions=MappingCustomFunctions())
