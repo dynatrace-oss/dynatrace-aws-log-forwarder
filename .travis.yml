@@ -8,6 +8,7 @@ notifications:
     on_success: never
 stages:
 - tests
+- build
 - deployment
 before_install:
   # set up awscli packages
@@ -24,17 +25,24 @@ jobs:
         - docker build -f pipeline/Dockerfile -t lambda_image .
         - docker run --rm lambda_image bash -c 'python3 -m pylint --rcfile=pipeline/pylint.cfg $(find src/ -name "*.py")'
         - docker run --rm lambda_image bash -c 'cd src && python3 -m pytest -v ../tests/unit'
+    - stage: build
+      name: Build AWS Lambda package
+      #if: tag =~ /^release.*$/
+      language: shell
+      services: docker
+      script:
+        - docker run --rm -v `pwd`:/var/task amazon/aws-sam-cli-build-image-python3.8 bash -c './build-release-package.sh'
+        - cp -p dynatrace-aws-log-forwarder.zip ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER
     - stage: deployment
       name: Github Release Deployment
       if: tag =~ /^release.*$/
       language: shell
       services: docker
-      script:
-        - docker run --rm -v `pwd`:/var/task amazon/aws-sam-cli-build-image-python3.8 bash -c './build-release-package.sh'
+      script: skip
       deploy:
         provider: releases
         api_key: $GITHUB_RELEASE_API_KEY
-        file: ./dynatrace-aws-log-forwarder.zip
+        file: ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER/dynatrace-aws-log-forwarder.zip
         skip_cleanup: true
         on:
           tags: true
