@@ -30,6 +30,22 @@ Parameters:
     Default: 'false'
     Description: "If false, expect target ActiveGate to have a self-signed SSL certificate and do not verify its validity"
     Type: String
+  UseExistingActiveGate:
+    Type: String
+    AllowedValues:
+      - 'true'
+      - 'false'
+  TenantId: # only needed when deploying new AG
+    Type: String
+    Default: ''
+  LatestAmazonLinuxAmiId:
+    # this will query for latest AMI ID automatically
+    # https://aws.amazon.com/blogs/compute/query-for-the-latest-amazon-linux-ami-ids-using-aws-systems-manager-parameter-store/
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
+
+Conditions:
+  DeployVPCwithAG: !Equals [ !Ref UseExistingActiveGate, 'false' ]
 
 Resources:
   Lambda:
@@ -47,9 +63,20 @@ Resources:
         Variables:
           DEBUG: 'false'
           DYNATRACE_API_KEY: !Ref DynatraceApiKey
-          DYNATRACE_ENV_URL: !Ref DynatraceEnvironmentUrl
+          DYNATRACE_ENV_URL: !If
+            - DeployVPCwithAG
+            - !Sub
+              - "https://${EC2ActiveGateIP}:9999/e/${TenantId}"
+              - EC2ActiveGateIP: !GetAtt EC2ActiveGate.PrivateIp
+                TenantId: !Ref TenantId
+            - !Ref DynatraceEnvironmentUrl
           VERIFY_SSL: !Ref VerifySSLTargetActiveGate
       Role: !GetAtt LambdaRole.Arn
+      VpcConfig: !If
+        - DeployVPCwithAG
+        - SecurityGroupIds: [ !Ref VPCSecurityGroup ]
+          SubnetIds: [ !Ref VPCPublicSubnet1  ]
+        - !Ref "AWS::NoValue"
 
   LambdaRole:
     Type: AWS::IAM::Role
@@ -71,6 +98,16 @@ Resources:
             Statement:
               - Effect: Allow
                 Action: 'cloudwatch:PutMetricData'
+                Resource: '*'
+        - PolicyName: 'SecurityGroupRequiredPermissions'
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                 - 'ec2:DescribeNetworkInterfaces'
+                 - 'ec2:CreateNetworkInterface'
+                 - 'ec2:DeleteNetworkInterface'
                 Resource: '*'
 
   FirehoseLogStreams:
@@ -517,6 +554,127 @@ Resources:
           }
         - __Region__: !Ref 'AWS::Region'
           __LambdaName__: !Ref Lambda
+
+  EC2ActiveGate:
+    Condition: DeployVPCwithAG
+    Type: AWS::EC2::Instance
+    DependsOn: VPCPublicRouteInternet
+    Properties:
+      ImageId: !Ref LatestAmazonLinuxAmiId
+      InstanceType: "t3.small"
+      BlockDeviceMappings:
+        - DeviceName: "/dev/sdm"
+          Ebs:
+            VolumeType: "io1"
+            Iops: "200"
+            DeleteOnTermination: "true"
+            VolumeSize: "8"
+      SecurityGroupIds: [ !Ref VPCSecurityGroup ]
+      UserData:
+        Fn::Base64:
+          !Sub
+          - |
+            #!/bin/bash -xe
+            wget -O Dynatrace-ActiveGate-Linux-x86.sh "${DynatraceEnvironmentUrl}/api/v1/deployment/installer/gateway/unix/latest?arch=x86&flavor=default" --header="Authorization: Api-Token ${DynatracePaasToken}"
+            wget https://ca.dynatrace.com/dt-root.cert.pem ; ( echo 'Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg="sha-256"; boundary="--SIGNED-INSTALLER"'; echo ; echo ; echo '----SIGNED-INSTALLER' ; cat Dynatrace-ActiveGate-Linux-x86.sh ) | openssl cms -verify -CAfile dt-root.cert.pem > /dev/null
+            /bin/sh Dynatrace-ActiveGate-Linux-x86.sh
+            touch /home/ec2-user/userdata-ag-installation-success
+
+            echo "[aws_monitoring]" >> /var/lib/dynatrace/gateway/config/custom.properties
+            echo "aws_monitoring_enabled = false" >> /var/lib/dynatrace/gateway/config/custom.properties
+            echo "[azure_monitoring]" >> /var/lib/dynatrace/gateway/config/custom.properties
+            echo "azure_monitoring_enabled = false" >> /var/lib/dynatrace/gateway/config/custom.properties
+            echo "[cloudfoundry_monitoring]" >> /var/lib/dynatrace/gateway/config/custom.properties
+            echo "cloudfoundry_monitoring_enabled = false" >> /var/lib/dynatrace/gateway/config/custom.properties
+            echo "[kubernetes_monitoring]" >> /var/lib/dynatrace/gateway/config/custom.properties
+            echo "kubernetes_monitoring_enabled = false" >> /var/lib/dynatrace/gateway/config/custom.properties
+            echo "[vmware_monitoring]" >> /var/lib/dynatrace/gateway/config/custom.properties
+            echo "vmware_monitoring_enabled = false" >> /var/lib/dynatrace/gateway/config/custom.properties
+            echo "[rpm]" >> /var/lib/dynatrace/gateway/config/custom.properties
+            echo "rpm_enabled = false" >> /var/lib/dynatrace/gateway/config/custom.properties
+            echo "[beacon_forwarder]" >> /var/lib/dynatrace/gateway/config/custom.properties
+            echo "beacon_forwarder_enabled = false" >> /var/lib/dynatrace/gateway/config/custom.properties
+            echo "[extension_controller]" >> /var/lib/dynatrace/gateway/config/custom.properties
+            echo "extension_controller_enabled = false" >> /var/lib/dynatrace/gateway/config/custom.properties
+            echo "[dbAgent]" >> /var/lib/dynatrace/gateway/config/custom.properties
+            echo "dbAgent_enabled = false" >> /var/lib/dynatrace/gateway/config/custom.properties
+            echo "[metrics_ingest]" >> /var/lib/dynatrace/gateway/config/custom.properties
+            echo "metrics_ingest_enabled = false" >> /var/lib/dynatrace/gateway/config/custom.properties
+            echo "[collector]" >> /var/lib/dynatrace/gateway/config/custom.properties
+            echo "MSGrouter = false" >> /var/lib/dynatrace/gateway/config/custom.properties
+
+            systemctl restart dynatracegateway
+          - DynatraceEnvironmentUrl: !Ref DynatraceEnvironmentUrl
+          - DynatracePaasToken: "ddd"
+      SubnetId: !Ref VPCPublicSubnet1
+
+  VPC:
+    Condition: DeployVPCwithAG
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: "172.31.0.0/16"
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+
+  VPCPublicSubnet1:
+    Condition: DeployVPCwithAG
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [ 0, !GetAZs ]
+      CidrBlock: 172.31.1.0/27
+      MapPublicIpOnLaunch: true
+
+  VPCInternetGateway:
+    Condition: DeployVPCwithAG
+    Type: AWS::EC2::InternetGateway
+    DependsOn: VPC
+
+  VPCInternetGatewayAttach:
+    Condition: DeployVPCwithAG
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref VPCInternetGateway
+
+  VPCPublicRouteTable:
+    Condition: DeployVPCwithAG
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+
+  VPCPublicRouteInternet:
+    Condition: DeployVPCwithAG
+    Type: AWS::EC2::Route
+    DependsOn: VPCInternetGatewayAttach
+    Properties:
+      RouteTableId: !Ref VPCPublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref VPCInternetGateway
+
+  VPCPublicSubnet1RouteTableAssoc:
+    Condition: DeployVPCwithAG
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref VPCPublicSubnet1
+      RouteTableId: !Ref VPCPublicRouteTable
+
+  VPCSecurityGroup:
+    Condition: DeployVPCwithAG
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow ActiveGate ingress
+      VpcId: !Ref VPC
+
+  VPCSecurityGroupActiveGateInbound:
+    Condition: DeployVPCwithAG
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      GroupId: !GetAtt VPCSecurityGroup.GroupId
+      IpProtocol: tcp
+      FromPort: '9999'
+      ToPort: '9999'
+      SourceSecurityGroupId: !GetAtt VPCSecurityGroup.GroupId
 
 Outputs:
   LambdaArn:
