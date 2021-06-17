@@ -7,7 +7,7 @@ notifications:
   email:
     on_success: never
 stages:
-- tests
+- unit_tests
 - build
 - deployment
 before_install:
@@ -17,8 +17,8 @@ before_install:
   - aws s3 sync s3://aws-log-forwader-travis-build-stages-shared-storage/$TRAVIS_BUILD_NUMBER ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER
 jobs:
   include:
-    - stage: tests
-      name: Tests & Linting
+    - stage: unit_tests
+      name: Unit tests & linting
       language: shell
       services: docker
       script:
