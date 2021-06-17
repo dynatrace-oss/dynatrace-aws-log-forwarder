@@ -35,6 +35,10 @@ Parameters:
     AllowedValues:
       - 'true'
       - 'false'
+  DynatracePaasToken:
+    Description: Dynatrace PaaS token
+    Type: String
+    NoEcho: true
   TenantIdNewAGonly:
     Type: String
     Default: "not_provided"
@@ -610,7 +614,7 @@ Resources:
 
             touch /home/ec2-user/userdata-ag-installation-success
           - DynatraceEnvironmentUrl: !Ref DynatraceEnvironmentUrl
-          - DynatracePaasToken: "ddd"
+            DynatracePaasToken: !Ref DynatracePaasToken
       SubnetId: !Ref VPCPublicSubnet1
 
   VPC:

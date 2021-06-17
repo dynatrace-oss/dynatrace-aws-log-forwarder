@@ -53,7 +53,7 @@ case $MAIN_OPTION in
 
   function print_help_deploy {
     printf "
-usage: dynatrace-aws-logs.sh deploy --target-url TARGET_URL --target-api-token TARGET_API_TOKEN --use-existing-active-gate {true|false} [--require-valid-certificate {true|false}] [--stack-name STACK_NAME]
+usage: dynatrace-aws-logs.sh deploy --target-url TARGET_URL --target-api-token TARGET_API_TOKEN --use-existing-active-gate {true|false} [--paas-token PAAS_TOKEN] [--require-valid-certificate {true|false}] [--stack-name STACK_NAME]
 
 arguments:
   -h, --help            show this help message and exit
@@ -63,6 +63,8 @@ arguments:
                         Dynatrace API token. Integration requires API v1 Log import Token permission.
   --use-existing-active-gate {true|false}
                         If true, you are expected to provide your own ActiveGate. If false, new EC2 with ActiveGate (enclosed in VPC) will be included in dynatrace-aws-logs deployment.
+  --paas-token PAAS_TOKEN
+                        Optional. Only needed when --use-existing-active-gate=false. PaaS token generated in Integration/Platform as a Service. Used for ActiveGate installation.
   --require-valid-certificate {true|false}
                         Enables checking SSL certificate of the target Active Gate. By default (if this option is not provided) certificates aren't validated
   --stack-name STACK_NAME
@@ -73,7 +75,7 @@ arguments:
   function print_params_deploy {
     echo
     echo "Deployment script will use following parameters:"
-    echo "TARGET_URL=\"$TARGET_URL\", TARGET_API_TOKEN=*****, USE_EXISTING_ACTIVE_GATE=\"$USE_EXISTING_ACTIVE_GATE\", REQUIRE_VALID_CERTIFICATE=\"$REQUIRE_VALID_CERTIFICATE\", STACK_NAME=\"$STACK_NAME\""
+    echo "TARGET_URL=\"$TARGET_URL\", TARGET_API_TOKEN=*****, USE_EXISTING_ACTIVE_GATE=\"$USE_EXISTING_ACTIVE_GATE\", PAAS_TOKEN=*****, REQUIRE_VALID_CERTIFICATE=\"$REQUIRE_VALID_CERTIFICATE\", STACK_NAME=\"$STACK_NAME\""
   }
 
   function ensure_param_value_given {
@@ -101,6 +103,12 @@ arguments:
       "--use-existing-active-gate")
         ensure_param_value_given $1 $2
         USE_EXISTING_ACTIVE_GATE=$2
+        shift;shift;
+      ;;
+
+      "--paas-token")
+        ensure_param_value_given $1 $2
+        PAAS_TOKEN=$2
         shift;shift;
       ;;
 
@@ -141,6 +149,9 @@ arguments:
     then echo "Invalid value for parameter --require-valid-certificate. Provide 'true' or 'false'"; print_help_deploy; exit 1; fi
   if [[ "$USE_EXISTING_ACTIVE_GATE" != "true" ]] && [[ "$USE_EXISTING_ACTIVE_GATE" != "false" ]];
     then echo "Invalid value for parameter --use-existing-active-gate. Provide 'true' or 'false'"; print_help_deploy; exit 1; fi
+  if [[ "$USE_EXISTING_ACTIVE_GATE" == "false" ]]; then
+    if [ -z "$PAAS_TOKEN" ]; then echo "No --paas-token (required when --use-existing-active-gate=false)"; print_help_deploy; exit 1; fi
+  fi
 
   if [[ "$USE_EXISTING_ACTIVE_GATE" == "false" ]]; then
     # extract tenantID: https://<your_environment_ID>.live.dynatrace.com ==> <your_environment_ID>
@@ -157,7 +168,7 @@ arguments:
 
   aws cloudformation deploy --stack "$STACK_NAME" --template-file "$TEMPLATE_FILE" --capabilities CAPABILITY_IAM \
     --parameter-overrides DynatraceEnvironmentUrl="$TARGET_URL" DynatraceApiKey="$TARGET_API_TOKEN" VerifySSLTargetActiveGate="$REQUIRE_VALID_CERTIFICATE" \
-    UseExistingActiveGate="$USE_EXISTING_ACTIVE_GATE" TenantIdNewAGonly="$TENANT_ID" \
+    UseExistingActiveGate="$USE_EXISTING_ACTIVE_GATE" TenantIdNewAGonly="$TENANT_ID" DynatracePaasToken="$PAAS_TOKEN" \
     --no-fail-on-empty-changeset
 
   LAMBDA_ARN=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" \
