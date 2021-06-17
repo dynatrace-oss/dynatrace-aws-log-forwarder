@@ -14,6 +14,7 @@ before_install:
   # set up awscli packages
   - pip install --user awscli
   - mkdir -p ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER
+  - env
   - aws s3 sync s3://aws-log-forwader-travis-build-stages-shared-storage/$TRAVIS_BUILD_NUMBER ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER
 jobs:
   include:
