@@ -28,7 +28,7 @@
           "pattern": "log_content_parsed.userIdentity.arn"
         },
         {
-          "key": "audit.status",
+          "key": "audit.result",
           "description":  "If a field errorCode exists, then return Failure.{errorCode}, else return Succeeded",
           "pattern": "if( errorCode==null, &'Succeeded', &[`Failure`, errorCode] | [? @!=null ] | join('.', @) , @)"
         },
