@@ -129,7 +129,7 @@ class MetadataEngine:
             if self.default_rule:
                 _apply_rule(self.default_rule, record, parsed_record)
         except Exception as ex:
-            logging.exception(f"Encountered exception when running Rule Engine")
+            logging.exception(f"Encountered exception when running Rule Engine", ex)
 
 
 def _check_if_rule_applies(rule: ConfigRule, record: Dict, parsed_record: Dict):
@@ -152,9 +152,9 @@ def _apply_rule(rule, record, parsed_record):
             if value:
                 parsed_record[attribute.key] = value
         except Exception as ex:
-            logging.exception(f"Encountered exception when evaluating attribute {attribute} of rule for {rule.entity_type_name}")
+            logging.exception(f"Encountered exception when evaluating attribute {attribute} of rule for {rule.entity_type_name}, ex")
 
-    record.pop("log_content_parsed")
+    record.pop("log_content_parsed", {})
 
 grok_by_pattern = {}
 

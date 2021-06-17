@@ -71,7 +71,7 @@ class MappingCustomFunctions(functions.Functions):
     def _func_dt_meid_ebs_volume(self, volumeId): return me_id.meid_md5("EBS_VOLUME", volumeId)
     @functions.signature({'types': ['string']})
     def _func_dt_meid_ec2_instance(self, instanceId): return me_id.meid_md5("EC2_INSTANCE", instanceId)
-    @functions.signature({'types': ['string']})
+    @functions.signature({'types': ['string']},{'types': ['string']},{'types': ['string']})
     def _func_dt_meid_lambda_function(self, functionName, region, accountId): return me_id.meid_md5("AWS_LAMBDA_FUNCTION", functionName+region+"_"+accountId)
 
     # aws credentials v1 - md5
