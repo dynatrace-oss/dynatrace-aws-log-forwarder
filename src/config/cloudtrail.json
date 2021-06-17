@@ -29,27 +29,130 @@
         },
         {
           "key": "audit.status",
-          "description":  "If a field errorCode exists, then return Failure.{errorCode}, else return Succeeded. [? @!=null] filters out null values, as otherwise the join method would crash when there was no errorCode",
-
-          "pattern": "[ { condition_field: errorCode, result: [`Failure`, errorCode] | [? @!=null ] | join('.', @) }, { condition_field: `defaultValue`, result: 'Succeeded'} ] | [?condition_field != null && condition_field !=``] | [0] | result"
+          "description":  "If a field errorCode exists, then return Failure.{errorCode}, else return Succeeded",
+          "pattern": "if( errorCode==null, &'Succeeded', &[`Failure`, errorCode] | [? @!=null ] | join('.', @) , @)"
         },
 
 
         {
-          "key": "dt.source_entity_type",
-          "description": "If a field given in condition_field exists and matches the condition value, use the value from result.",
-
-          "pattern": "[ { condition: `rds.amazonaws.com`, condition_field: log_content_parsed.eventSource, result: 'RELATIONAL_DATABASE_SERVICE'} ] | [?condition_field == condition] | [0] | result"
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'CreateDBInstance', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.responseElements.dBInstanceIdentifier)), &EmptyValue, @ )"
+        },
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'DeleteDBCluster', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier)), &EmptyValue, @ )"
         },
 
-
-
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'DeleteDBInstance', &EmptyValue, &EmptyValue, @ )"
+        },
 
         {
-          "key": "dt.source_entity_type",
-          "description": "If a field given in condition_field exists and matches the condition value, use the value from result.",
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'DescribeAccountAttributes', &EmptyValue, &EmptyValue, @ )"
+        },
 
-          "pattern": "[ { condition: `some other source of cloudTrail log event`, condition_field: log_content_parsed.eventSource, result: 'some other entity, e.g. CUSTOM_DEVICE'} ] | [?condition_field == condition] | [0] | result"
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'DescribeCertificates', &EmptyValue, &EmptyValue, @ )"
+        },
+
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'DescribeCustomAvailabilityZones', &EmptyValue, &EmptyValue, @ )"
+        },
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBClusterParameterGroups', &EmptyValue, &EmptyValue, @ )"
+        },
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBClusters', &EmptyValue, &EmptyValue, @ )"
+        },
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBClusterSnapshots', &EmptyValue, &EmptyValue, @ )"
+        },
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBEngineVersions', &EmptyValue, &EmptyValue, @ )"
+        },
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBInstances', &(dt_meid_rds_v2('arn:aws:rds:us-east-1:908047316593:db:belu-metadata-database-1-instance-1')), &EmptyValue, @ )"
+        },
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBParameterGroups', &EmptyValue, &EmptyValue, @ )"
+        },
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBSecurityGroups', &EmptyValue, &EmptyValue, @ )"
+        },
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBSnapshots', &EmptyValue, &EmptyValue, @ )"
+        },
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBSubnetGroups', &EmptyValue, &EmptyValue, @ )"
+        },
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'DescribeEvents', &EmptyValue, &EmptyValue, @ )"
+        },
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'DescribeEventSubscriptions', &EmptyValue, &EmptyValue, @ )"
+        },
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'DescribeGlobalClusters', &EmptyValue, &EmptyValue, @ )"
+        },
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'DescribeInstallationMedia', &EmptyValue, &EmptyValue, @ )"
+        },
+
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'DescribeOptionGroups', &EmptyValue, &EmptyValue, @ )"
+        },
+
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'DescribeOrderableDBInstanceOptions', &EmptyValue, &EmptyValue, @ )"
+        },
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'DescribeRecommendationGroups', &EmptyValue, &EmptyValue, @ )"
+        },
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'ListTagsForResource', &(dt_meid_rds_v2( log_content_parsed.requestParameters.resourceName)), &EmptyValue, @ )"
+        },
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'RebootDBInstance', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier)), &EmptyValue, @ )"
+        },
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'DescribeEvents', &EmptyValue, &EmptyValue, @ )"
+        },
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'RebootDBInstance', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier)), &EmptyValue, @ )"
+        },
+        
+        
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'TODO', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier)), &EmptyValue, @ )"
+        },
+        {
+          "key": "dt.source_entity",
+          "pattern": "if( log_content_parsed.eventName == 'TODO', &(dt_meid_rds_v2( log_content_parsed.requestParameters.TODO_arn )), &EmptyValue, @ )"
         }
       ]
     }

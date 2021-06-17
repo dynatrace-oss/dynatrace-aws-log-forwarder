@@ -128,7 +128,7 @@ class MetadataEngine:
             # No matching rule has been found, applying the default rule
             if self.default_rule:
                 _apply_rule(self.default_rule, record, parsed_record)
-        except Exception:
+        except Exception as ex:
             logging.exception(f"Encountered exception when running Rule Engine")
 
 
@@ -140,7 +140,7 @@ def _apply_rule(rule, record, parsed_record):
     if rule.aws_loggroup_pattern and "log_group" in record:
         extracted_values = parse_aws_loggroup_with_grok_pattern(record["log_group"], rule.aws_loggroup_pattern)
         record.update(extracted_values)
-    if rule.log_content_parse_type in "json":
+    if rule.log_content_parse_type == "json":
         try:
             record["log_content_parsed"] = json.loads(parsed_record.get("content", {}))
         except Exception:
@@ -227,7 +227,7 @@ def _create_config_rule(entity_name: str, rule_json: Dict) -> Optional[ConfigRul
         aws_loggroup_pattern = rule_json["aws"]["logGroup"]
     except KeyError:
         aws_loggroup_pattern = None
-    log_content_parse_type = rule_json.get("aws", {}).get("logContentParseAs", None)
+    log_content_parse_type = rule_json.get("aws", {}).get("logContentParseAs", "")
 
     return ConfigRule(entity_type_name=entity_name, source_matchers=sources, attributes=attributes,
                       aws_loggroup_pattern=aws_loggroup_pattern, log_content_parse_type = log_content_parse_type)
