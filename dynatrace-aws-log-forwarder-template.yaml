@@ -35,9 +35,10 @@ Parameters:
     AllowedValues:
       - 'true'
       - 'false'
-  TenantId: # only needed when deploying new AG
+  TenantIdNewAGonly:
     Type: String
-    Default: ''
+    Default: "not_provided"
+    Description: "Needed to construct full target-url path in scenario with new AG deployment (with existing AG option, target-url is already provided by DynatraceEnvironmentUrl)"
   LatestAmazonLinuxAmiId:
     # this will query for latest AMI ID automatically
     # https://aws.amazon.com/blogs/compute/query-for-the-latest-amazon-linux-ami-ids-using-aws-systems-manager-parameter-store/
@@ -68,7 +69,7 @@ Resources:
             - !Sub
               - "https://${EC2ActiveGateIP}:9999/e/${TenantId}"
               - EC2ActiveGateIP: !GetAtt EC2ActiveGate.PrivateIp
-                TenantId: !Ref TenantId
+                TenantId: !Ref TenantIdNewAGonly
             - !Ref DynatraceEnvironmentUrl
           VERIFY_SSL: !Ref VerifySSLTargetActiveGate
       Role: !GetAtt LambdaRole.Arn
@@ -99,16 +100,19 @@ Resources:
               - Effect: Allow
                 Action: 'cloudwatch:PutMetricData'
                 Resource: '*'
-        - PolicyName: 'SecurityGroupRequiredPermissions'
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                 - 'ec2:DescribeNetworkInterfaces'
-                 - 'ec2:CreateNetworkInterface'
-                 - 'ec2:DeleteNetworkInterface'
-                Resource: '*'
+        - !If
+          - DeployVPCwithAG
+          - PolicyName: 'SecurityGroupRequiredPermissions'
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                   - 'ec2:DescribeNetworkInterfaces'
+                   - 'ec2:CreateNetworkInterface'
+                   - 'ec2:DeleteNetworkInterface'
+                  Resource: '*'
+          - !Ref AWS::NoValue
 
   FirehoseLogStreams:
     Type: AWS::KinesisFirehose::DeliveryStream
@@ -578,7 +582,6 @@ Resources:
             wget -O Dynatrace-ActiveGate-Linux-x86.sh "${DynatraceEnvironmentUrl}/api/v1/deployment/installer/gateway/unix/latest?arch=x86&flavor=default" --header="Authorization: Api-Token ${DynatracePaasToken}"
             wget https://ca.dynatrace.com/dt-root.cert.pem ; ( echo 'Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg="sha-256"; boundary="--SIGNED-INSTALLER"'; echo ; echo ; echo '----SIGNED-INSTALLER' ; cat Dynatrace-ActiveGate-Linux-x86.sh ) | openssl cms -verify -CAfile dt-root.cert.pem > /dev/null
             /bin/sh Dynatrace-ActiveGate-Linux-x86.sh
-            touch /home/ec2-user/userdata-ag-installation-success
 
             echo "[aws_monitoring]" >> /var/lib/dynatrace/gateway/config/custom.properties
             echo "aws_monitoring_enabled = false" >> /var/lib/dynatrace/gateway/config/custom.properties
@@ -604,6 +607,8 @@ Resources:
             echo "MSGrouter = false" >> /var/lib/dynatrace/gateway/config/custom.properties
 
             systemctl restart dynatracegateway
+
+            touch /home/ec2-user/userdata-ag-installation-success
           - DynatraceEnvironmentUrl: !Ref DynatraceEnvironmentUrl
           - DynatracePaasToken: "ddd"
       SubnetId: !Ref VPCPublicSubnet1
