@@ -53,14 +53,16 @@ case $MAIN_OPTION in
 
   function print_help_deploy {
     printf "
-usage: dynatrace-aws-logs.sh deploy --target-url TARGET_URL --target-api-token TARGET_API_TOKEN [--require-valid-certificate {true|false}] [--stack-name STACK_NAME]
+usage: dynatrace-aws-logs.sh deploy --target-url TARGET_URL --target-api-token TARGET_API_TOKEN --use-existing-active-gate {true|false} [--require-valid-certificate {true|false}] [--stack-name STACK_NAME]
 
 arguments:
   -h, --help            show this help message and exit
   --target-url TARGET_URL
-                        The URL to Your Dynatrace SaaS environment logs ingest target. Currently only ActiveGate endpoint is supported: https://<active_gate_address>:9999/e/<environment_id> (e.g. https://22.111.98.222:9999/e/abc12345)
+                        The URL to Your Dynatrace SaaS environment logs ingest target. If you choose new ActiveGate deployment (--use-existing-active-gate=false), provide Tenant URL (https://<your_environment_ID>.live.dynatrace.com). If you choose to use existing ActiveGate (--use-existing-active-gate=true), provide ActiveGate endpoint: https://<active_gate_address>:9999/e/<environment_id> (e.g. https://22.111.98.222:9999/e/abc12345).
   --target-api-token TARGET_API_TOKEN
                         Dynatrace API token. Integration requires API v1 Log import Token permission.
+  --use-existing-active-gate {true|false}
+                        If true, you are expected to provide your own ActiveGate. If false, new EC2 with ActiveGate (enclosed in VPC) will be included in dynatrace-aws-logs deployment.
   --require-valid-certificate {true|false}
                         Enables checking SSL certificate of the target Active Gate. By default (if this option is not provided) certificates aren't validated
   --stack-name STACK_NAME
@@ -71,7 +73,7 @@ arguments:
   function print_params_deploy {
     echo
     echo "Deployment script will use following parameters:"
-    echo "TARGET_URL=\"$TARGET_URL\", TARGET_API_TOKEN=*****, REQUIRE_VALID_CERTIFICATE=\"$REQUIRE_VALID_CERTIFICATE\", STACK_NAME=\"$STACK_NAME\""
+    echo "TARGET_URL=\"$TARGET_URL\", TARGET_API_TOKEN=*****, USE_EXISTING_ACTIVE_GATE=\"$USE_EXISTING_ACTIVE_GATE\", REQUIRE_VALID_CERTIFICATE=\"$REQUIRE_VALID_CERTIFICATE\", STACK_NAME=\"$STACK_NAME\""
   }
 
   function ensure_param_value_given {
@@ -94,6 +96,12 @@ arguments:
         ensure_param_value_given $1 $2
         TARGET_API_TOKEN=$2
         shift; shift
+      ;;
+
+      "--use-existing-active-gate")
+        ensure_param_value_given $1 $2
+        USE_EXISTING_ACTIVE_GATE=$2
+        shift;shift;
       ;;
 
       "--require-valid-certificate")
@@ -127,9 +135,19 @@ arguments:
   if [ -z "$TARGET_API_TOKEN" ]; then echo "No --target-api-token"; print_help_deploy; exit 1; fi
   if [ -z "$REQUIRE_VALID_CERTIFICATE" ]; then REQUIRE_VALID_CERTIFICATE="false"; fi
   if [ -z "$STACK_NAME" ]; then STACK_NAME=$DEFAULT_STACK_NAME; fi
+  if [ -z "$USE_EXISTING_ACTIVE_GATE" ]; then echo "No --use-existing-active-gate"; print_help_deploy; exit 1; fi
 
   if [[ "$REQUIRE_VALID_CERTIFICATE" != "true" ]] && [[ "$REQUIRE_VALID_CERTIFICATE" != "false" ]];
     then echo "Invalid value for parameter --require-valid-certificate. Provide 'true' or 'false'"; print_help_deploy; exit 1; fi
+  if [[ "$USE_EXISTING_ACTIVE_GATE" != "true" ]] && [[ "$USE_EXISTING_ACTIVE_GATE" != "false" ]];
+    then echo "Invalid value for parameter --use-existing-active-gate. Provide 'true' or 'false'"; print_help_deploy; exit 1; fi
+
+  if [[ "$USE_EXISTING_ACTIVE_GATE" == "false" ]]; then
+    # extract tenantID: https://<your_environment_ID>.live.dynatrace.com ==> <your_environment_ID>
+    TENANT_ID=$(echo $TARGET_URL | sed 's|https://\([^.]*\).*|\1|')
+  else
+    TENANT_ID="" # NOT USED IN THIS CASE
+  fi
 
   print_params_deploy
 
@@ -139,6 +157,7 @@ arguments:
 
   aws cloudformation deploy --stack "$STACK_NAME" --template-file "$TEMPLATE_FILE" --capabilities CAPABILITY_IAM \
     --parameter-overrides DynatraceEnvironmentUrl="$TARGET_URL" DynatraceApiKey="$TARGET_API_TOKEN" VerifySSLTargetActiveGate="$REQUIRE_VALID_CERTIFICATE" \
+    UseExistingActiveGate="$USE_EXISTING_ACTIVE_GATE" TenantIdNewAGonly="$TENANT_ID" \
     --no-fail-on-empty-changeset
 
   LAMBDA_ARN=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" \
