@@ -22,4 +22,5 @@ If it is not visible, follow these steps to check AG installation logs:
 
 1. Enable SSH traffic in EC2 Security Group.
 2. Connect to EC2 through EC2 Instance Connect in EC2 screen in AWS Console. Use user `ec2-user`. You don't need any SSH keys in this scenario.
-3. Check `/var/log/cloud-init-output.log` using sudo. You will find installation script logs there.
+3. Check if file `/home/ec2-user/userdata-ag-installation-success` exists. If it does, installation was successful.
+4. Check `/var/log/cloud-init-output.log` using sudo. You will find installation script logs there.
