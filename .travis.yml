@@ -9,16 +9,18 @@ notifications:
 stages:
 - unit_tests
 - build
+- e2e_tests
 - deployment
 before_install:
   # set up awscli packages
   - pip install --user awscli
+  # set up shared storage for build artifacts
   - mkdir -p ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER
   - aws s3 sync s3://aws-log-forwader-travis-build-stages-shared-storage/$TRAVIS_BUILD_NUMBER ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER
 jobs:
   include:
     - stage: unit_tests
-      name: Unit tests & linting
+      name: Execute unit tests & linting
       language: shell
       services: docker
       script:
@@ -33,6 +35,18 @@ jobs:
       script:
         - docker run --rm -v `pwd`:/var/task amazon/aws-sam-cli-build-image-python3.8 bash -c './build-release-package.sh'
         - cp -p dynatrace-aws-log-forwarder.zip ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER
+    - stage: e2e_tests
+      name: Execute e2e tests
+      language: shell
+      services: docker
+      script:
+        # deploy log forwarder resources reqiured for e2e to AWS
+        - cp -r ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER/dynatrace-aws-log-forwarder.zip .
+        - ./dynatrace-aws-logs.sh deploy \
+          --target-url $DYNATRACE_ENV_URL \
+          --target-api-token $DYNATRACE_API_KEY \
+          --require-valid-certificate $VERIFY_SSL
+          --stack-name aws-log-forwarder-e2e-build-$TRAVIS_BUILD_NUMBER
     - stage: deployment
       name: Github Release Deployment
       if: tag =~ /^release.*$/
