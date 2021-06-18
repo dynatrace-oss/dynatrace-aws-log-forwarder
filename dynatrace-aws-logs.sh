@@ -149,9 +149,8 @@ arguments:
     then echo "Invalid value for parameter --require-valid-certificate. Provide 'true' or 'false'"; print_help_deploy; exit 1; fi
   if [[ "$USE_EXISTING_ACTIVE_GATE" != "true" ]] && [[ "$USE_EXISTING_ACTIVE_GATE" != "false" ]];
     then echo "Invalid value for parameter --use-existing-active-gate. Provide 'true' or 'false'"; print_help_deploy; exit 1; fi
-  if [[ "$USE_EXISTING_ACTIVE_GATE" == "false" ]]; then
-    if [ -z "$TARGET_PAAS_TOKEN" ]; then echo "No --target-paas-token (required when --use-existing-active-gate=false)"; print_help_deploy; exit 1; fi
-  fi
+  if [[ "$USE_EXISTING_ACTIVE_GATE" == "false" ]] && [ -z "$TARGET_PAAS_TOKEN" ];
+    then echo "No --target-paas-token"; print_help_deploy; exit 1; fi
 
   if [[ "$USE_EXISTING_ACTIVE_GATE" == "false" ]]; then
     # extract tenantID: https://<your_environment_ID>.live.dynatrace.com ==> <your_environment_ID>
