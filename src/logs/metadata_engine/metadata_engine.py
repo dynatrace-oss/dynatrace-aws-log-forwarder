@@ -223,10 +223,7 @@ def _create_config_rule(entity_name: str, rule_json: Dict) -> Optional[ConfigRul
         return None
     attributes = _create_attributes(rule_json.get("attributes", []))
 
-    try:
-        aws_loggroup_pattern = rule_json["aws"]["logGroup"]
-    except KeyError:
-        aws_loggroup_pattern = None
+    aws_loggroup_pattern = rule_json.get("aws", {}).get("logGroup", None)
     log_content_parse_type = rule_json.get("aws", {}).get("logContentParseAs", None)
 
     return ConfigRule(entity_type_name=entity_name, source_matchers=sources, attributes=attributes,

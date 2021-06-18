@@ -4,7 +4,6 @@
   "rules": [
     {
       "aws": {
-        "logGroup": "aws-cloudtrail-logs-%{DATA:account_id}-%{GREEDYDATA:suffix}",
         "logContentParseAs": "json"
       },
       "sources": [
