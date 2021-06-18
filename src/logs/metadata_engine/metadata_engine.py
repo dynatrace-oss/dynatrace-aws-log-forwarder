@@ -116,7 +116,7 @@ class MetadataEngine:
                         self.default_rule = _create_config_rules(config_json)[0]
                     else:
                         self.rules.extend(_create_config_rules(config_json))
-            except Exception:
+            except Exception as ex:
                 logging.exception(f"Failed to load configuration file: '{config_file_path}'")
 
     def apply(self, record: Dict, parsed_record: Dict):
@@ -129,7 +129,7 @@ class MetadataEngine:
             if self.default_rule:
                 _apply_rule(self.default_rule, record, parsed_record)
         except Exception as ex:
-            logging.exception(f"Encountered exception when running Rule Engine", ex)
+            logging.log_error_with_stacktrace(ex, f"Encountered exception when running Rule Engine")
 
 
 def _check_if_rule_applies(rule: ConfigRule, record: Dict, parsed_record: Dict):
@@ -143,8 +143,8 @@ def _apply_rule(rule, record, parsed_record):
     if rule.log_content_parse_type == "json":
         try:
             record["log_content_parsed"] = json.loads(parsed_record.get("content", {}))
-        except Exception:
-            logging.exception(f"Encountered exception when parsing log content as json, requested by rule for {rule.entity_type_name}")
+        except Exception as ex:
+            logging.log_error_with_stacktrace(ex, f"Encountered exception when parsing log content as json, requested by rule for {rule.entity_type_name}")
 
     for attribute in rule.attributes:
         try:
@@ -152,7 +152,7 @@ def _apply_rule(rule, record, parsed_record):
             if value:
                 parsed_record[attribute.key] = value
         except Exception as ex:
-            logging.exception(f"Encountered exception when evaluating attribute {attribute} of rule for {rule.entity_type_name}, ex")
+            logging.exception(f"Encountered exception when evaluating attribute {attribute} of rule for {rule.entity_type_name}")
 
     record.pop("log_content_parsed", {})
 
@@ -227,7 +227,7 @@ def _create_config_rule(entity_name: str, rule_json: Dict) -> Optional[ConfigRul
         aws_loggroup_pattern = rule_json["aws"]["logGroup"]
     except KeyError:
         aws_loggroup_pattern = None
-    log_content_parse_type = rule_json.get("aws", {}).get("logContentParseAs", "")
+    log_content_parse_type = rule_json.get("aws", {}).get("logContentParseAs", None)
 
     return ConfigRule(entity_type_name=entity_name, source_matchers=sources, attributes=attributes,
                       aws_loggroup_pattern=aws_loggroup_pattern, log_content_parse_type = log_content_parse_type)
