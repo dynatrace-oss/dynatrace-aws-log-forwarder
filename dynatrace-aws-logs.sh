@@ -58,11 +58,14 @@ usage: dynatrace-aws-logs.sh deploy --target-url TARGET_URL --target-api-token T
 arguments:
   -h, --help            show this help message and exit
   --target-url TARGET_URL
-                        The URL to Your Dynatrace SaaS environment logs ingest target. If you choose new ActiveGate deployment (--use-existing-active-gate=false), provide Tenant URL (https://<your_environment_ID>.live.dynatrace.com). If you choose to use existing ActiveGate (--use-existing-active-gate=true), provide ActiveGate endpoint: https://<active_gate_address>:9999/e/<environment_id> (e.g. https://22.111.98.222:9999/e/abc12345).
+                        The URL to Your Dynatrace SaaS logs ingest target.
+                        If you choose new ActiveGate deployment (--use-existing-active-gate=false), provide Tenant URL (https://<your_environment_ID>.live.dynatrace.com).
+                        If you choose to use existing ActiveGate (--use-existing-active-gate=true), provide ActiveGate endpoint: https://<active_gate_address>:9999/e/<environment_id> (e.g. https://22.111.98.222:9999/e/abc12345).
   --target-api-token TARGET_API_TOKEN
                         Dynatrace API token. Integration requires API v1 Log import Token permission.
   --use-existing-active-gate {true|false}
-                        If true, you are expected to provide your own ActiveGate. If false, new EC2 with ActiveGate (enclosed in VPC) will be included in dynatrace-aws-logs deployment.
+                        If you choose new ActiveGate deployment, put 'false'. In such case, new EC2 with ActiveGate will be added to log forwarder deployment (enclosed in VPC with log forwarder).
+                        If you choose to use existing ActiveGate, put 'true'.
   --target-paas-token TARGET_PAAS_TOKEN
                         Optional. Only needed when --use-existing-active-gate=false. PaaS token generated in Integration/Platform as a Service. Used for ActiveGate installation.
   --require-valid-certificate {true|false}
