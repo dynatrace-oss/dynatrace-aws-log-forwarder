@@ -39,7 +39,7 @@ Parameters:
     Description: Dynatrace PaaS token
     Type: String
     NoEcho: true
-  TenantIdNewAGonly:
+  TenantId:
     Type: String
     Default: "not_provided"
     Description: "Needed to construct full target-url path in scenario with new AG deployment (with existing AG option, target-url is already provided by DynatraceEnvironmentUrl)"
@@ -73,7 +73,7 @@ Resources:
             - !Sub
               - "https://${EC2ActiveGateIP}:9999/e/${TenantId}"
               - EC2ActiveGateIP: !GetAtt EC2ActiveGate.PrivateIp
-                TenantId: !Ref TenantIdNewAGonly
+                TenantId: !Ref TenantId
             - !Ref DynatraceEnvironmentUrl
           VERIFY_SSL: !Ref VerifySSLTargetActiveGate
       Role: !GetAtt LambdaRole.Arn
