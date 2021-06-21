@@ -587,28 +587,28 @@ Resources:
             wget https://ca.dynatrace.com/dt-root.cert.pem ; ( echo 'Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg="sha-256"; boundary="--SIGNED-INSTALLER"'; echo ; echo ; echo '----SIGNED-INSTALLER' ; cat Dynatrace-ActiveGate-Linux-x86.sh ) | openssl cms -verify -CAfile dt-root.cert.pem > /dev/null
             /bin/sh Dynatrace-ActiveGate-Linux-x86.sh
 
-            echo "[aws_monitoring]" >> /var/lib/dynatrace/gateway/config/custom.properties
-            echo "aws_monitoring_enabled = false" >> /var/lib/dynatrace/gateway/config/custom.properties
-            echo "[azure_monitoring]" >> /var/lib/dynatrace/gateway/config/custom.properties
-            echo "azure_monitoring_enabled = false" >> /var/lib/dynatrace/gateway/config/custom.properties
-            echo "[cloudfoundry_monitoring]" >> /var/lib/dynatrace/gateway/config/custom.properties
-            echo "cloudfoundry_monitoring_enabled = false" >> /var/lib/dynatrace/gateway/config/custom.properties
-            echo "[kubernetes_monitoring]" >> /var/lib/dynatrace/gateway/config/custom.properties
-            echo "kubernetes_monitoring_enabled = false" >> /var/lib/dynatrace/gateway/config/custom.properties
-            echo "[vmware_monitoring]" >> /var/lib/dynatrace/gateway/config/custom.properties
-            echo "vmware_monitoring_enabled = false" >> /var/lib/dynatrace/gateway/config/custom.properties
-            echo "[rpm]" >> /var/lib/dynatrace/gateway/config/custom.properties
-            echo "rpm_enabled = false" >> /var/lib/dynatrace/gateway/config/custom.properties
-            echo "[beacon_forwarder]" >> /var/lib/dynatrace/gateway/config/custom.properties
-            echo "beacon_forwarder_enabled = false" >> /var/lib/dynatrace/gateway/config/custom.properties
-            echo "[extension_controller]" >> /var/lib/dynatrace/gateway/config/custom.properties
-            echo "extension_controller_enabled = false" >> /var/lib/dynatrace/gateway/config/custom.properties
-            echo "[dbAgent]" >> /var/lib/dynatrace/gateway/config/custom.properties
-            echo "dbAgent_enabled = false" >> /var/lib/dynatrace/gateway/config/custom.properties
-            echo "[metrics_ingest]" >> /var/lib/dynatrace/gateway/config/custom.properties
-            echo "metrics_ingest_enabled = false" >> /var/lib/dynatrace/gateway/config/custom.properties
-            echo "[collector]" >> /var/lib/dynatrace/gateway/config/custom.properties
-            echo "MSGrouter = false" >> /var/lib/dynatrace/gateway/config/custom.properties
+            echo "[aws_monitoring]
+            aws_monitoring_enabled = false
+            [azure_monitoring]
+            azure_monitoring_enabled = false
+            [cloudfoundry_monitoring]
+            cloudfoundry_monitoring_enabled = false
+            [kubernetes_monitoring]
+            kubernetes_monitoring_enabled = false
+            [vmware_monitoring]
+            vmware_monitoring_enabled = false
+            [rpm]
+            rpm_enabled = false
+            [beacon_forwarder]
+            beacon_forwarder_enabled = false
+            [extension_controller]
+            extension_controller_enabled = false
+            [dbAgent]
+            dbAgent_enabled = false
+            [metrics_ingest]
+            metrics_ingest_enabled = false
+            [collector]
+            MSGrouter = false" >> /var/lib/dynatrace/gateway/config/custom.properties
 
             systemctl restart dynatracegateway
 
