@@ -50,7 +50,7 @@ Parameters:
     Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
 
 Conditions:
-  DeployVPCwithAG: !Equals [ !Ref UseExistingActiveGate, 'false' ]
+  DeployAGwithVPC: !Equals [ !Ref UseExistingActiveGate, 'false' ]
 
 Resources:
   Lambda:
@@ -69,7 +69,7 @@ Resources:
           DEBUG: 'false'
           DYNATRACE_API_KEY: !Ref DynatraceApiKey
           DYNATRACE_ENV_URL: !If
-            - DeployVPCwithAG
+            - DeployAGwithVPC
             - !Sub
               - "https://${EC2ActiveGateIP}:9999/e/${TenantId}"
               - EC2ActiveGateIP: !GetAtt EC2ActiveGate.PrivateIp
@@ -78,7 +78,7 @@ Resources:
           VERIFY_SSL: !Ref VerifySSLTargetActiveGate
       Role: !GetAtt LambdaRole.Arn
       VpcConfig: !If
-        - DeployVPCwithAG
+        - DeployAGwithVPC
         - SecurityGroupIds: [ !Ref VPCSecurityGroup ]
           SubnetIds: [ !Ref VPCPublicSubnet1  ]
         - !Ref "AWS::NoValue"
@@ -105,7 +105,7 @@ Resources:
                 Action: 'cloudwatch:PutMetricData'
                 Resource: '*'
         - !If
-          - DeployVPCwithAG
+          - DeployAGwithVPC
           - PolicyName: 'SecurityGroupRequiredPermissions'
             PolicyDocument:
               Version: '2012-10-17'
@@ -564,7 +564,7 @@ Resources:
           __LambdaName__: !Ref Lambda
 
   EC2ActiveGate:
-    Condition: DeployVPCwithAG
+    Condition: DeployAGwithVPC
     Type: AWS::EC2::Instance
     DependsOn: VPCPublicRouteInternet
     Properties:
@@ -618,7 +618,7 @@ Resources:
       SubnetId: !Ref VPCPublicSubnet1
 
   VPC:
-    Condition: DeployVPCwithAG
+    Condition: DeployAGwithVPC
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: "172.31.0.0/16"
@@ -626,7 +626,7 @@ Resources:
       EnableDnsHostnames: true
 
   VPCPublicSubnet1:
-    Condition: DeployVPCwithAG
+    Condition: DeployAGwithVPC
     Type: 'AWS::EC2::Subnet'
     Properties:
       VpcId: !Ref VPC
@@ -635,25 +635,25 @@ Resources:
       MapPublicIpOnLaunch: true
 
   VPCInternetGateway:
-    Condition: DeployVPCwithAG
+    Condition: DeployAGwithVPC
     Type: AWS::EC2::InternetGateway
     DependsOn: VPC
 
   VPCInternetGatewayAttach:
-    Condition: DeployVPCwithAG
+    Condition: DeployAGwithVPC
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref VPCInternetGateway
 
   VPCPublicRouteTable:
-    Condition: DeployVPCwithAG
+    Condition: DeployAGwithVPC
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref VPC
 
   VPCPublicRouteInternet:
-    Condition: DeployVPCwithAG
+    Condition: DeployAGwithVPC
     Type: AWS::EC2::Route
     DependsOn: VPCInternetGatewayAttach
     Properties:
@@ -662,21 +662,21 @@ Resources:
       GatewayId: !Ref VPCInternetGateway
 
   VPCPublicSubnet1RouteTableAssoc:
-    Condition: DeployVPCwithAG
+    Condition: DeployAGwithVPC
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref VPCPublicSubnet1
       RouteTableId: !Ref VPCPublicRouteTable
 
   VPCSecurityGroup:
-    Condition: DeployVPCwithAG
+    Condition: DeployAGwithVPC
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Allow ActiveGate ingress
       VpcId: !Ref VPC
 
   VPCSecurityGroupActiveGateInbound:
-    Condition: DeployVPCwithAG
+    Condition: DeployAGwithVPC
     Type: 'AWS::EC2::SecurityGroupIngress'
     Properties:
       GroupId: !GetAtt VPCSecurityGroup.GroupId
