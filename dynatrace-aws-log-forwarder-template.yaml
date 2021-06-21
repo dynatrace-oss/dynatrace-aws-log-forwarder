@@ -42,7 +42,7 @@ Parameters:
   TenantId:
     Type: String
     Default: "not_provided"
-    Description: "Needed to construct full target-url path in scenario with new AG deployment (with existing AG option, target-url is already provided by DynatraceEnvironmentUrl)"
+    Description: "Needed to construct Lambda destination URL (path for AG) in scenario with new AG deployment"
   LatestAmazonLinuxAmiId:
     # this will query for latest AMI ID automatically
     # https://aws.amazon.com/blogs/compute/query-for-the-latest-amazon-linux-ami-ids-using-aws-systems-manager-parameter-store/
