@@ -213,7 +213,7 @@ arguments:
 
   # CHECK IF STACK HAS BEEN DELETED
   # aws cloudformation list-stacks --stack-status-filter DELETE_COMPLETE
-  # ;;
+  ;;
 
 "subscribe")
 
