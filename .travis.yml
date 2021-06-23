@@ -47,7 +47,7 @@ jobs:
         - ./dynatrace-aws-logs.sh deploy \
           --target-url $DYNATRACE_ENV_URL \
           --target-api-token $DYNATRACE_API_KEY \
-          --require-valid-certificate $VERIFY_SSL
+          --require-valid-certificate $VERIFY_SSL \
           --stack-name aws-log-forwarder-e2e-build-$TRAVIS_BUILD_NUMBER
         # delete log forwarder AWS resources
         - ./dynatrace-aws-logs.sh delete \
