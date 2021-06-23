@@ -37,6 +37,8 @@ jobs:
         - cp -p dynatrace-aws-log-forwarder.zip ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER
     - stage: e2e_tests
       name: Execute e2e tests
+      # run e2e tests only for development branches until test execution part is done
+      if: branch IN (APM-280447,APM-306464)
       language: shell
       services: docker
       script:
