@@ -173,10 +173,7 @@ BATCH_METADATA = BatchMetadata("444000444", "us-east-1", "aws")
                                                    "eventCategory": "Management",
                                                    "recipientAccountId": "444000444"
                                                })
-                                               },
-                                              {"id": "36184182057683330175263108764349521965726085205046394889",
-                                               "timestamp": 1622554840009,
-                                               "message": "{\"eventVersion\":\"1.08\",\"userIdentity\":{\"type\":\"IAMUser\",\"principalId\":\"AIDA5G26WOZYV56B23PDL\",\"arn\":\"arn:aws:iam::444000444:user/Dynatrace_monitoring_user\",\"accountId\":\"444000444\",\"accessKeyId\":\"AIDA12345667789ABCEF\",\"userName\":\"Dynatrace_monitoring_user\"},\"eventTime\":\"2021-06-01T13:29:17Z\",\"eventSource\":\"rds.amazonaws.com\",\"eventName\":\"DescribeDBInstances\",\"awsRegion\":\"eu-north-1\",\"sourceIPAddress\":\"157.25.19.100\",\"userAgent\":\"aws-sdk-java/1.11.789 Linux/5.4.0-56-generic OpenJDK_64-Bit_Server_VM/11.0.8+10 java/11.0.8 vendor/AdoptOpenJDK\",\"requestParameters\":null,\"responseElements\":null,\"requestID\":\"0a58cb63-bb56-4e63-9883-98bf0ae258ed\",\"eventID\":\"5e83e0d1-c17a-4bbd-980a-7221cacbacdc\",\"readOnly\":true,\"eventType\":\"AwsApiCall\",\"managementEvent\":true,\"eventCategory\":\"Management\",\"recipientAccountId\":\"444000444\"}" }
+                                               }
                                               ]},
         "expect_first_log_contains": {
             'aws.service': 'cloudtrail',
