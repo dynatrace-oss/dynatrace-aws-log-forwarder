@@ -145,6 +145,8 @@ def _apply_rule(rule, record, parsed_record):
             record["log_content_parsed"] = json.loads(parsed_record.get("content", {}))
         except Exception as ex:
             logging.log_error_with_stacktrace(ex, f"Encountered exception when parsing log content as json, requested by rule for {rule.entity_type_name}")
+    else:
+        record["log_content_parsed"] = parsed_record.get("content", "")
 
     for attribute in rule.attributes:
         try:

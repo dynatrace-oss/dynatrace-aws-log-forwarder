@@ -31,6 +31,10 @@
           "description":  "If a field errorCode exists, then return Failure.{errorCode}, else return Succeeded",
           "pattern": "if( log_content_parsed.errorCode==null, &'Succeeded', &[`Failed`, log_content_parsed.errorCode] | [? @!=null ] | join('.', @) , @)"
         },
+        {
+          "key": "severity",
+          "pattern": "if( log_content_parsed.errorCode==null, &'INFO', &'ERROR', @)"
+        },
 
 
         {
@@ -39,28 +43,28 @@
         },
         {
           "key": "aws.arn",
-          "pattern": "format('arn:{}:lambda:{}:{}:dbTODOcluster:{}', [partition, region, account_id, TODO])"
+          "pattern": "TODO"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'AddRoleToDBCluster', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'AddRoleToDBCluster', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'AddRoleToDBInstance', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'AddRoleToDBInstance', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'AddSourceIdentifierToSubscription', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'AddSourceIdentifierToSubscription', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier])), &EmptyValue, @ )"
         },
 
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'AddSourceIdentifierToSubscription', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'AddSourceIdentifierToSubscription', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'AddTagsToResource', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.resourceName)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'AddTagsToResource', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.resourceName])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
@@ -68,111 +72,111 @@
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'BacktrackDBCluster', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'BacktrackDBCluster', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier])), &EmptyValue, @ )"
         },
 
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'CreateDBCluster', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'CreateDBCluster', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'CreateDBClusterEndpoint', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'CreateDBClusterEndpoint', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier])), &EmptyValue, @ )"
         },{
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'CreateDBClusterSnapshot', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'CreateDBClusterSnapshot', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'CreateDBInstance', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.responseElements.dBInstanceIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'CreateDBInstance', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.responseElements.dBInstanceIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'CreateDBInstanceReadReplica', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.responseElements.sourceDBInstanceIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'CreateDBInstanceReadReplica', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.responseElements.sourceDBInstanceIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'CreateDBSnapshot', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'CreateDBSnapshot', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'CreateEventSubscription', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.SourceIds[*].SourceId.dBClusterIdentifier )), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'CreateEventSubscription', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.SourceIds[*].SourceId.dBClusterIdentifier ])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'CreateEventSubscription', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.SourceIds[*].SourceId.dBInstanceIdentifier  )), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'CreateEventSubscription', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.SourceIds[*].SourceId.dBInstanceIdentifier  ])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'CreateGlobalCluster', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.globalClusterIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'CreateGlobalCluster', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.globalClusterIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'DeleteDBCluster', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DeleteDBCluster', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'DeleteDBInstance', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DeleteDBInstance', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'DeleteDBInstanceAutomatedBackup', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.DbiResourceId)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DeleteDBInstanceAutomatedBackup', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.DbiResourceId])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'DeleteGlobalCluster', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.globalClusterIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DeleteGlobalCluster', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.globalClusterIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'DeregisterDBProxyTargets', &TODOdt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifiers[*])), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DeregisterDBProxyTargets', &TODOdt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifiers[*]])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'DescribeDBClusterBacktracks', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBClusterBacktracks', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'DescribeDBClusterEndpoints', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBClusterEndpoints', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'DescribeDBClusterBacktracks', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBClusterBacktracks', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'DescribeDBClusters', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBClusters', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'DescribeDBClusterSnapshots', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBClusterSnapshots', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'DescribeDBInstanceAutomatedBackups', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBInstanceAutomatedBackups', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'DescribeDBInstances', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBInstances', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'DescribeDBLogFiles', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBLogFiles', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'DescribeDBSnapshots', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBSnapshots', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'DescribeEvents', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribeEvents', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'DescribeEvents', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribeEvents', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'DescribeGlobalClusters', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.globalClusterIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribeGlobalClusters', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.globalClusterIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
@@ -180,19 +184,19 @@
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'DescribeValidDBInstanceModifications', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribeValidDBInstanceModifications', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'DownloadDBLogFilePortion', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DownloadDBLogFilePortion', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'FailoverDBCluster', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'FailoverDBCluster', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'FailoverGlobalCluster', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.globalClusterIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'FailoverGlobalCluster', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.globalClusterIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
@@ -200,47 +204,47 @@
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'ModifyDBCluster', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'ModifyDBCluster', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'ModifyDBInstance', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'ModifyDBInstance', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'ModifyDBSnapshot', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.responseElements.dBInstanceIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'ModifyDBSnapshot', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.responseElements.dBInstanceIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'ModifyGlobalCluster', &TODOdt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'ModifyGlobalCluster', &TODOdt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'PromoteReadReplica', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'PromoteReadReplica', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'PromoteReadReplicaDBCluster', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'PromoteReadReplicaDBCluster', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'RebootDBInstance', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'RebootDBInstance', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'RegisterDBProxyTargets', &TODOdt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifiers[*])), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'RegisterDBProxyTargets', &TODOdt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifiers[*]])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'RemoveFromGlobalCluster', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'RemoveFromGlobalCluster', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'RemoveRoleFromDBCluster', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'RemoveRoleFromDBCluster', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'RemoveRoleFromDBInstance', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'RemoveRoleFromDBInstance', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
@@ -248,27 +252,27 @@
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'RestoreDBClusterFromS3', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'RestoreDBClusterFromS3', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'RestoreDBClusterFromSnapshot', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'RestoreDBClusterFromSnapshot', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'RestoreDBClusterToPointInTime', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.targetDBInstanceIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'RestoreDBClusterToPointInTime', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.targetDBInstanceIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'RestoreDBInstanceFromDBSnapshot', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'RestoreDBInstanceFromDBSnapshot', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'RestoreDBInstanceFromS3', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'RestoreDBInstanceFromS3', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'RestoreDBInstanceToPointInTime', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'RestoreDBInstanceToPointInTime', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier])), &EmptyValue, @ )"
         },
 
         {
@@ -277,11 +281,11 @@
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'StartDBCluster', &dt_meid_supporting_service_v2( format('arn:aws:rds:{}:{}:cluster:{}', region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'StartDBCluster', &dt_meid_supporting_service_v2( 'Aurora', format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'StartDBInstance', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'StartDBInstance', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
@@ -297,7 +301,7 @@
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'StopDBInstance', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier)), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'StopDBInstance', &dt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier])), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",

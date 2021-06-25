@@ -44,14 +44,23 @@ class MappingCustomFunctions(functions.Functions):
         else:
             return if_false_expression.visit(if_false_expression.expression, node_scope)
 
+
+    @functions.signature({'types': ['string', 'null']}, {'types': ['string', 'null']})
+    def _func_starts_with(self, search, suffix):
+        if(search == None or suffix == None):
+            return False
+        return search.startswith(suffix)
+
     @functions.signature({"types": ['string']},
-                         {"types": ['array-string']})
+                         {"types": ['array']})
     def _func_format(self, pattern, values):
         assert pattern.count("{}") == len(values)
 
         output = pattern
 
         for value in values:
+            if value == None:
+                return None
             output = output.replace("{}", value, 1)
 
         return output
@@ -112,7 +121,7 @@ class MappingCustomFunctions(functions.Functions):
     def _func_dt_meid_auto_scaling_group_v2(self, arn): return me_id.meid_murmurhash_awsseed("AUTO_SCALING_GROUP", arn)
     @functions.signature({'types': ['string']})
     def _func_dt_meid_dynamo_db_v2(self, arn): return me_id.meid_murmurhash_awsseed("DYNAMO_DB_TABLE", arn)
-    @functions.signature({'types': ['string']})
+    @functions.signature({'types': ['string', 'null']})
     def _func_dt_meid_rds_v2(self, arn): return me_id.meid_murmurhash_awsseed("RELATIONAL_DATABASE_SERVICE", arn)
     @functions.signature({'types': ['string']})
     def _func_dt_meid_s3_bucket_v2(self, arn): return me_id.meid_murmurhash_awsseed("S3BUCKET", arn)
@@ -121,5 +130,7 @@ class MappingCustomFunctions(functions.Functions):
     @functions.signature({'types': ['string']}, {'types': ['string']})
     def _func_dt_meid_supporting_service_v2(self, supporting_service_short_name, arn): return me_id.meid_murmurhash("CUSTOM_DEVICE", supporting_service_short_name.lower() + arn)
 
-
+jmespath.functions.REVERSE_TYPES_MAP['null'] = ('NoneType', 'None')
+jmespath.functions.TYPES_MAP['NoneType'] = ('null')
+jmespath.functions.TYPES_MAP['None'] = ('null')
 JMESPATH_OPTIONS = jmespath.Options(custom_functions=MappingCustomFunctions())
