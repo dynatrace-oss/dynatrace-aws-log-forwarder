@@ -20,7 +20,7 @@ int64 = ctypes.c_int64
 
 
 def meid_md5(entity_type: str, hashing_input: str):
-    if hashing_input == None:
+    if hashing_input is None:
         return None
 
     long_id = _legacy_entity_id_md5(hashing_input)
@@ -29,7 +29,7 @@ def meid_md5(entity_type: str, hashing_input: str):
 
 
 def meid_murmurhash(entity_type: str, hashing_input: str) -> str:
-    if hashing_input == None:
+    if hashing_input is None:
         return None
 
     long_id = _murmurhash2_64A(hashing_input)
@@ -37,7 +37,7 @@ def meid_murmurhash(entity_type: str, hashing_input: str) -> str:
     return identifier
 
 def meid_murmurhash_awsseed(entity_type: str, hashing_input: str) -> str:
-    if hashing_input == None:
+    if hashing_input is None:
         return None
 
     long_id = _murmurhash2_64A(hashing_input, seed = -512093083)
@@ -47,7 +47,7 @@ def meid_murmurhash_awsseed(entity_type: str, hashing_input: str) -> str:
 
 
 def _legacy_entity_id_md5(hash_input: str) -> int:
-    if hash_input == None:
+    if hash_input is None:
         return None
 
     md5_digest = hashlib.md5(hash_input.encode("UTF-8"))
@@ -63,7 +63,7 @@ def _zfrs(num, shift):
 
 
 def _murmurhash2_64A(data: str, seed=0xe17a1465) -> int:
-    if data == None:
+    if data is None:
         return None
 
     buf = bytearray(data.encode("UTF-8"))

@@ -47,7 +47,7 @@ class MappingCustomFunctions(functions.Functions):
 
     @functions.signature({'types': ['string', 'null']}, {'types': ['string', 'null']})
     def _func_starts_with(self, search, suffix):
-        if(search == None or suffix == None):
+        if(search is None or suffix is None):
             return False
         return search.startswith(suffix)
 
@@ -59,7 +59,7 @@ class MappingCustomFunctions(functions.Functions):
         output = pattern
 
         for value in values:
-            if value == None:
+            if value is None:
                 return None
             output = output.replace("{}", value, 1)
 
