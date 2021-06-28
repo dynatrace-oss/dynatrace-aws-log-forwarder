@@ -177,8 +177,6 @@ BATCH_METADATA = BatchMetadata("444000444", "us-east-1", "aws")
                                               ]},
         "expect_first_log_contains": {
             'aws.service': 'cloudtrail',
-            # "aws.resource.id": "TODO",
-            # "aws.arn": "arn:aws:TODO:us-east-1::/restapis/8zcb3dxf4l",
             'content': '{"eventVersion": "1.08", "userIdentity": {"type": "IAMUser", "principalId": "AIDA12345667789ABCEF", "arn": "arn:aws:iam::444000444:user/somemonitoringuser", "accountId": "444000444", "accessKeyId": "AKIA123456789ABCDEFG", "userName": "Dynatrace_monitoring_user"}, "eventTime": "2021-05-28T11:39:33Z", "eventSource": "rds.amazonaws.com", "eventName": "DescribeEvents", "awsRegion": "ap-southeast-2", "sourceIPAddress": "155.55.55.055", "userAgent": "aws-sdk-java/1.11.789 Linux/5.4.0-56-generic OpenJDK_64-Bit_Server_VM/11.0.8+10 java/11.0.8 vendor/AdoptOpenJDK", "requestParameters": {"startTime": "May 28, 2021 11:29:00 AM", "endTime": "May 28, 2021 11:34:00 AM"}, "responseElements": null, "requestID": "69de2278-ef7a-4b9a-bdc5-a78c9210ea4e", "eventID": "249491df-4970-421d-8575-5bf555357c14", "readOnly": true, "eventType": "AwsApiCall", "managementEvent": true, "eventCategory": "Management", "recipientAccountId": "444000444"}',
             'cloud.provider': 'aws',
             'cloud.account.id': '444000444',
@@ -250,8 +248,85 @@ BATCH_METADATA = BatchMetadata("444000444", "us-east-1", "aws")
                                               ]},
         "expect_first_log_contains": {
             'aws.service': 'cloudtrail',
-            # "aws.resource.id": "TODO",
-            # "aws.arn": "arn:aws:TODO:us-east-1::/restapis/8zcb3dxf4l",
+            "aws.resource.id": "belu-metadata-database-1",
+            "aws.arn": "arn:aws:rds:us-east-1:444000444:cluster:belu-metadata-database-1",
+            "dt.source_entity": "CUSTOM_DEVICE-F033DECA180883EE",
+            'content': '{"eventVersion": "1.08", "userIdentity": {"type": "AssumedRole", "principalId": "AIDA12345667789ABCEF:444000444-somemonitoringuser", "arn": "arn:aws:iam::444000444:user/somemonitoringuser", "accountId": "444000444", "accessKeyId": "AKIA123456789ABCDEFG", "sessionContext": {"sessionIssuer": {"type": "Role", "principalId": "AIDA12345667789ABCEF", "arn": "arn:aws:iam::444000444:role/sso/dtRoleAdmin", "accountId": "444000444", "userName": "dtRoleAdmin"}, "webIdFederationData": {}, "attributes": {"mfaAuthenticated": "false", "creationDate": "2021-06-21T06:30:44Z"}}}, "eventTime": "2021-06-21T07:15:43Z", "eventSource": "rds.amazonaws.com", "eventName": "ModifyDBCluster", "awsRegion": "us-east-1", "sourceIPAddress": "157.25.19.100", "userAgent": "aws-internal/3 aws-sdk-java/1.11.975 Linux/4.9.230-0.1.ac.224.84.332.metal1.x86_64 OpenJDK_64-Bit_Server_VM/25.242-b08 java/1.8.0_242 vendor/Oracle_Corporation cfg/retry-mode/legacy", "errorCode": "InvalidDBClusterStateFault", "errorMessage": "DB cluster is not available for modification with status configuring-iam-database-auth", "requestParameters": {"applyImmediately": true, "dBClusterIdentifier": "belu-metadata-database-1", "allowMajorVersionUpgrade": false}, "responseElements": null, "requestID": "f8a1ee03-1d27-41c7-9b6f-2aafed555986", "eventID": "2c230775-64c2-4b82-bb20-24a1effb73bd", "readOnly": false, "eventType": "AwsApiCall", "managementEvent": true, "eventCategory": "Management", "recipientAccountId": "444000444"}',
+            'cloud.provider': 'aws',
+            'cloud.account.id': '444000444',
+            'cloud.region': 'us-east-1',
+            'aws.log_group': 'aws-cloudtrail-logs-444000444-1cceb782',
+            'aws.log_stream': '444000444_CloudTrail_us-east-1',
+            'aws.region': 'us-east-1',
+            'aws.account.id': '444000444',
+            'severity': 'ERROR',
+            'timestamp': 1622554840009,
+            'audit.action': 'ModifyDBCluster',
+            'audit.identity': 'arn:aws:iam::444000444:user/somemonitoringuser',
+            'audit.result': 'Failed.InvalidDBClusterStateFault'}
+    }, id="testcase_Cloudtrail_RDS_error"),
+
+    pytest.param({
+        "record_data_decoded": {"messageType": "DATA_MESSAGE", "owner": "444000444",
+                                "logGroup": "aws-cloudtrail-logs-444000444-1cceb782",
+                                "logStream": "444000444_CloudTrail_us-east-1",
+                                "subscriptionFilters": ["Belu-APM-299389-cloudtrail-RDS_subscriptionFilter"],
+                                "logEvents": [{"id": "36184182057683330175263108764349521965726085205046394887",
+                                               "timestamp": 1622554840009,
+                                               "message": json.dumps({
+                                                   "log_group": "aws-cloudtrail-logs-908047316593-1cceb782",
+                                                   "region": "us-east-1",
+                                                   "partition": "aws",
+                                                   "account_id": "908047316593",
+                                                   "log_content_parsed": {
+                                                       "eventVersion": "1.08",
+                                                       "userIdentity": {
+                                                           "type": "AssumedRole",
+                                                           "principalId": "AROA5G26WOZY6RK23PZZN:dynatrace-monitoring-jxw01498-Cloud-Monitoring-Team-Dev-90804731",
+                                                           "arn": "arn:aws:sts::908047316593:assumed-role/Dynatrace_monitoring_role/dynatrace-monitoring-jxw01498-Cloud-Monitoring-Team-Dev-90804731",
+                                                           "accountId": "908047316593",
+                                                           "accessKeyId": "ASIA5G26WOZYVFNTBT43",
+                                                           "sessionContext": {
+                                                               "sessionIssuer": {
+                                                                   "type": "Role",
+                                                                   "principalId": "AROA5G26WOZY6RK23PZZN",
+                                                                   "arn": "arn:aws:iam::908047316593:role/Dynatrace_monitoring_role",
+                                                                   "accountId": "908047316593",
+                                                                   "userName": "Dynatrace_monitoring_role"
+                                                               },
+                                                               "webIdFederationData": {},
+                                                               "attributes": {
+                                                                   "mfaAuthenticated": "False",
+                                                                   "creationDate": "2021-06-25T15:28:11Z"
+                                                               }
+                                                           }
+                                                       },
+                                                       "eventTime": "2021-06-25T15:58:25Z",
+                                                       "eventSource": "rds.amazonaws.com",
+                                                       "eventName": "DescribeDBClusters",
+                                                       "awsRegion": "eu-north-1",
+                                                       "sourceIPAddress": "54.88.45.104",
+                                                       "userAgent": "aws-sdk-java/1.11.789 Linux/4.14.181-108.257.amzn1.x86_64 OpenJDK_64-Bit_Server_VM/11.0.11+9 java/11.0.11 vendor/AdoptOpenJDK",
+                                                       "requestParameters": {
+                                                           "includeShared": False
+                                                       },
+                                                       "responseElements": None,
+                                                       "requestID": "68791869-b3ad-40da-a3f7-4f0ef76d5ed8",
+                                                       "eventID": "ebdb0ac6-5a5a-4604-b106-6d2f712c3b7c",
+                                                       "readOnly": True,
+                                                       "eventType": "AwsApiCall",
+                                                       "managementEvent": True,
+                                                       "eventCategory": "Management",
+                                                       "recipientAccountId": "908047316593"
+                                                   }
+                                               })
+                                               }
+                                              ]},
+        "expect_first_log_contains": {
+            'aws.service': 'cloudtrail',
+            "aws.resource.id": "belu-metadata-database-1",
+            "aws.arn": "'arn:aws:rds:us-east-1:444000444:cluster:belu-metadata-database-1'",
+            "dt.source_entity": "CUSTOM_DEVICE-F033DECA180883EE",
             'content': '{"eventVersion": "1.08", "userIdentity": {"type": "AssumedRole", "principalId": "AIDA12345667789ABCEF:444000444-somemonitoringuser", "arn": "arn:aws:iam::444000444:user/somemonitoringuser", "accountId": "444000444", "accessKeyId": "AKIA123456789ABCDEFG", "sessionContext": {"sessionIssuer": {"type": "Role", "principalId": "AIDA12345667789ABCEF", "arn": "arn:aws:iam::444000444:role/sso/dtRoleAdmin", "accountId": "444000444", "userName": "dtRoleAdmin"}, "webIdFederationData": {}, "attributes": {"mfaAuthenticated": "false", "creationDate": "2021-06-21T06:30:44Z"}}}, "eventTime": "2021-06-21T07:15:43Z", "eventSource": "rds.amazonaws.com", "eventName": "ModifyDBCluster", "awsRegion": "us-east-1", "sourceIPAddress": "157.25.19.100", "userAgent": "aws-internal/3 aws-sdk-java/1.11.975 Linux/4.9.230-0.1.ac.224.84.332.metal1.x86_64 OpenJDK_64-Bit_Server_VM/25.242-b08 java/1.8.0_242 vendor/Oracle_Corporation cfg/retry-mode/legacy", "errorCode": "InvalidDBClusterStateFault", "errorMessage": "DB cluster is not available for modification with status configuring-iam-database-auth", "requestParameters": {"applyImmediately": true, "dBClusterIdentifier": "belu-metadata-database-1", "allowMajorVersionUpgrade": false}, "responseElements": null, "requestID": "f8a1ee03-1d27-41c7-9b6f-2aafed555986", "eventID": "2c230775-64c2-4b82-bb20-24a1effb73bd", "readOnly": false, "eventType": "AwsApiCall", "managementEvent": true, "eventCategory": "Management", "recipientAccountId": "444000444"}',
             'cloud.provider': 'aws',
             'cloud.account.id': '444000444',
