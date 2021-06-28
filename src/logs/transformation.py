@@ -43,7 +43,7 @@ def extract_dt_logs_from_single_record(
         log_entry = transform_single_log_entry(log_event, batch_metadata, record_metadata)
         logs.append(log_entry)
 
-    log_content_lens = [len(log["content"]) for log in logs]
+    log_content_lens = [len(  ["content"] )   for log in logs    if log.get("content", None) is not None ]
     log_content_lens_sum = sum(log_content_lens)
 
     context.sfm.single_record_transformed(record_metadata.log_group, len(logs), log_content_lens_sum)

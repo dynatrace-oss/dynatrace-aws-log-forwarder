@@ -21,18 +21,22 @@ def test_meid_credentials_v1_legacy_md5():
 
     id = me_id._legacy_entity_id_md5(input)
     meid = me_id.meid_md5("AWS_LAMBDA_FUNCTION", input)
+    meid_from_list = me_id.meid_md5("AWS_LAMBDA_FUNCTION", "dynatrace-aws-logs-Lambda-1K7HG2Q2LIQKU", "us-east-1_000047316593")
 
     assert id == -3464187019831048966
     assert meid == "AWS_LAMBDA_FUNCTION-CFECBC426F7384FA"
+    assert meid == meid_from_list
 
 def test_meid_credentials_v2_supporting_service__murmurhash():
     input = "api gatewayarn:aws:apigateway:us-east-1:000047316593:/restapis/PetStore"
 
     id = me_id._murmurhash2_64A(input)
     meid = me_id.meid_murmurhash("CUSTOM_DEVICE", input)
+    meid_from_list = me_id.meid_murmurhash("CUSTOM_DEVICE", "api gateway", "arn:aws:apigateway:us-east-1:000047316593:/restapis/PetStore")
 
     assert id == -364647979568170292
     assert meid == "CUSTOM_DEVICE-FAF0829835C67ACC"
+    assert meid == meid_from_list
 
 def test_meid_in_credentials_v2_core_services__murmurhash_awsseed():
     real_long_id_from_dt_cluster = 7316649878848848536

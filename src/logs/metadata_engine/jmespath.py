@@ -59,9 +59,8 @@ class MappingCustomFunctions(functions.Functions):
         output = pattern
 
         for value in values:
-            if value is None:
-                return None
-            output = output.replace("{}", value, 1)
+            if value is not None:
+                output = output.replace("{}", value, 1)
 
         return output
 
@@ -81,7 +80,7 @@ class MappingCustomFunctions(functions.Functions):
     @functions.signature({'types': ['string', 'null']})
     def _func_dt_meid_ec2_instance(self, instanceId): return me_id.meid_md5("EC2_INSTANCE", instanceId)
     @functions.signature({'types': ['string', 'null']},{'types': ['string', 'null']},{'types': ['string', 'null']})
-    def _func_dt_meid_lambda_function(self, functionName, region, accountId): return me_id.meid_md5("AWS_LAMBDA_FUNCTION", functionName+region+"_"+accountId)
+    def _func_dt_meid_lambda_function(self, functionName, region, accountId): return me_id.meid_md5("AWS_LAMBDA_FUNCTION", functionName, region, "_", accountId)
 
     # aws credentials v1 - md5
     @functions.signature({'types': ['string', 'null']})
@@ -93,22 +92,15 @@ class MappingCustomFunctions(functions.Functions):
     @functions.signature({'types': ['string', 'null']})
     def _func_dt_meid_auto_scaling_group_v1(self, arn): return me_id.meid_md5("AUTO_SCALING_GROUP", arn)
     @functions.signature({'types': ['string', 'null']}, {'types': ['string', 'null']})
-    def _func_dt_meid_dynamo_db_v1(self, tableName, region): return me_id.meid_md5("DYNAMO_DB_TABLE", tableName+region)
+    def _func_dt_meid_dynamo_db_v1(self, tableName, region): return me_id.meid_md5("DYNAMO_DB_TABLE", tableName, region)
     @functions.signature({'types': ['string', 'null']}, {'types': ['string', 'null']})
-    def _func_dt_meid_rds_v1(self, instanceId, region): return me_id.meid_md5("RELATIONAL_DATABASE_SERVICE", instanceId+region)
+    def _func_dt_meid_rds_v1(self, instanceId, region): return me_id.meid_md5("RELATIONAL_DATABASE_SERVICE", instanceId, region)
     @functions.signature({'types': ['string', 'null']})
     def _func_dt_meid_s3_bucket_v1(self, name): return me_id.meid_md5("S3BUCKET", name)
 
     def _func_dt_meid_supporting_service_v1(self, supporting_service_name, region, main_dimension, name):
-        custom_device_input_string = "-".join([supporting_service_name.lower(), region, main_dimension, name])
-
-        # out.writeLong(customDeviceGroupLongId);
-        # out.write(customDeviceIdBytes);
-        # out.writeInt(customDeviceIdBytes.length);
-        #
-        # return MURMUR_128.hashBytes(byteOut.toByteArray()).asLong();
-
-        raise NotImplementedError
+        raise NotImplementedError("ID calculation for supporting services in Credentials version=1 is not possible without querying Dynatrace. "
+                                      "It requires Credentials ID that is generated randomly by the Dynatrace cluster and not accessible here")
 
     # aws credentials v2 - murmurhash with special hash
     @functions.signature({'types': ['string', 'null']})
@@ -128,7 +120,7 @@ class MappingCustomFunctions(functions.Functions):
 
     # aws credentials v2 - murmurhash with default hash
     @functions.signature({'types': ['string', 'null']}, {'types': ['string', 'null']})
-    def _func_dt_meid_supporting_service_v2(self, supporting_service_short_name, arn): return me_id.meid_murmurhash("CUSTOM_DEVICE", supporting_service_short_name.lower() + arn)
+    def _func_dt_meid_supporting_service_v2(self, supporting_service_short_name, arn): return me_id.meid_murmurhash("CUSTOM_DEVICE", supporting_service_short_name.lower(), arn)
 
 jmespath.functions.REVERSE_TYPES_MAP['null'] = ('NoneType', 'None')
 jmespath.functions.TYPES_MAP['NoneType'] = ('null')
