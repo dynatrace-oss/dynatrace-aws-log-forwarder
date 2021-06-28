@@ -129,7 +129,7 @@ class MetadataEngine:
             if self.default_rule:
                 _apply_rule(self.default_rule, record, parsed_record)
         except Exception as ex:
-            logging.log_error_with_stacktrace(ex, f"Encountered exception when running Rule Engine")
+            logging.exception(f"Encountered exception when running Rule Engine. ")
 
 
 def _check_if_rule_applies(rule: ConfigRule, record: Dict, parsed_record: Dict):
@@ -154,7 +154,7 @@ def _apply_rule(rule, record, parsed_record):
             if value:
                 parsed_record[attribute.key] = value
         except Exception as ex:
-            logging.exception(f"Encountered exception when evaluating attribute {attribute} of rule for {rule.entity_type_name}")
+            logging.log_error_without_stacktrace(f"Encountered exception when evaluating attribute {attribute} of rule for {rule.entity_type_name}")
 
     record.pop("log_content_parsed", {})
 
@@ -173,7 +173,7 @@ def parse_aws_loggroup_with_grok_pattern(loggroup, pattern) -> dict:
     extracted_values = grok.match(loggroup)
 
     if not extracted_values:
-        logging.exception(f"Failed to match logGroup '{loggroup}' against the pattern '{pattern}'")
+        logging.warning(f"Failed to match logGroup '{loggroup}' against the pattern '{pattern}'")
         return {}
 
     return extracted_values
