@@ -35,6 +35,7 @@ jobs:
       script:
         - docker run --rm -v `pwd`:/var/task amazon/aws-sam-cli-build-image-python3.8 bash -c './build-release-package.sh'
         - cp -p dynatrace-aws-log-forwarder.zip ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER
+        - cp -p dynatrace-aws-log-forwarder-lambda.zip ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER
     - stage: e2e_tests
       name: Execute e2e tests
       # run e2e tests only for development branches until test execution part is done
@@ -44,7 +45,6 @@ jobs:
       script:
         # deploy log forwarder resources reqiured for e2e to AWS
         - cp -r ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER/dynatrace-aws-log-forwarder.zip .
-        - unzip dynatrace-aws-log-forwarder.zip
         - ./dynatrace-aws-logs.sh deploy --target-url $DYNATRACE_ENV_URL --target-api-token $DYNATRACE_API_KEY --require-valid-certificate $VERIFY_SSL --stack-name aws-log-forwarder-e2e-build-$TRAVIS_BUILD_NUMBER
         # delete log forwarder AWS resources
         - ./dynatrace-aws-logs.sh delete --stack-name aws-log-forwarder-e2e-build-$TRAVIS_BUILD_NUMBER
