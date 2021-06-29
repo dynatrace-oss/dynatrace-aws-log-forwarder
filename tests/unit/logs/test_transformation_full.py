@@ -132,9 +132,9 @@ CLOUDTRAIL_USER_IDENTITY = {
                     "id": "35958590510527767165636549608812769529777864588249006080",
                     "timestamp": "12345",
                     "message": "[ERROR] UnboundLocalError: local variable 'single_log_entry' referenced before assignment\n"
-                               +"Traceback (most recent call last):\n"
-                               +"  File \"/var/task/lambda_function.py\", line 101, in lambda_handler\n"
-                               +"    print(i.__str__() + single_log_entry)"
+                               + "Traceback (most recent call last):\n"
+                               + "  File \"/var/task/lambda_function.py\", line 101, in lambda_handler\n"
+                               + "    print(i.__str__() + single_log_entry)"
                 }
             ],
         },
@@ -144,9 +144,9 @@ CLOUDTRAIL_USER_IDENTITY = {
             "aws.arn": "arn:aws:lambda:us-east-1:444000444:function:dynatrace-aws-logs-Lambda-1K7HG2Q2LIQKU",
             "dt.source_entity": "AWS_LAMBDA_FUNCTION-F141CAEAE2BED565",
             'content': "[ERROR] UnboundLocalError: local variable 'single_log_entry' referenced before assignment\n"
-                       +"Traceback (most recent call last):\n"
-                       +"  File \"/var/task/lambda_function.py\", line 101, in lambda_handler\n"
-                       +"    print(i.__str__() + single_log_entry)",
+                       + "Traceback (most recent call last):\n"
+                       + "  File \"/var/task/lambda_function.py\", line 101, in lambda_handler\n"
+                       + "    print(i.__str__() + single_log_entry)",
             'cloud.provider': 'aws',
             'cloud.account.id': "444000444",
             'cloud.region': "us-east-1",
@@ -410,7 +410,7 @@ CLOUDTRAIL_USER_IDENTITY = {
                                                    "eventType": "AwsApiCall",
                                                    "managementEvent": True,
                                                    "eventCategory": "Management",
-                                                   "recipientAccountId": "908047316593"
+                                                   "recipientAccountId": "444000444"
                                                })
                                                }
                                               ]},
@@ -419,7 +419,7 @@ CLOUDTRAIL_USER_IDENTITY = {
             "aws.resource.id": 'belu-metadata-database-1',
             "aws.arn": 'arn:aws:rds:us-east-1:444000444:cluster:belu-metadata-database-1',
             "dt.source_entity": 'CUSTOM_DEVICE-F033DECA180883EE',
-            'content': '{"eventVersion": "1.08", "userIdentity": {"type": "AssumedRole", "principalId": "AIDA12345667789ABCEF:444000444-somemonitoringuser", "arn": "arn:aws:iam::444000444:user/somemonitoringuser", "accountId": "444000444", "accessKeyId": "AKIA123456789ABCDEFG", "sessionContext": {"sessionIssuer": {"type": "Role", "principalId": "AIDA12345667789ABCEF", "arn": "arn:aws:iam::444000444:role/sso/dtRoleAdmin", "accountId": "444000444", "userName": "dtRoleAdmin"}, "webIdFederationData": {}, "attributes": {"mfaAuthenticated": "false", "creationDate": "2021-06-21T06:30:44Z"}}}, "eventTime": "2021-05-28T12:03:24Z", "eventSource": "rds.amazonaws.com", "eventName": "RegisterDBProxyTargets", "awsRegion": "us-east-1", "sourceIPAddress": "rds.amazonaws.com", "userAgent": "rds.amazonaws.com", "requestParameters": {"dBProxyName": "beluTestRDSProxy", "dBClusterIdentifiers": ["belu-metadata-database-1"]}, "responseElements": {"dBProxyTargets": [{"rdsResourceId": "belu-metadata-database-1", "port": 5432, "type": "TRACKED_CLUSTER", "targetHealth": {"state": "REGISTERING"}}, {"endpoint": "belu-metadata-database-1-instance-1.cx6dmgg4ljp5.us-east-1.rds.amazonaws.com", "rdsResourceId": "belu-metadata-database-1-instance-1", "port": 5432, "type": "RDS_INSTANCE", "targetHealth": {"state": "REGISTERING"}}]}, "requestID": "ca8dd6f5-8752-4eb0-acfe-34c2f0cfc34d", "eventID": "7744cfe9-179b-4b49-8475-06c5aa97c391", "readOnly": false, "eventType": "AwsApiCall", "managementEvent": true, "eventCategory": "Management", "recipientAccountId": "908047316593"}',
+            'content': '{"eventVersion": "1.08", "userIdentity": {"type": "AssumedRole", "principalId": "AIDA12345667789ABCEF:444000444-somemonitoringuser", "arn": "arn:aws:iam::444000444:user/somemonitoringuser", "accountId": "444000444", "accessKeyId": "AKIA123456789ABCDEFG", "sessionContext": {"sessionIssuer": {"type": "Role", "principalId": "AIDA12345667789ABCEF", "arn": "arn:aws:iam::444000444:role/sso/dtRoleAdmin", "accountId": "444000444", "userName": "dtRoleAdmin"}, "webIdFederationData": {}, "attributes": {"mfaAuthenticated": "false", "creationDate": "2021-06-21T06:30:44Z"}}}, "eventTime": "2021-05-28T12:03:24Z", "eventSource": "rds.amazonaws.com", "eventName": "RegisterDBProxyTargets", "awsRegion": "us-east-1", "sourceIPAddress": "rds.amazonaws.com", "userAgent": "rds.amazonaws.com", "requestParameters": {"dBProxyName": "beluTestRDSProxy", "dBClusterIdentifiers": ["belu-metadata-database-1"]}, "responseElements": {"dBProxyTargets": [{"rdsResourceId": "belu-metadata-database-1", "port": 5432, "type": "TRACKED_CLUSTER", "targetHealth": {"state": "REGISTERING"}}, {"endpoint": "belu-metadata-database-1-instance-1.cx6dmgg4ljp5.us-east-1.rds.amazonaws.com", "rdsResourceId": "belu-metadata-database-1-instance-1", "port": 5432, "type": "RDS_INSTANCE", "targetHealth": {"state": "REGISTERING"}}]}, "requestID": "ca8dd6f5-8752-4eb0-acfe-34c2f0cfc34d", "eventID": "7744cfe9-179b-4b49-8475-06c5aa97c391", "readOnly": false, "eventType": "AwsApiCall", "managementEvent": true, "eventCategory": "Management", "recipientAccountId": "444000444"}',
             'cloud.provider': 'aws',
             'cloud.account.id': '444000444',
             'cloud.region': 'us-east-1',
@@ -433,6 +433,75 @@ CLOUDTRAIL_USER_IDENTITY = {
             'audit.identity': 'arn:aws:iam::444000444:user/somemonitoringuser',
             'audit.result': 'Succeeded'}
     }, id="testcase_Cloudtrail_RDS_RegisterDBProxyTargets_multiple_resources"),
+
+    pytest.param({
+        "record_data_decoded": {"messageType": "DATA_MESSAGE", "owner": "444000444",
+                                "logGroup": "aws-cloudtrail-logs-444000444-1cceb782",
+                                "logStream": "444000444_CloudTrail_us-east-1",
+                                "subscriptionFilters": ["Belu-APM-299389-cloudtrail-RDS_subscriptionFilter"],
+                                "logEvents": [{"id": "36184182057683330175263108764349521965726085205046394887",
+                                               "timestamp": 1622554840009,
+                                               "message": json.dumps({
+                                                   "eventVersion": "1.08",
+                                                   "userIdentity": CLOUDTRAIL_USER_IDENTITY,
+                                                   "eventTime": "2021-05-28T12:03:24Z",
+                                                   "eventSource": "rds.amazonaws.com",
+                                                   "eventName": "CreateEventSubscription",
+                                                   "awsRegion": "us-east-1",
+                                                   "sourceIPAddress": "83.164.160.102",
+                                                   "userAgent": "aws-internal/3 aws-sdk-java/1.11.975 Linux/4.9.230-0.1.ac.224.84.332.metal1.x86_64 OpenJDK_64-Bit_Server_VM/25.242-b08 java/1.8.0_242 vendor/Oracle_Corporation cfg/retry-mode/legacy",
+                                                   "requestParameters": {
+                                                       "subscriptionName": "beluRdsEventSubscription",
+                                                       "snsTopicArn": "arn:aws:sns:us-east-1:444000444:test",
+                                                       "sourceType": "db-instance",
+                                                       "sourceIds": [
+                                                           "belu-metadata-database-1-instance-1",
+                                                           "belu-mysql-database-1"
+                                                       ]
+                                                   },
+                                                   "responseElements": {
+                                                       "customerAwsId": "444000444",
+                                                       "custSubscriptionId": "beluRdsEventSubscription",
+                                                       "snsTopicArn": "arn:aws:sns:us-east-1:444000444:test",
+                                                       "status": "active",
+                                                       "subscriptionCreationTime": "Tue Jun 29 12:21:35 UTC 2021",
+                                                       "sourceType": "db-instance",
+                                                       "sourceIdsList": [
+                                                           "belu-metadata-database-1-instance-1",
+                                                           "belu-mysql-database-1"
+                                                       ],
+                                                       "enabled": True,
+                                                       "eventSubscriptionArn": "arn:aws:rds:us-east-1:444000444:es:beluRdsEventSubscription"
+                                                   },
+                                                   "requestID": "b7ef566c-d266-446a-a617-9ddff87cafd7",
+                                                   "eventID": "941338b4-bc46-4b2f-8b7e-9149fcf23bb7",
+                                                   "readOnly": False,
+                                                   "eventType": "AwsApiCall",
+                                                   "managementEvent": True,
+                                                   "eventCategory": "Management",
+                                                   "recipientAccountId": "444000444"
+                                               })
+                                               }
+                                              ]},
+        "expect_first_log_contains": {
+            'aws.service': 'cloudtrail',
+            "aws.resource.id": 'belu-metadata-database-1-instance-1',
+            "aws.arn": 'arn:aws:rds:us-east-1:444000444:db:belu-metadata-database-1-instance-1',
+            "dt.source_entity": 'RELATIONAL_DATABASE_SERVICE-BD5D6EC7B9C3C4A1',
+            'content': '{"eventVersion": "1.08", "userIdentity": {"type": "AssumedRole", "principalId": "AIDA12345667789ABCEF:444000444-somemonitoringuser", "arn": "arn:aws:iam::444000444:user/somemonitoringuser", "accountId": "444000444", "accessKeyId": "AKIA123456789ABCDEFG", "sessionContext": {"sessionIssuer": {"type": "Role", "principalId": "AIDA12345667789ABCEF", "arn": "arn:aws:iam::444000444:role/sso/dtRoleAdmin", "accountId": "444000444", "userName": "dtRoleAdmin"}, "webIdFederationData": {}, "attributes": {"mfaAuthenticated": "false", "creationDate": "2021-06-21T06:30:44Z"}}}, "eventTime": "2021-05-28T12:03:24Z", "eventSource": "rds.amazonaws.com", "eventName": "CreateEventSubscription", "awsRegion": "us-east-1", "sourceIPAddress": "83.164.160.102", "userAgent": "aws-internal/3 aws-sdk-java/1.11.975 Linux/4.9.230-0.1.ac.224.84.332.metal1.x86_64 OpenJDK_64-Bit_Server_VM/25.242-b08 java/1.8.0_242 vendor/Oracle_Corporation cfg/retry-mode/legacy", "requestParameters": {"subscriptionName": "beluRdsEventSubscription", "snsTopicArn": "arn:aws:sns:us-east-1:444000444:test", "sourceType": "db-instance", "sourceIds": ["belu-metadata-database-1-instance-1", "belu-mysql-database-1"]}, "responseElements": {"customerAwsId": "444000444", "custSubscriptionId": "beluRdsEventSubscription", "snsTopicArn": "arn:aws:sns:us-east-1:444000444:test", "status": "active", "subscriptionCreationTime": "Tue Jun 29 12:21:35 UTC 2021", "sourceType": "db-instance", "sourceIdsList": ["belu-metadata-database-1-instance-1", "belu-mysql-database-1"], "enabled": true, "eventSubscriptionArn": "arn:aws:rds:us-east-1:444000444:es:beluRdsEventSubscription"}, "requestID": "b7ef566c-d266-446a-a617-9ddff87cafd7", "eventID": "941338b4-bc46-4b2f-8b7e-9149fcf23bb7", "readOnly": false, "eventType": "AwsApiCall", "managementEvent": true, "eventCategory": "Management", "recipientAccountId": "444000444"}',
+            'cloud.provider': 'aws',
+            'cloud.account.id': '444000444',
+            'cloud.region': 'us-east-1',
+            'aws.log_group': 'aws-cloudtrail-logs-444000444-1cceb782',
+            'aws.log_stream': '444000444_CloudTrail_us-east-1',
+            'aws.region': 'us-east-1',
+            'aws.account.id': '444000444',
+            'severity': 'INFO',
+            'timestamp': 1622554840009,
+            'audit.action': 'CreateEventSubscription',
+            'audit.identity': 'arn:aws:iam::444000444:user/somemonitoringuser',
+            'audit.result': 'Succeeded'}
+    }, id="testcase_Cloudtrail_RDS_CreateEventSubscription_multiple_resources_with_source_type"),
 
 ])
 def test_full_transformation(testcase: dict):
@@ -452,4 +521,5 @@ def test_full_transformation(testcase: dict):
         if expected_value == None:
             assert k not in first_log, f"key={k} not expected in the output, actual={first_log[k]}"
         else:
-            assert first_log.get(k, None) == expected_value, f"key={k}, expected value={expected_value}, actual={first_log.get(k, None)}"
+            assert first_log.get(k,
+                                 None) == expected_value, f"key={k}, expected value={expected_value}, actual={first_log.get(k, None)}"
