@@ -361,6 +361,79 @@ CLOUDTRAIL_USER_IDENTITY = {
             'audit.result': 'Succeeded'}
     }, id="testcase_Cloudtrail_RDS_ListTagsForResource_resource_id_from_arn"),
 
+    pytest.param({
+        "record_data_decoded": {"messageType": "DATA_MESSAGE", "owner": "444000444",
+                                "logGroup": "aws-cloudtrail-logs-444000444-1cceb782",
+                                "logStream": "444000444_CloudTrail_us-east-1",
+                                "subscriptionFilters": ["Belu-APM-299389-cloudtrail-RDS_subscriptionFilter"],
+                                "logEvents": [{"id": "36184182057683330175263108764349521965726085205046394887",
+                                               "timestamp": 1622554840009,
+                                               "message": json.dumps({
+                                                   "eventVersion": "1.08",
+                                                   "userIdentity": CLOUDTRAIL_USER_IDENTITY,
+                                                   "eventTime": "2021-05-28T12:03:24Z",
+                                                   "eventSource": "rds.amazonaws.com",
+                                                   "eventName": "RegisterDBProxyTargets",
+                                                   "awsRegion": "us-east-1",
+                                                   "sourceIPAddress": "rds.amazonaws.com",
+                                                   "userAgent": "rds.amazonaws.com",
+                                                   "requestParameters": {
+                                                       "dBProxyName": "beluTestRDSProxy",
+                                                       "dBClusterIdentifiers": [
+                                                           "belu-metadata-database-1"
+                                                       ]
+                                                   },
+                                                   "responseElements": {
+                                                       "dBProxyTargets": [
+                                                           {
+                                                               "rdsResourceId": "belu-metadata-database-1",
+                                                               "port": 5432,
+                                                               "type": "TRACKED_CLUSTER",
+                                                               "targetHealth": {
+                                                                   "state": "REGISTERING"
+                                                               }
+                                                           },
+                                                           {
+                                                               "endpoint": "belu-metadata-database-1-instance-1.cx6dmgg4ljp5.us-east-1.rds.amazonaws.com",
+                                                               "rdsResourceId": "belu-metadata-database-1-instance-1",
+                                                               "port": 5432,
+                                                               "type": "RDS_INSTANCE",
+                                                               "targetHealth": {
+                                                                   "state": "REGISTERING"
+                                                               }
+                                                           }
+                                                       ]
+                                                   },
+                                                   "requestID": "ca8dd6f5-8752-4eb0-acfe-34c2f0cfc34d",
+                                                   "eventID": "7744cfe9-179b-4b49-8475-06c5aa97c391",
+                                                   "readOnly": False,
+                                                   "eventType": "AwsApiCall",
+                                                   "managementEvent": True,
+                                                   "eventCategory": "Management",
+                                                   "recipientAccountId": "908047316593"
+                                               })
+                                               }
+                                              ]},
+        "expect_first_log_contains": {
+            'aws.service': 'cloudtrail',
+            "aws.resource.id": 'belu-metadata-database-1',
+            "aws.arn": 'arn:aws:rds:us-east-1:444000444:cluster:belu-metadata-database-1',
+            "dt.source_entity": 'CUSTOM_DEVICE-F033DECA180883EE',
+            'content': '{"eventVersion": "1.08", "userIdentity": {"type": "AssumedRole", "principalId": "AIDA12345667789ABCEF:444000444-somemonitoringuser", "arn": "arn:aws:iam::444000444:user/somemonitoringuser", "accountId": "444000444", "accessKeyId": "AKIA123456789ABCDEFG", "sessionContext": {"sessionIssuer": {"type": "Role", "principalId": "AIDA12345667789ABCEF", "arn": "arn:aws:iam::444000444:role/sso/dtRoleAdmin", "accountId": "444000444", "userName": "dtRoleAdmin"}, "webIdFederationData": {}, "attributes": {"mfaAuthenticated": "false", "creationDate": "2021-06-21T06:30:44Z"}}}, "eventTime": "2021-05-28T12:03:24Z", "eventSource": "rds.amazonaws.com", "eventName": "RegisterDBProxyTargets", "awsRegion": "us-east-1", "sourceIPAddress": "rds.amazonaws.com", "userAgent": "rds.amazonaws.com", "requestParameters": {"dBProxyName": "beluTestRDSProxy", "dBClusterIdentifiers": ["belu-metadata-database-1"]}, "responseElements": {"dBProxyTargets": [{"rdsResourceId": "belu-metadata-database-1", "port": 5432, "type": "TRACKED_CLUSTER", "targetHealth": {"state": "REGISTERING"}}, {"endpoint": "belu-metadata-database-1-instance-1.cx6dmgg4ljp5.us-east-1.rds.amazonaws.com", "rdsResourceId": "belu-metadata-database-1-instance-1", "port": 5432, "type": "RDS_INSTANCE", "targetHealth": {"state": "REGISTERING"}}]}, "requestID": "ca8dd6f5-8752-4eb0-acfe-34c2f0cfc34d", "eventID": "7744cfe9-179b-4b49-8475-06c5aa97c391", "readOnly": false, "eventType": "AwsApiCall", "managementEvent": true, "eventCategory": "Management", "recipientAccountId": "908047316593"}',
+            'cloud.provider': 'aws',
+            'cloud.account.id': '444000444',
+            'cloud.region': 'us-east-1',
+            'aws.log_group': 'aws-cloudtrail-logs-444000444-1cceb782',
+            'aws.log_stream': '444000444_CloudTrail_us-east-1',
+            'aws.region': 'us-east-1',
+            'aws.account.id': '444000444',
+            'severity': 'INFO',
+            'timestamp': 1622554840009,
+            'audit.action': 'RegisterDBProxyTargets',
+            'audit.identity': 'arn:aws:iam::444000444:user/somemonitoringuser',
+            'audit.result': 'Succeeded'}
+    }, id="testcase_Cloudtrail_RDS_RegisterDBProxyTargets_multiple_resources"),
+
 ])
 def test_full_transformation(testcase: dict):
     context = Context("function-name", "dt-url", "dt-token", False, False)
