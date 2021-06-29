@@ -97,7 +97,7 @@
         },
         {
           "key": "aws.resource.id",
-          "pattern": "if( log_content_parsed.eventName == 'AddTagsToResource', &TODO_EXTRACT_FROM_ARN_log_content_parsed.requestParameters.resourceName, &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'AddTagsToResource', &replace_regex(log_content_parsed.requestParameters.resourceName, 'arn:aws:rds:[^:]*:[^:]*:[^:]*:([^:]*)','$1') &EmptyValue, @ )"
         },
         {
           "key": "aws.arn",
@@ -118,7 +118,7 @@
         },
         {
           "key": "aws.resource.id",
-          "pattern": "if( log_content_parsed.eventName == 'ApplyPendingMaintenanceAction', &TODO_EXTRACT_FROM_ARN_log_content_parsed.requestParameters.resourceIdentifier, &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'ApplyPendingMaintenanceAction', &replace_regex(log_content_parsed.requestParameters.resourceIdentifier, 'arn:aws:rds:[^:]*:[^:]*:[^:]*:([^:]*)','$1') &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
@@ -472,7 +472,7 @@
         },
         {
           "key": "aws.resource.id",
-          "pattern": "if( log_content_parsed.eventName == 'DescribePendingMaintenanceActions', &TODO_EXTRACT_FROM_ARN_log_content_parsed.requestParameters.resourceIdentifier, &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribePendingMaintenanceActions', &replace_regex(log_content_parsed.requestParameters.resourceIdentifier, 'arn:aws:rds:[^:]*:[^:]*:[^:]*:([^:]*)','$1') &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
@@ -536,7 +536,7 @@
         },
         {
           "key": "aws.resource.id",
-          "pattern": "if( log_content_parsed.eventName == 'ListTagsForResource', &TODO_EXTRACT_FROM_ARN_log_content_parsed.requestParameters.resourceName, &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'ListTagsForResource', &replace_regex(log_content_parsed.requestParameters.resourceName, 'arn:aws:rds:[^:]*:[^:]*:[^:]*:([^:]*)','$1') &EmptyValue, @ )"
         },
         {
           "key": "aws.arn",
@@ -696,7 +696,7 @@
         },
         {
           "key": "aws.resource.id",
-          "pattern": "if( log_content_parsed.eventName == 'RemoveTagsFromResource', &TODO_EXTRACT_FROM_ARN_log_content_parsed.requestParameters.resourceName, &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'RemoveTagsFromResource', &replace_regex(log_content_parsed.requestParameters.resourceName, 'arn:aws:rds:[^:]*:[^:]*:[^:]*:([^:]*)','$1') &EmptyValue, @ )"
         },
         {
           "key": "aws.arn",
@@ -791,7 +791,7 @@
         },
         {
           "key": "aws.resource.id",
-          "pattern": "if( log_content_parsed.eventName == 'StartActivityStream', &TODO_EXTRACT_FROM_ARN_log_content_parsed.requestParameters.resourceArn, &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'StartActivityStream', &replace_regex(log_content_parsed.requestParameters.resourceArn, 'arn:aws:rds:[^:]*:[^:]*:[^:]*:([^:]*)','$1') &EmptyValue, @ )"
         },
         {
           "key": "aws.arn",
@@ -826,7 +826,7 @@
         },
         {
           "key": "aws.resource.id",
-          "pattern": "if( log_content_parsed.eventName == 'StartDBInstanceAutomatedBackupsReplication', &TODO_EXTRACT_FROM_ARN_log_content_parsed.requestParameters.sourceDBInstanceArn, &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'StartDBInstanceAutomatedBackupsReplication', &replace_regex(log_content_parsed.requestParameters.sourceDBInstanceArn, 'arn:aws:rds:[^:]*:[^:]*:[^:]*:([^:]*)','$1') &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
@@ -847,7 +847,7 @@
         },
         {
           "key": "aws.resource.id",
-          "pattern": "if( log_content_parsed.eventName == 'StopActivityStream', &TODO_EXTRACT_FROM_ARN_log_content_parsed.requestParameters.resourceArn, &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'StopActivityStream', &replace_regex(log_content_parsed.requestParameters.resourceArn, 'arn:aws:rds:[^:]*:[^:]*:[^:]*:([^:]*)','$1') &EmptyValue, @ )"
         },
         {
           "key": "aws.arn",
@@ -882,7 +882,7 @@
         },
         {
           "key": "aws.resource.id",
-          "pattern": "if( log_content_parsed.eventName == 'StopDBInstanceAutomatedBackupsReplication', &TODO_EXTRACT_FROM_ARN_log_content_parsed.requestParameters.sourceDBInstanceArn, &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'StopDBInstanceAutomatedBackupsReplication', &replace_regex(log_content_parsed.requestParameters.sourceDBInstanceArn, 'arn:aws:rds:[^:]*:[^:]*:[^:]*:([^:]*)','$1') &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",

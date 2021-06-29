@@ -287,7 +287,7 @@ CLOUDTRAIL_USER_IDENTITY = {
                                                    "eventType": "AwsApiCall",
                                                    "managementEvent": True,
                                                    "eventCategory": "Management",
-                                                   "recipientAccountId": "908047316593"
+                                                   "recipientAccountId": "444000444"
                                                })
                                                }
                                               ]},
@@ -296,7 +296,7 @@ CLOUDTRAIL_USER_IDENTITY = {
             "aws.resource.id": None,
             "aws.arn": None,
             "dt.source_entity": None,
-            'content': '{"eventVersion": "1.08", "userIdentity": {"type": "AssumedRole", "principalId": "AIDA12345667789ABCEF:444000444-somemonitoringuser", "arn": "arn:aws:iam::444000444:user/somemonitoringuser", "accountId": "444000444", "accessKeyId": "AKIA123456789ABCDEFG", "sessionContext": {"sessionIssuer": {"type": "Role", "principalId": "AIDA12345667789ABCEF", "arn": "arn:aws:iam::444000444:role/sso/dtRoleAdmin", "accountId": "444000444", "userName": "dtRoleAdmin"}, "webIdFederationData": {}, "attributes": {"mfaAuthenticated": "false", "creationDate": "2021-06-21T06:30:44Z"}}}, "eventTime": "2021-05-28T12:03:24Z", "eventSource": "rds.amazonaws.com", "eventName": "DescribeDBClusters", "awsRegion": "us-east-1", "sourceIPAddress": "188.147.123.198", "userAgent": "aws-internal/3 aws-sdk-java/1.11.975 Linux/4.9.230-0.1.ac.224.84.332.metal1.x86_64 OpenJDK_64-Bit_Server_VM/25.242-b08 java/1.8.0_242 vendor/Oracle_Corporation cfg/retry-mode/legacy", "requestParameters": {"includeShared": true}, "responseElements": null, "requestID": "c78e8786-693b-4874-99ad-5f12e31b51aa", "eventID": "2e619293-cff3-4d72-b7a0-5768a566b661", "readOnly": true, "eventType": "AwsApiCall", "managementEvent": true, "eventCategory": "Management", "recipientAccountId": "908047316593"}',
+            'content': '{"eventVersion": "1.08", "userIdentity": {"type": "AssumedRole", "principalId": "AIDA12345667789ABCEF:444000444-somemonitoringuser", "arn": "arn:aws:iam::444000444:user/somemonitoringuser", "accountId": "444000444", "accessKeyId": "AKIA123456789ABCDEFG", "sessionContext": {"sessionIssuer": {"type": "Role", "principalId": "AIDA12345667789ABCEF", "arn": "arn:aws:iam::444000444:role/sso/dtRoleAdmin", "accountId": "444000444", "userName": "dtRoleAdmin"}, "webIdFederationData": {}, "attributes": {"mfaAuthenticated": "false", "creationDate": "2021-06-21T06:30:44Z"}}}, "eventTime": "2021-05-28T12:03:24Z", "eventSource": "rds.amazonaws.com", "eventName": "DescribeDBClusters", "awsRegion": "us-east-1", "sourceIPAddress": "188.147.123.198", "userAgent": "aws-internal/3 aws-sdk-java/1.11.975 Linux/4.9.230-0.1.ac.224.84.332.metal1.x86_64 OpenJDK_64-Bit_Server_VM/25.242-b08 java/1.8.0_242 vendor/Oracle_Corporation cfg/retry-mode/legacy", "requestParameters": {"includeShared": true}, "responseElements": null, "requestID": "c78e8786-693b-4874-99ad-5f12e31b51aa", "eventID": "2e619293-cff3-4d72-b7a0-5768a566b661", "readOnly": true, "eventType": "AwsApiCall", "managementEvent": true, "eventCategory": "Management", "recipientAccountId": "444000444"}',
             'cloud.provider': 'aws',
             'cloud.account.id': '444000444',
             'cloud.region': 'us-east-1',
@@ -310,6 +310,56 @@ CLOUDTRAIL_USER_IDENTITY = {
             'audit.identity': 'arn:aws:iam::444000444:user/somemonitoringuser',
             'audit.result': 'Succeeded'}
     }, id="testcase_Cloudtrail_RDS_DescribeDBClusters_optional_entity_linking"),
+
+    pytest.param({
+        "record_data_decoded": {"messageType": "DATA_MESSAGE", "owner": "444000444",
+                                "logGroup": "aws-cloudtrail-logs-444000444-1cceb782",
+                                "logStream": "444000444_CloudTrail_us-east-1",
+                                "subscriptionFilters": ["Belu-APM-299389-cloudtrail-RDS_subscriptionFilter"],
+                                "logEvents": [{"id": "36184182057683330175263108764349521965726085205046394887",
+                                               "timestamp": 1622554840009,
+                                               "message": json.dumps({
+                                                   "eventVersion": "1.08",
+                                                   "userIdentity": CLOUDTRAIL_USER_IDENTITY,
+                                                   "eventTime": "2021-05-28T12:03:24Z",
+                                                   "eventSource": "rds.amazonaws.com",
+                                                   "eventName": "ListTagsForResource",
+                                                   "awsRegion": "us-east-1",
+                                                   "sourceIPAddress": "157.25.19.100",
+                                                   "userAgent": "aws-sdk-java/1.11.789 Linux/5.4.0-51-generic OpenJDK_64-Bit_Server_VM/11.0.10+9 java/11.0.10 vendor/AdoptOpenJDK",
+                                                   "requestParameters": {
+                                                       "resourceName": "arn:aws:rds:us-east-1:444000444:db:belu-metadata-database-1-instance-1"
+                                                   },
+                                                   "responseElements": None,
+                                                   "requestID": "c78e8786-693b-4874-99ad-5f12e31b51aa",
+                                                   "eventID": "2e619293-cff3-4d72-b7a0-5768a566b661",
+                                                   "readOnly": True,
+                                                   "eventType": "AwsApiCall",
+                                                   "managementEvent": True,
+                                                   "eventCategory": "Management",
+                                                   "recipientAccountId": "444000444"
+                                               })
+                                               }
+                                              ]},
+        "expect_first_log_contains": {
+            'aws.service': 'cloudtrail',
+            "aws.resource.id": 'belu-metadata-database-1-instance-1',
+            "aws.arn": 'arn:aws:rds:us-east-1:444000444:db:belu-metadata-database-1-instance-1',
+            "dt.source_entity": 'RELATIONAL_DATABASE_SERVICE-BD5D6EC7B9C3C4A1',
+            'content': '{"eventVersion": "1.08", "userIdentity": {"type": "AssumedRole", "principalId": "AIDA12345667789ABCEF:444000444-somemonitoringuser", "arn": "arn:aws:iam::444000444:user/somemonitoringuser", "accountId": "444000444", "accessKeyId": "AKIA123456789ABCDEFG", "sessionContext": {"sessionIssuer": {"type": "Role", "principalId": "AIDA12345667789ABCEF", "arn": "arn:aws:iam::444000444:role/sso/dtRoleAdmin", "accountId": "444000444", "userName": "dtRoleAdmin"}, "webIdFederationData": {}, "attributes": {"mfaAuthenticated": "false", "creationDate": "2021-06-21T06:30:44Z"}}}, "eventTime": "2021-05-28T12:03:24Z", "eventSource": "rds.amazonaws.com", "eventName": "ListTagsForResource", "awsRegion": "us-east-1", "sourceIPAddress": "157.25.19.100", "userAgent": "aws-sdk-java/1.11.789 Linux/5.4.0-51-generic OpenJDK_64-Bit_Server_VM/11.0.10+9 java/11.0.10 vendor/AdoptOpenJDK", "requestParameters": {"resourceName": "arn:aws:rds:us-east-1:444000444:db:belu-metadata-database-1-instance-1"}, "responseElements": null, "requestID": "c78e8786-693b-4874-99ad-5f12e31b51aa", "eventID": "2e619293-cff3-4d72-b7a0-5768a566b661", "readOnly": true, "eventType": "AwsApiCall", "managementEvent": true, "eventCategory": "Management", "recipientAccountId": "444000444"}',
+            'cloud.provider': 'aws',
+            'cloud.account.id': '444000444',
+            'cloud.region': 'us-east-1',
+            'aws.log_group': 'aws-cloudtrail-logs-444000444-1cceb782',
+            'aws.log_stream': '444000444_CloudTrail_us-east-1',
+            'aws.region': 'us-east-1',
+            'aws.account.id': '444000444',
+            'severity': 'INFO',
+            'timestamp': 1622554840009,
+            'audit.action': 'ListTagsForResource',
+            'audit.identity': 'arn:aws:iam::444000444:user/somemonitoringuser',
+            'audit.result': 'Succeeded'}
+    }, id="testcase_Cloudtrail_RDS_ListTagsForResource_resource_id_from_arn"),
 
 ])
 def test_full_transformation(testcase: dict):
