@@ -156,7 +156,7 @@ usage: dynatrace-aws-logs.sh delete [--stack-name STACK_NAME]
 arguments:
   -h, --help            show this help message and exit
   --stack-name STACK_NAME
-                        Optional. The name for the CloudFormation stack in which the resources will be deployed. This defaults to \"$DEFAULT_STACK_NAME\"
+                        Optional. The name for the CloudFormation stack in which the resources will be removed. This defaults to \"$DEFAULT_STACK_NAME\"
 "
   }
 
