@@ -16,7 +16,7 @@ before_install:
   - pip install --user awscli
   # set up shared storage for build artifacts
   - mkdir -p ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER
-  - aws s3 sync s3://aws-log-forwader-travis-build-shared-storage/$TRAVIS_BUILD_NUMBER ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER
+  - aws s3 sync s3://aws-log-forwarder-travis-build-shared-storage/$TRAVIS_BUILD_NUMBER ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER
 jobs:
   include:
     - stage: unit_tests
@@ -62,4 +62,4 @@ jobs:
           tags: true
 
 after_success:
-  - aws s3 sync ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER s3://aws-log-forwader-travis-build-shared-storage/$TRAVIS_BUILD_NUMBER
+  - aws s3 sync ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER s3://aws-log-forwarder-travis-build-shared-storage/$TRAVIS_BUILD_NUMBER

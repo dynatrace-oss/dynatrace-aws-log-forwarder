@@ -33,8 +33,8 @@ actions:
 
   {deploy,subscribe,unsubscribe,discover-log-groups}
                         Actions to be executed by the script:
-    deploy              Deploy AWS infrastructure (AWS Kinesis Firehose and AWS Lambda) configured to forward logs from AWS CloudWatch to Dynatrace ActiveGate.
-    delete              Delete AWS infrastructure.
+    deploy              Deploy AWS log forwarder stack.
+    delete              Delete AWS log forwarder stack.
     subscribe           Subscribe Dynatrace to Logs from LogGroup(s) (creates a Subscription Filter per each given Log Group)
     unsubscribe         Unsubscribe Dynatrace from Logs from LogGroup(s) (removes Subscription Filter from each given Log Group)
     discover-log-groups Convenience option to list all existing log groups in your AWS account
