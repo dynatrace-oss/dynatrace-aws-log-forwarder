@@ -294,8 +294,8 @@ CLOUDTRAIL_USER_IDENTITY = {
         "expect_first_log_contains": {
             'aws.service': 'cloudtrail',
             "aws.resource.id": None,
-            # "aws.arn": None,TODO make it work
-            # "dt.source_entity": None,
+            "aws.arn": None,
+            "dt.source_entity": None,
             'content': '{"eventVersion": "1.08", "userIdentity": {"type": "AssumedRole", "principalId": "AIDA12345667789ABCEF:444000444-somemonitoringuser", "arn": "arn:aws:iam::444000444:user/somemonitoringuser", "accountId": "444000444", "accessKeyId": "AKIA123456789ABCDEFG", "sessionContext": {"sessionIssuer": {"type": "Role", "principalId": "AIDA12345667789ABCEF", "arn": "arn:aws:iam::444000444:role/sso/dtRoleAdmin", "accountId": "444000444", "userName": "dtRoleAdmin"}, "webIdFederationData": {}, "attributes": {"mfaAuthenticated": "false", "creationDate": "2021-06-21T06:30:44Z"}}}, "eventTime": "2021-05-28T12:03:24Z", "eventSource": "rds.amazonaws.com", "eventName": "DescribeDBClusters", "awsRegion": "us-east-1", "sourceIPAddress": "188.147.123.198", "userAgent": "aws-internal/3 aws-sdk-java/1.11.975 Linux/4.9.230-0.1.ac.224.84.332.metal1.x86_64 OpenJDK_64-Bit_Server_VM/25.242-b08 java/1.8.0_242 vendor/Oracle_Corporation cfg/retry-mode/legacy", "requestParameters": {"includeShared": true}, "responseElements": null, "requestID": "c78e8786-693b-4874-99ad-5f12e31b51aa", "eventID": "2e619293-cff3-4d72-b7a0-5768a566b661", "readOnly": true, "eventType": "AwsApiCall", "managementEvent": true, "eventCategory": "Management", "recipientAccountId": "908047316593"}',
             'cloud.provider': 'aws',
             'cloud.account.id': '444000444',

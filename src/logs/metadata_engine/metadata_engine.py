@@ -18,6 +18,7 @@ import json
 import os
 import re
 from dataclasses import dataclass
+from math import inf
 from os import listdir
 from os.path import isfile
 from typing import Dict, List, Optional, Any
@@ -44,6 +45,7 @@ Grok.DEFAULT_PATTERNS_DIRS = []
 @dataclass(frozen=True)
 class Attribute:
     key: str
+    priority: int
     pattern: str
 
 
@@ -153,6 +155,10 @@ def _apply_rule(rule, record, parsed_record):
             value = jmespath.search(attribute.pattern, record, JMESPATH_OPTIONS)
             if value:
                 parsed_record[attribute.key] = value
+
+                # attributes with priority are available for the calculation of further attributes
+                if attribute.priority is not None:
+                    record[attribute.key] = value
         except Exception as ex:
             logging.log_error_without_stacktrace(f"Encountered exception when evaluating attribute {attribute} of rule for {rule.entity_type_name}")
 
@@ -204,13 +210,16 @@ def _create_attributes(attributes_json: List[Dict]) -> List[Attribute]:
 
     for source_json in attributes_json:
         key = source_json.get("key", None)
+        priority = source_json.get("priority", None)
         pattern = source_json.get("pattern", None)
 
         if key and pattern:
-            result.append(Attribute(key, pattern))
+            result.append(Attribute(key, priority, pattern))
         else:
             logging.warning(f"Encountered invalid rule attribute with missing parameter, parameters were: key = {key}, pattern = {pattern}")
 
+    # attributes without priority are executed last
+    result.sort(key= lambda attribute: attribute.priority if attribute.priority is not None else inf)
     return result
 
 
