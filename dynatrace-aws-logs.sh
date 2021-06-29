@@ -109,11 +109,7 @@ arguments:
         shift;shift;
       ;;
 
-      "-h")
-        print_help_deploy
-        shift; exit 0
-      ;;
-      "--help")
+      "-h" | "--help")
         print_help_deploy
         shift; exit 0
       ;;
@@ -186,11 +182,7 @@ arguments:
         shift;shift;
       ;;
 
-      "-h")
-        print_help_delete
-        shift; exit 0
-      ;;
-      "--help")
+      "-h" | "--help")
         print_help_delete
         shift; exit 0
       ;;
@@ -295,11 +287,7 @@ arguments:
         shift; shift
       ;;
 
-      "-h")
-        shift
-        print_help_subcribe; exit 0
-      ;;
-      "--help")
+      "-h" | "--help")
         shift
         print_help_subcribe; exit 0
       ;;
@@ -401,12 +389,8 @@ arguments:
         shift; shift
       ;;
 
-      "-h")
+      "-h" | "--help")
         print_help_unsubcribe;
-        shift; exit 0
-      ;;
-      "--help")
-        print_help_unsubcribe
         shift; exit 0
       ;;
       *)
@@ -452,12 +436,8 @@ usage: dynatrace-aws-logs.sh discover-log-groups
   }
   while (( "$#" )); do
     case "$1" in
-      "-h")
+      "-h" | "--help")
         print_help_discover;
-        shift; exit 0
-      ;;
-      "--help")
-        print_help_discover
         shift; exit 0
       ;;
       *)
@@ -468,10 +448,7 @@ usage: dynatrace-aws-logs.sh discover-log-groups
 
  ;;
 
-"-h")
-   print_help_main_options
- ;;
-"--help")
+"-h" | "--help")
    print_help_main_options
  ;;
 *)
