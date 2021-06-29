@@ -54,15 +54,26 @@ class MappingCustomFunctions(functions.Functions):
     @functions.signature({'types': ['string', 'null']},
                          {"types": ['array']})
     def _func_format(self, pattern, values):
-        assert pattern.count("{}") == len(values)
+        return self.format(pattern, values)
+
+    def format(self, pattern, values):
+        if pattern.count("{}") != len(values):
+            return None
 
         output = pattern
-
         for value in values:
             if value is not None:
                 output = output.replace("{}", value, 1)
-
         return output
+
+    @functions.signature({'types': ['string', 'null']},
+                         {"types": ['array']})
+    def _func_format_arn(self, pattern, values):
+        if None in values:
+            # any None value in input is treated as missing required data, no complete arn can be calculated
+            return None
+
+        return self.format(pattern, values)
 
     @functions.signature({'types': ['string', 'null']},
                          {'types': ['string', 'null']})

@@ -24,7 +24,7 @@
         },
         {
           "key": "aws.arn",
-          "pattern": "format('arn:{}:lambda:{}:{}:function:{}', [partition, region, account_id, function_name])"
+          "pattern": "format_arn('arn:{}:lambda:{}:{}:function:{}', [partition, region, account_id, function_name])"
         },
         {
           "key": "severity",

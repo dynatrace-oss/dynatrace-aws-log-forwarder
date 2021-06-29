@@ -42,7 +42,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'AddRoleToDBCluster', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'AddRoleToDBCluster', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -55,7 +55,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'AddRoleToDBInstance', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'AddRoleToDBInstance', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -68,7 +68,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'AddSourceIdentifierToSubscription' && log_content_parsed.requestParameters.sourceType == 'db-cluster', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'AddSourceIdentifierToSubscription' && log_content_parsed.requestParameters.sourceType == 'db-cluster', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -81,7 +81,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'AddSourceIdentifierToSubscription' && log_content_parsed.requestParameters.sourceType == 'db-instance', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'AddSourceIdentifierToSubscription' && log_content_parsed.requestParameters.sourceType == 'db-instance', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -127,7 +127,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'BacktrackDBCluster', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'BacktrackDBCluster', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -140,7 +140,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'CreateDBCluster', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'CreateDBCluster', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -153,7 +153,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'CreateDBClusterEndpoint', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'CreateDBClusterEndpoint', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -166,7 +166,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'CreateDBClusterSnapshot', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'CreateDBClusterSnapshot', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -179,7 +179,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'CreateDBInstance', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.responseElements.dBInstanceIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'CreateDBInstance', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.responseElements.dBInstanceIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -192,7 +192,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'CreateDBInstanceReadReplica', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.responseElements.sourceDBInstanceIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'CreateDBInstanceReadReplica', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.responseElements.sourceDBInstanceIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -205,7 +205,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'CreateDBSnapshot', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'CreateDBSnapshot', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -218,7 +218,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'CreateEventSubscription' && log_content_parsed.requestParameters.sourceType == 'db-cluster', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.SourceIds[*].SourceId.dBClusterIdentifier ]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'CreateEventSubscription' && log_content_parsed.requestParameters.sourceType == 'db-cluster', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.SourceIds[*].SourceId.dBClusterIdentifier ]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -231,7 +231,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'CreateEventSubscription' && log_content_parsed.requestParameters.sourceType == 'db-instance', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.SourceIds[*].dBInstanceIdentifier  ]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'CreateEventSubscription' && log_content_parsed.requestParameters.sourceType == 'db-instance', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.SourceIds[*].dBInstanceIdentifier  ]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -244,7 +244,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'CreateGlobalCluster', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.globalClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'CreateGlobalCluster', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.globalClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -257,7 +257,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'DeleteDBCluster', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DeleteDBCluster', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -270,7 +270,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'DeleteDBInstance', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DeleteDBInstance', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -283,7 +283,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'DeleteDBInstanceAutomatedBackup', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.DbiResourceId]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DeleteDBInstanceAutomatedBackup', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.DbiResourceId]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -300,16 +300,16 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'DeleteGlobalCluster', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.globalClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DeleteGlobalCluster', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.globalClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'DeregisterDBProxyTargets', & format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifiers[*]]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DeregisterDBProxyTargets', & format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifiers[*]]), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'DeregisterDBProxyTargets', &TODOdt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifiers[*]])), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DeregisterDBProxyTargets', &TODOdt_meid_rds_v2( format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifiers[*]])), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -322,7 +322,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'DescribeDBClusterBacktracks', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBClusterBacktracks', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -335,7 +335,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'DescribeDBClusterEndpoints', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBClusterEndpoints', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -348,7 +348,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'DescribeDBClusterSnapshots', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBClusterSnapshots', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -361,7 +361,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'DescribeDBClusters', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBClusters', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -374,7 +374,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'DescribeDBInstanceAutomatedBackups', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBInstanceAutomatedBackups', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -387,7 +387,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'DescribeDBInstances', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBInstances', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -400,7 +400,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'DescribeDBLogFiles', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBLogFiles', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -413,7 +413,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'DescribeDBSnapshots', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribeDBSnapshots', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -426,7 +426,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'DescribeEvents'  && log_content_parsed.requestParameters.sourceType == 'db-instance', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribeEvents'  && log_content_parsed.requestParameters.sourceType == 'db-instance', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -439,7 +439,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'DescribeEvents' && log_content_parsed.requestParameters.sourceType == 'db-cluster', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribeEvents' && log_content_parsed.requestParameters.sourceType == 'db-cluster', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -452,7 +452,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'DescribeGlobalClusters', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.globalClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribeGlobalClusters', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.globalClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -481,7 +481,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'DescribeValidDBInstanceModifications', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DescribeValidDBInstanceModifications', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -494,7 +494,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'DownloadDBLogFilePortion', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'DownloadDBLogFilePortion', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -507,7 +507,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'FailoverDBCluster', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'FailoverDBCluster', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -520,7 +520,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'FailoverGlobalCluster', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.globalClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'FailoverGlobalCluster', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.globalClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -550,7 +550,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'ModifyDBCluster', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'ModifyDBCluster', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -563,7 +563,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'ModifyDBInstance', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'ModifyDBInstance', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -576,7 +576,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'ModifyDBSnapshot', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.responseElements.dBInstanceIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'ModifyDBSnapshot', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.responseElements.dBInstanceIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -589,7 +589,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'ModifyGlobalCluster', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'ModifyGlobalCluster', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -602,7 +602,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'PromoteReadReplica', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'PromoteReadReplica', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -615,7 +615,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'PromoteReadReplicaDBCluster', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'PromoteReadReplicaDBCluster', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -628,7 +628,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'RebootDBInstance', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'RebootDBInstance', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -636,12 +636,12 @@
         },
         {
           "key": "dt.source_entity",
-          "pattern": "if( log_content_parsed.eventName == 'RegisterDBProxyTargets', &TODOdt_meid_rds_v2( format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifiers[*]])), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'RegisterDBProxyTargets', &TODOdt_meid_rds_v2( format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifiers[*]])), &EmptyValue, @ )"
         },
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'RegisterDBProxyTargets', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifiers[*]]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'RegisterDBProxyTargets', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifiers[*]]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -654,7 +654,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'RemoveFromGlobalCluster', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'RemoveFromGlobalCluster', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -667,7 +667,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'RemoveRoleFromDBCluster', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'RemoveRoleFromDBCluster', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -680,7 +680,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'RemoveRoleFromDBInstance', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'RemoveRoleFromDBInstance', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -710,7 +710,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'RestoreDBClusterFromS3', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'RestoreDBClusterFromS3', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -723,7 +723,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'RestoreDBClusterFromSnapshot', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'RestoreDBClusterFromSnapshot', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -736,7 +736,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'RestoreDBClusterToPointInTime', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'RestoreDBClusterToPointInTime', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -749,7 +749,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'RestoreDBInstanceFromDBSnapshot', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'RestoreDBInstanceFromDBSnapshot', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -762,7 +762,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'RestoreDBInstanceFromS3', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'RestoreDBInstanceFromS3', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -775,7 +775,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'RestoreDBInstanceToPointInTime', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'RestoreDBInstanceToPointInTime', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -805,7 +805,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'StartDBCluster', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'StartDBCluster', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -818,7 +818,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'StartDBInstance', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'StartDBInstance', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
@@ -865,7 +865,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'StopDBCluster', &format('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'StopDBCluster', &format_arn('arn:aws:rds:{}:{}:cluster:{}', [region, account_id, log_content_parsed.requestParameters.dBClusterIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "dt.source_entity",
@@ -874,7 +874,7 @@
         {
           "key": "aws.arn",
           "priority": 10,
-          "pattern": "if( log_content_parsed.eventName == 'StopDBInstance', &format('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
+          "pattern": "if( log_content_parsed.eventName == 'StopDBInstance', &format_arn('arn:aws:rds:{}:{}:db:{}', [region, account_id, log_content_parsed.requestParameters.dBInstanceIdentifier]), &EmptyValue, @ )"
         },
         {
           "key": "aws.resource.id",
