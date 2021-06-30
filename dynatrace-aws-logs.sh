@@ -22,7 +22,7 @@ function print_help_main_options {
   echo ""
   printf \
 "usage: dynatrace-aws-logs.sh [-h]
-                              {deploy,delete,subscribe,unsubscribe,discover-log-groups}
+                              {deploy,subscribe,unsubscribe,discover-log-groups}
                               ...
 
 optional arguments:
@@ -34,7 +34,6 @@ actions:
   {deploy,subscribe,unsubscribe,discover-log-groups}
                         Actions to be executed by the script:
     deploy              Deploy AWS log forwarder stack.
-    delete              Delete AWS log forwarder stack.
     subscribe           Subscribe Dynatrace to Logs from LogGroup(s) (creates a Subscription Filter per each given Log Group)
     unsubscribe         Unsubscribe Dynatrace from Logs from LogGroup(s) (removes Subscription Filter from each given Log Group)
     discover-log-groups Convenience option to list all existing log groups in your AWS account
@@ -145,66 +144,6 @@ arguments:
 
   # SHOW OUTPUTS
   aws cloudformation describe-stacks --stack-name "$STACK_NAME" --query "Stacks[0].Outputs"
-  ;;
-
-"delete")
-
-  function print_help_delete {
-    printf "
-usage: dynatrace-aws-logs.sh delete [--stack-name STACK_NAME]
-
-arguments:
-  -h, --help            show this help message and exit
-  --stack-name STACK_NAME
-                        Optional. The name for the CloudFormation stack in which the resources will be removed. This defaults to \"$DEFAULT_STACK_NAME\"
-"
-  }
-
-  function print_params_delete {
-    echo
-    echo "Deletion script will use following parameters:"
-    echo "STACK_NAME=\"$STACK_NAME\""
-  }
-
-  function ensure_param_value_given {
-    # Checks if a value ($2) was passed for a parameter ($1). The two OR'ed conditions catch the following mistakes:
-    # 1. The parameter is the last one and has no value
-    # 2. The parameter is between other parameters and (as it has no value) the name of the next parameter is taken as its value
-    if [ -z $2 ] || [[ $2 == "--"* ]]; then echo "Missing value for parameter $1"; print_help_delete; exit 1; fi
-  }
-
-  while (( "$#" )); do
-    case "$1" in
-
-      "--stack-name")
-        ensure_param_value_given $1 $2
-        STACK_NAME=$2
-        shift;shift;
-      ;;
-
-      "-h" | "--help")
-        print_help_delete
-        shift; exit 0
-      ;;
-      *)
-        echo "Unknown param $1"
-        print_help_delete
-        exit 1
-    esac
-  done
-
-  if [ -z "$STACK_NAME" ]; then STACK_NAME=$DEFAULT_STACK_NAME; fi
-
-  print_params_delete
-
-  set -e
-
-  echo "Deleting stack $STACK_NAME"
-
-  aws cloudformation delete-stack --stack-name "$STACK_NAME"
-
-  # CHECK IF STACK HAS BEEN DELETED
-  # aws cloudformation list-stacks --stack-status-filter DELETE_COMPLETE
   ;;
 
 "subscribe")
