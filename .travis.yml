@@ -46,6 +46,7 @@ jobs:
         - cp -r ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER/dynatrace-aws-log-forwarder-lambda.zip .
         - ./dynatrace-aws-logs.sh deploy --target-url $DYNATRACE_ENV_URL --target-api-token $DYNATRACE_API_KEY --use-existing-active-gate true --require-valid-certificate $VERIFY_SSL --stack-name aws-log-forwarder-e2e-build-$TRAVIS_BUILD_NUMBER
         # delete log forwarder AWS resources
+        - aws cloudformation delete-stack --stack-name aws-log-forwarder-e2e-build-$TRAVIS_BUILD_NUMBER
     - stage: deployment
       name: Github Release Deployment
       if: tag =~ /^release.*$/
