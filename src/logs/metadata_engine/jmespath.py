@@ -46,10 +46,10 @@ class MappingCustomFunctions(functions.Functions):
 
 
     @functions.signature({'types': ['string', 'null']}, {'types': ['string', 'null']})
-    def _func_starts_with(self, search, suffix):
-        if(search is None or suffix is None):
+    def _func_starts_with(self, search, prefix):
+        if(search is None or prefix is None):
             return False
-        return search.startswith(suffix)
+        return search.startswith(prefix)
 
     @functions.signature({'types': ['string', 'null']},
                          {"types": ['array']})
