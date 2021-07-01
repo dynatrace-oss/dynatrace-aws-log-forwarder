@@ -42,7 +42,7 @@ jobs:
       services: docker
       before_script: cd ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER
       script:
-        - unzip dynatrace-aws-log-forwarder-lambda.zip
+        - unzip dynatrace-aws-log-forwarder.zip
         # deploy log forwarder resources reqiured for e2e to AWS
         - ./dynatrace-aws-logs.sh deploy --target-url $DYNATRACE_ENV_URL --target-api-token $DYNATRACE_API_KEY --use-existing-active-gate true --require-valid-certificate $VERIFY_SSL --stack-name aws-log-forwarder-e2e-build-$TRAVIS_BUILD_NUMBER
         # delete log forwarder AWS resources
