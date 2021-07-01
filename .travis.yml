@@ -45,6 +45,7 @@ jobs:
         - unzip dynatrace-aws-log-forwarder.zip
         # deploy log forwarder resources reqiured for e2e to AWS
         - ./dynatrace-aws-logs.sh deploy --target-url $DYNATRACE_ENV_URL --target-api-token $DYNATRACE_API_KEY --use-existing-active-gate true --require-valid-certificate $VERIFY_SSL --stack-name aws-log-forwarder-e2e-build-$TRAVIS_BUILD_NUMBER
+      after_script:
         # delete log forwarder AWS resources
         - aws cloudformation delete-stack --stack-name aws-log-forwarder-e2e-build-$TRAVIS_BUILD_NUMBER
     - stage: deployment
