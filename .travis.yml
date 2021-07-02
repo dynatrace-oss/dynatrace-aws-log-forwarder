@@ -1,31 +1,69 @@
+env:
+  global:
+    # include $HOME/.local/bin for `aws`
+    - PATH=$HOME/.local/bin:$PATH
 language: shell
 notifications:
   email:
     on_success: never
 stages:
-- tests
+- unit_tests
+- build
+- e2e_tests
 - deployment
+before_install:
+  # set up awscli packages
+  - pip install --user awscli
+  # set up shared storage for build artifacts
+  - mkdir -p ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER
+  - aws s3 sync s3://aws-log-forwarder-travis-build-shared-storage/$TRAVIS_BUILD_NUMBER ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER
 jobs:
   include:
-    - stage: tests
-      name: Tests & Linting
+    - stage: unit_tests
+      name: Execute unit tests & linting
       language: shell
       services: docker
       script:
         - docker build -f pipeline/Dockerfile -t lambda_image .
         - docker run --rm lambda_image bash -c 'python3 -m pylint --rcfile=pipeline/pylint.cfg $(find src/ -name "*.py")'
         - docker run --rm lambda_image bash -c 'cd src && python3 -m pytest -v ../tests/unit'
+    - stage: build
+      name: Build AWS Lambda package
+      #if: tag =~ /^release.*$/
+      language: shell
+      services: docker
+      script:
+        - docker run --rm -v `pwd`:/var/task amazon/aws-sam-cli-build-image-python3.8 bash -c './build-release-package.sh'
+        - cp -p dynatrace-aws-log-forwarder.zip ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER
+    - stage: e2e_tests
+      name: Execute e2e tests
+      if: branch = master OR type = pull_request
+      language: shell
+      services: docker
+      before_script: 
+        - mkdir -p ./e2e_tests_tmp
+        - cp -p ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER/dynatrace-aws-log-forwarder.zip ./e2e_tests_tmp
+        - cd ./e2e_tests_tmp
+        - unzip dynatrace-aws-log-forwarder.zip
+      script:
+        # deploy log forwarder resources reqiured for e2e to AWS
+        - ./dynatrace-aws-logs.sh deploy --target-url $DYNATRACE_ENV_URL --target-api-token $DYNATRACE_API_KEY --use-existing-active-gate true --require-valid-certificate $VERIFY_SSL --stack-name aws-log-forwarder-e2e-build-$TRAVIS_BUILD_NUMBER
+      after_script:
+        # delete log forwarder AWS resources
+        - aws cloudformation delete-stack --stack-name aws-log-forwarder-e2e-build-$TRAVIS_BUILD_NUMBER
     - stage: deployment
       name: Github Release Deployment
       if: tag =~ /^release.*$/
       language: shell
       services: docker
-      script:
-        - docker run --rm -v `pwd`:/var/task amazon/aws-sam-cli-build-image-python3.8 bash -c './build-release-package.sh'
+      script: skip
       deploy:
         provider: releases
         api_key: $GITHUB_RELEASE_API_KEY
-        file: ./dynatrace-aws-log-forwarder.zip
+        file: ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER/dynatrace-aws-log-forwarder.zip
         skip_cleanup: true
         on:
           tags: true
+
+after_success:
+  - aws s3 sync ~/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER s3://aws-log-forwarder-travis-build-shared-storage/$TRAVIS_BUILD_NUMBER

@@ -33,7 +33,7 @@ actions:
 
   {deploy,subscribe,unsubscribe,discover-log-groups}
                         Actions to be executed by the script:
-    deploy              Deploy AWS infrastructure (AWS Kinesis Firehose and AWS Lambda) configured to forward logs from AWS CloudWatch to Dynatrace ActiveGate.
+    deploy              Deploy AWS log forwarder stack.
     subscribe           Subscribe Dynatrace to Logs from LogGroup(s) (creates a Subscription Filter per each given Log Group)
     unsubscribe         Unsubscribe Dynatrace from Logs from LogGroup(s) (removes Subscription Filter from each given Log Group)
     discover-log-groups Convenience option to list all existing log groups in your AWS account
@@ -127,11 +127,7 @@ arguments:
         shift;shift;
       ;;
 
-      "-h")
-        print_help_deploy
-        shift; exit 0
-      ;;
-      "--help")
+      "-h" | "--help")
         print_help_deploy
         shift; exit 0
       ;;
@@ -181,7 +177,6 @@ arguments:
   # SHOW OUTPUTS
   aws cloudformation describe-stacks --stack-name "$STACK_NAME" --query "Stacks[0].Outputs"
   ;;
-
 
 "subscribe")
 
@@ -263,11 +258,7 @@ arguments:
         shift; shift
       ;;
 
-      "-h")
-        shift
-        print_help_subcribe; exit 0
-      ;;
-      "--help")
+      "-h" | "--help")
         shift
         print_help_subcribe; exit 0
       ;;
@@ -369,12 +360,8 @@ arguments:
         shift; shift
       ;;
 
-      "-h")
+      "-h" | "--help")
         print_help_unsubcribe;
-        shift; exit 0
-      ;;
-      "--help")
-        print_help_unsubcribe
         shift; exit 0
       ;;
       *)
@@ -420,12 +407,8 @@ usage: dynatrace-aws-logs.sh discover-log-groups
   }
   while (( "$#" )); do
     case "$1" in
-      "-h")
+      "-h" | "--help")
         print_help_discover;
-        shift; exit 0
-      ;;
-      "--help")
-        print_help_discover
         shift; exit 0
       ;;
       *)
@@ -436,10 +419,7 @@ usage: dynatrace-aws-logs.sh discover-log-groups
 
  ;;
 
-"-h")
-   print_help_main_options
- ;;
-"--help")
+"-h" | "--help")
    print_help_main_options
  ;;
 *)
