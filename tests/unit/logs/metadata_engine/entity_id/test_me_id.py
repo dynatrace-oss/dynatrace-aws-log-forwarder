@@ -18,14 +18,16 @@ from logs.metadata_engine.jmespath import format_required
 jmes_custom_functions = jmespath.MappingCustomFunctions()
 
 def test_format_required():
-    assert format_required("{}") is None
-    assert format_required("{}{}") is None
-    assert format_required("{}{}", "1") is None
-    assert format_required("{}{}_{}", "1", "2") is None
+    assert format_required("{}", None) is None
+    assert format_required("{}", []) is None
+    assert format_required("{}{}", []) is None
+    assert format_required("{}{}", ["1"]) is None
+    assert format_required("{}{}_{}", ["1", "2"]) is None
 
     assert jmes_custom_functions._func_format_arn("{}", None) is None
-    assert jmes_custom_functions._func_format_arn("{}{}", None) is None
-    assert jmes_custom_functions._func_format_arn("{}{}", "1") is None
+    assert jmes_custom_functions._func_format_arn("{}", []) is None
+    assert jmes_custom_functions._func_format_arn("{}{}", []) is None
+    assert jmes_custom_functions._func_format_arn("{}{}", ["1"]) is None
     assert jmes_custom_functions._func_format_arn("{}{}_{}", ["1", "2"]) is None
 
 def test_meid_credentials_v1_legacy_md5():
@@ -33,7 +35,7 @@ def test_meid_credentials_v1_legacy_md5():
 
     id = me_id._legacy_entity_id_md5(input)
     meid = me_id.meid_md5("AWS_LAMBDA_FUNCTION", input)
-    meid_from_format = me_id.meid_md5("AWS_LAMBDA_FUNCTION", format_required("{}{}_{}", "dynatrace-aws-logs-Lambda-1K7HG2Q2LIQKU", "us-east-1", "000047316593"))
+    meid_from_format = me_id.meid_md5("AWS_LAMBDA_FUNCTION", format_required("{}{}_{}", ["dynatrace-aws-logs-Lambda-1K7HG2Q2LIQKU", "us-east-1", "000047316593"]))
 
     assert id == -3464187019831048966
     assert meid == "AWS_LAMBDA_FUNCTION-CFECBC426F7384FA"
@@ -44,7 +46,7 @@ def test_meid_credentials_v2_supporting_service__murmurhash():
 
     id = me_id._murmurhash2_64A(input)
     meid = me_id.meid_murmurhash("CUSTOM_DEVICE", input)
-    meid_from_list = me_id.meid_murmurhash("CUSTOM_DEVICE", format_required("{}{}", "api gateway", "arn:aws:apigateway:us-east-1:000047316593:/restapis/PetStore"))
+    meid_from_list = me_id.meid_murmurhash("CUSTOM_DEVICE", format_required("{}{}", ["api gateway", "arn:aws:apigateway:us-east-1:000047316593:/restapis/PetStore"]))
 
     assert id == -364647979568170292
     assert meid == "CUSTOM_DEVICE-FAF0829835C67ACC"
