@@ -40,7 +40,7 @@ def meid_murmurhash_awsseed(entity_type: str, hashing_input: str) -> str:
     if hashing_input is None:
         return None
 
-    long_id = _murmurhash2_64A(hashing_input, seed = -512093083)
+    long_id = _murmurhash2_64A(hashing_input, seed = -512093083) #APM-226544: 0xe17a1465 as default but with casting to int used
 
     identifier = _encode_me_identifier(entity_type, long_id)
     return identifier
