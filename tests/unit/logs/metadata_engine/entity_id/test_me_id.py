@@ -13,26 +13,38 @@
 #   limitations under the License.
 
 from logs.metadata_engine import me_id, jmespath
+from logs.metadata_engine.jmespath import format_required
 
+jmes_custom_functions = jmespath.MappingCustomFunctions()
 
+def test_format_required():
+    assert format_required("{}") is None
+    assert format_required("{}{}") is None
+    assert format_required("{}{}", "1") is None
+    assert format_required("{}{}_{}", "1", "2") is None
+
+    assert jmes_custom_functions._func_format_arn("{}", None) is None
+    assert jmes_custom_functions._func_format_arn("{}{}", None) is None
+    assert jmes_custom_functions._func_format_arn("{}{}", "1") is None
+    assert jmes_custom_functions._func_format_arn("{}{}_{}", ["1", "2"]) is None
 
 def test_meid_credentials_v1_legacy_md5():
     input = "dynatrace-aws-logs-Lambda-1K7HG2Q2LIQKUus-east-1_000047316593"
 
     id = me_id._legacy_entity_id_md5(input)
     meid = me_id.meid_md5("AWS_LAMBDA_FUNCTION", input)
-    meid_from_list = me_id.meid_md5("AWS_LAMBDA_FUNCTION", "dynatrace-aws-logs-Lambda-1K7HG2Q2LIQKU", "us-east-1_000047316593")
+    meid_from_format = me_id.meid_md5("AWS_LAMBDA_FUNCTION", format_required("{}{}_{}", "dynatrace-aws-logs-Lambda-1K7HG2Q2LIQKU", "us-east-1", "000047316593"))
 
     assert id == -3464187019831048966
     assert meid == "AWS_LAMBDA_FUNCTION-CFECBC426F7384FA"
-    assert meid == meid_from_list
+    assert meid == meid_from_format
 
 def test_meid_credentials_v2_supporting_service__murmurhash():
     input = "api gatewayarn:aws:apigateway:us-east-1:000047316593:/restapis/PetStore"
 
     id = me_id._murmurhash2_64A(input)
     meid = me_id.meid_murmurhash("CUSTOM_DEVICE", input)
-    meid_from_list = me_id.meid_murmurhash("CUSTOM_DEVICE", "api gateway", "arn:aws:apigateway:us-east-1:000047316593:/restapis/PetStore")
+    meid_from_list = me_id.meid_murmurhash("CUSTOM_DEVICE", format_required("{}{}", "api gateway", "arn:aws:apigateway:us-east-1:000047316593:/restapis/PetStore"))
 
     assert id == -364647979568170292
     assert meid == "CUSTOM_DEVICE-FAF0829835C67ACC"
@@ -63,7 +75,6 @@ def test_meid_in_credentials_v2_core_services__murmurhash_awsseed():
     assert meid == real_meid_from_dt_cluster, "From awsSeed calculation, with seed -512093083:"
     assert id == real_long_id_from_dt_cluster
 
-    jmes_custom_functions = jmespath.MappingCustomFunctions()
     meid = jmes_custom_functions._func_dt_meid_rds_v2(dbInstanceArn)
     assert meid == real_meid_from_dt_cluster, "From jmesPath customFunctions - seed should be -512093083:"
     assert id == real_long_id_from_dt_cluster

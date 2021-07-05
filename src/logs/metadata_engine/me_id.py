@@ -19,37 +19,28 @@ import struct
 int64 = ctypes.c_int64
 
 
-def meid_md5(entity_type: str, *hashing_input: str):
-    if None in hashing_input:
-        # any None value in input is treated as missing required data, no ID can be calculated
+def meid_md5(entity_type: str, hashing_input: str):
+    if hashing_input is None:
         return None
 
-    concatented_input = "".join(hashing_input)
-
-    long_id = _legacy_entity_id_md5(concatented_input)
+    long_id = _legacy_entity_id_md5(hashing_input)
     identifier = _encode_me_identifier(entity_type, long_id)
     return identifier
 
 
-def meid_murmurhash(entity_type: str, *hashing_input: str) -> str:
-    if None in hashing_input:
-        # any None value in input is treated as missing required data, no ID can be calculated
+def meid_murmurhash(entity_type: str, hashing_input: str) -> str:
+    if hashing_input is None:
         return None
 
-    concatented_input = "".join(hashing_input)
-
-    long_id = _murmurhash2_64A(concatented_input)
+    long_id = _murmurhash2_64A(hashing_input)
     identifier = _encode_me_identifier(entity_type, long_id)
     return identifier
 
-def meid_murmurhash_awsseed(entity_type: str, *hashing_input: str) -> str:
-    if None in hashing_input:
-        # any None value in input is treated as missing required data, no ID can be calculated
+def meid_murmurhash_awsseed(entity_type: str, hashing_input: str) -> str:
+    if hashing_input is None:
         return None
 
-    concatented_input = "".join(hashing_input)
-
-    long_id = _murmurhash2_64A(concatented_input, seed = -512093083)
+    long_id = _murmurhash2_64A(hashing_input, seed = -512093083)
 
     identifier = _encode_me_identifier(entity_type, long_id)
     return identifier
