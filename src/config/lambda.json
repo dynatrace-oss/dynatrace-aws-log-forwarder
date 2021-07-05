@@ -28,7 +28,7 @@
         },
         {
           "key": "severity",
-          "pattern": "if( starts_with(log_content_parsed, '[ERROR]'), &'ERROR', &'INFO', @)"
+          "pattern": "if( starts_with(log_content, '[ERROR]'), &'ERROR', &'INFO', @)"
         },
         {
           "key": "dt.source_entity",

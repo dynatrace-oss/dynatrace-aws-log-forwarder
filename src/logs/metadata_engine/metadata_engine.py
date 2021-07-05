@@ -144,11 +144,11 @@ def _apply_rule(rule, record, parsed_record):
         record.update(extracted_values)
     if rule.log_content_parse_type == "json":
         try:
-            record["log_content_parsed"] = json.loads(parsed_record.get("content", {}))
+            record["log_content"] = json.loads(parsed_record.get("content", {}))
         except Exception as ex:
             logging.log_error_with_stacktrace(ex, f"Encountered exception when parsing log content as json, requested by rule for {rule.entity_type_name}")
     else:
-        record["log_content_parsed"] = parsed_record.get("content", "")
+        record["log_content"] = parsed_record.get("content", "")
 
     for attribute in rule.attributes:
         try:
@@ -162,7 +162,7 @@ def _apply_rule(rule, record, parsed_record):
         except Exception as ex:
             logging.log_error_without_stacktrace(f"Encountered exception when evaluating attribute {attribute} of rule for {rule.entity_type_name}")
 
-    record.pop("log_content_parsed", {})
+    record.pop("log_content", {})
 
 grok_by_pattern = {}
 
