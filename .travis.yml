@@ -42,7 +42,6 @@ jobs:
       language: shell
       services: docker
       before_install:
-        - python -m pip install --upgrade pip
         - pip install --user -r ./tests/e2e/requirements.txt
       before_script:
         - mkdir -p ./e2e_tests_tmp
