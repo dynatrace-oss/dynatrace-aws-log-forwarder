@@ -88,27 +88,37 @@ class MappingCustomFunctions(functions.Functions):
 
     #same ids across all version of aws credentials - md5
     @functions.signature({'types': ['string', 'null']})
-    def _func_dt_meid_ebs_volume(self, volumeId): return me_id.meid_md5("EBS_VOLUME", format_required("{}", [volumeId]))
+    def _func_dt_meid_ebs_volume(self, volumeId):
+        return me_id.meid_md5("EBS_VOLUME", format_required("{}", [volumeId]))
     @functions.signature({'types': ['string', 'null']})
-    def _func_dt_meid_ec2_instance(self, instanceId): return me_id.meid_md5("EC2_INSTANCE", format_required("{}", [instanceId]))
+    def _func_dt_meid_ec2_instance(self, instanceId):
+        return me_id.meid_md5("EC2_INSTANCE", format_required("{}", [instanceId]))
     @functions.signature({'types': ['string', 'null']},{'types': ['string', 'null']},{'types': ['string', 'null']})
-    def _func_dt_meid_lambda_function(self, functionName, region, accountId): return me_id.meid_md5("AWS_LAMBDA_FUNCTION", format_required("{}{}_{}", [functionName, region, accountId]))
+    def _func_dt_meid_lambda_function(self, functionName, region, accountId):
+        return me_id.meid_md5("AWS_LAMBDA_FUNCTION", format_required("{}{}_{}", [functionName, region, accountId]))
 
     # aws credentials v1 - md5
     @functions.signature({'types': ['string', 'null']})
-    def _func_dt_meid_elb_v1(self, dnsName): return me_id.meid_md5("ELASTIC_LOAD_BALANCER", format_required("{}", [dnsName]))
+    def _func_dt_meid_elb_v1(self, dnsName):
+        return me_id.meid_md5("ELASTIC_LOAD_BALANCER", format_required("{}", [dnsName]))
     @functions.signature({'types': ['string', 'null']})
-    def _func_dt_meid_alb_v1(self, arn): return me_id.meid_md5("AWS_APPLICATION_LOAD_BALANCER", format_required("{}", [arn]))
+    def _func_dt_meid_alb_v1(self, arn):
+        return me_id.meid_md5("AWS_APPLICATION_LOAD_BALANCER", format_required("{}", [arn]))
     @functions.signature({'types': ['string', 'null']})
-    def _func_dt_meid_nlb_v1(self, arn): return me_id.meid_md5("AWS_NETWORK_LOAD_BALANCER", format_required("{}", [arn]))
+    def _func_dt_meid_nlb_v1(self, arn):
+        return me_id.meid_md5("AWS_NETWORK_LOAD_BALANCER", format_required("{}", [arn]))
     @functions.signature({'types': ['string', 'null']})
-    def _func_dt_meid_auto_scaling_group_v1(self, arn): return me_id.meid_md5("AUTO_SCALING_GROUP", format_required("{}", [arn]))
+    def _func_dt_meid_auto_scaling_group_v1(self, arn):
+        return me_id.meid_md5("AUTO_SCALING_GROUP", format_required("{}", [arn]))
     @functions.signature({'types': ['string', 'null']}, {'types': ['string', 'null']})
-    def _func_dt_meid_dynamo_db_v1(self, tableName, region): return me_id.meid_md5("DYNAMO_DB_TABLE", format_required("{}{}", [tableName, region]))
+    def _func_dt_meid_dynamo_db_v1(self, tableName, region):
+        return me_id.meid_md5("DYNAMO_DB_TABLE", format_required("{}{}", [tableName, region]))
     @functions.signature({'types': ['string', 'null']}, {'types': ['string', 'null']})
-    def _func_dt_meid_rds_v1(self, instanceId, region): return me_id.meid_md5("RELATIONAL_DATABASE_SERVICE", format_required("{}{}", [instanceId, region]))
+    def _func_dt_meid_rds_v1(self, instanceId, region):
+        return me_id.meid_md5("RELATIONAL_DATABASE_SERVICE", format_required("{}{}", [instanceId, region]))
     @functions.signature({'types': ['string', 'null']})
-    def _func_dt_meid_s3_bucket_v1(self, name): return me_id.meid_md5("S3BUCKET", format_required("{}", [name]))
+    def _func_dt_meid_s3_bucket_v1(self, name):
+        return me_id.meid_md5("S3BUCKET", format_required("{}", [name]))
 
     def _func_dt_meid_supporting_service_v1(self, supporting_service_name, region, main_dimension, name):
         raise NotImplementedError("ID calculation for supporting services in Credentials version=1 is not possible without querying Dynatrace. "
@@ -116,23 +126,31 @@ class MappingCustomFunctions(functions.Functions):
 
     # aws credentials v2 - murmurhash with special hash
     @functions.signature({'types': ['string', 'null']})
-    def _func_dt_meid_elb_v2(self, arn): return me_id.meid_murmurhash_awsseed("ELASTIC_LOAD_BALANCER", format_required("{}", [arn]))
+    def _func_dt_meid_elb_v2(self, arn):
+        return me_id.meid_murmurhash_awsseed("ELASTIC_LOAD_BALANCER", format_required("{}", [arn]))
     @functions.signature({'types': ['string', 'null']})
-    def _func_dt_meid_alb_v2(self, arn): return me_id.meid_murmurhash_awsseed("AWS_APPLICATION_LOAD_BALANCER", format_required("{}", [arn]))
+    def _func_dt_meid_alb_v2(self, arn):
+        return me_id.meid_murmurhash_awsseed("AWS_APPLICATION_LOAD_BALANCER", format_required("{}", [arn]))
     @functions.signature({'types': ['string', 'null']})
-    def _func_dt_meid_nlb_v2(self, arn): return me_id.meid_murmurhash_awsseed("AWS_NETWORK_LOAD_BALANCER", format_required("{}", [arn]))
+    def _func_dt_meid_nlb_v2(self, arn):
+        return me_id.meid_murmurhash_awsseed("AWS_NETWORK_LOAD_BALANCER", format_required("{}", [arn]))
     @functions.signature({'types': ['string', 'null']})
-    def _func_dt_meid_auto_scaling_group_v2(self, arn): return me_id.meid_murmurhash_awsseed("AUTO_SCALING_GROUP", format_required("{}", [arn]))
+    def _func_dt_meid_auto_scaling_group_v2(self, arn):
+        return me_id.meid_murmurhash_awsseed("AUTO_SCALING_GROUP", format_required("{}", [arn]))
     @functions.signature({'types': ['string', 'null']})
-    def _func_dt_meid_dynamo_db_v2(self, arn): return me_id.meid_murmurhash_awsseed("DYNAMO_DB_TABLE", format_required("{}", [arn]))
+    def _func_dt_meid_dynamo_db_v2(self, arn):
+        return me_id.meid_murmurhash_awsseed("DYNAMO_DB_TABLE", format_required("{}", [arn]))
     @functions.signature({'types': ['string', 'null']})
-    def _func_dt_meid_rds_v2(self, arn): return me_id.meid_murmurhash_awsseed("RELATIONAL_DATABASE_SERVICE", format_required("{}", [arn]))
+    def _func_dt_meid_rds_v2(self, arn):
+        return me_id.meid_murmurhash_awsseed("RELATIONAL_DATABASE_SERVICE", format_required("{}", [arn]))
     @functions.signature({'types': ['string', 'null']})
-    def _func_dt_meid_s3_bucket_v2(self, arn): return me_id.meid_murmurhash_awsseed("S3BUCKET", format_required("{}", [arn]))
+    def _func_dt_meid_s3_bucket_v2(self, arn):
+        return me_id.meid_murmurhash_awsseed("S3BUCKET", format_required("{}", [arn]))
 
     # aws credentials v2 - murmurhash with default hash
     @functions.signature({'types': ['string', 'null']}, {'types': ['string', 'null']})
-    def _func_dt_meid_supporting_service_v2(self, supporting_service_short_name, arn): return me_id.meid_murmurhash("CUSTOM_DEVICE", format_required("{}{}", [supporting_service_short_name.lower(), arn]))
+    def _func_dt_meid_supporting_service_v2(self, supporting_service_short_name, arn):
+        return me_id.meid_murmurhash("CUSTOM_DEVICE", format_required("{}{}", [supporting_service_short_name.lower(), arn]))
 
 jmespath.functions.REVERSE_TYPES_MAP['null'] = ('NoneType', 'None')
 jmespath.functions.TYPES_MAP['NoneType'] = ('null')
