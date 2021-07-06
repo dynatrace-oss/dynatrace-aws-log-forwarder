@@ -27,8 +27,7 @@ from pygrok import Grok
 import jmespath
 
 from util import logging
-from .jmespath import JMESPATH_OPTIONS
-
+from .jmespath import JMESPATH_OPTIONS, jmespath_parser
 
 _CONDITION_COMPARATOR_MAP = {
     "$eq".casefold(): lambda x, y: str(x).casefold() == str(y).casefold(),
@@ -152,7 +151,7 @@ def _apply_rule(rule, record, parsed_record):
 
     for attribute in rule.attributes:
         try:
-            value = jmespath.search(attribute.pattern, record, JMESPATH_OPTIONS)
+            value = jmespath_parser.parse(attribute.pattern).search(record, JMESPATH_OPTIONS)
             if value:
                 parsed_record[attribute.key] = value
 

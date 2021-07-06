@@ -169,7 +169,14 @@ class MappingCustomFunctions(functions.Functions):
     def _func_dt_meid_supporting_service_v2(self, supporting_service_short_name, arn):
         return me_id.meid_murmurhash("CUSTOM_DEVICE", format_required("{}{}", [supporting_service_short_name.lower(), arn]))
 
+#fixes incomplete implementation in the lib
 jmespath.functions.REVERSE_TYPES_MAP['null'] = ('NoneType', 'None')
 jmespath.functions.TYPES_MAP['NoneType'] = ('null')
 jmespath.functions.TYPES_MAP['None'] = ('null')
+
 JMESPATH_OPTIONS = jmespath.Options(custom_functions=MappingCustomFunctions())
+
+#creates a reusable parser with a high cached expressions limit
+jmespath_parser = jmespath.parser.Parser()
+jmespath_parser._MAX_SIZE = 20000
+
