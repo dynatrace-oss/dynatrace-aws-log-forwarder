@@ -182,7 +182,7 @@ arguments:
       echo "Invalid value for parameter --target-url. Example of valid url for deployment with ActiveGate: https://environment-id.live.dynatrace.com"
       exit 1
   elif [[ "$USE_EXISTING_ACTIVE_GATE" == "true" ]] && ! [[ "${TARGET_URL}" =~ $ACTIVE_GATE_TARGET_URL_REGEX ]]; then
-      echo "Invalid value for parameter --target-url. Example of valid url for deployment without ActiveGate: https://environemnt-active-gate-url:9999/e/environment-id"
+      echo "Invalid value for parameter --target-url. Example of valid url for deployment without ActiveGate: https://environment-active-gate-url:9999/e/environment-id"
       exit 1
   fi
 
