@@ -96,15 +96,15 @@ arguments:
       CODE=$(sed -rn 's/.*<<HTTP_CODE>>(.*)$/\1/p' <<<"$RESPONSE")
       RESPONSE=$(sed -r 's/(.*)<<HTTP_CODE>>.*$/\1/' <<<"$RESPONSE")
       if [ "$CODE" -ge 300 ]; then
-        echo "Failed to check Dynatrace API token permissions - please verify provided values for parameters: --target-url and --target-api-token. $RESPONSE"
+        echo "Failed to check Dynatrace API token permissions - please verify provided values for parameters: --target-url (${TARGET_URL}) and --target-api-token. $RESPONSE"
         exit 1
       fi
-      if ! grep -q "logs.ingest" <<<"$RESPONSE"; then
-        echo "Missing Ingest logs permission for the API token"
+      if ! grep -q '"logs.ingest"' <<<"$RESPONSE"; then
+        echo "Missing Ingest logs permission (v2) for the API token"
         exit 1
       fi
     else
-      echo "Failed to check Dynatrace API token permissions - please verify provided values for parameters: --target-url and --target-api-token."
+      echo "Failed to check Dynatrace API token permissions - please verify provided values for parameters: --target-url (${TARGET_URL})"
     fi
   }
 
@@ -179,15 +179,15 @@ arguments:
   fi
 
   if [[ "$USE_EXISTING_ACTIVE_GATE" == "false" ]] && ! [[ "${TARGET_URL}" =~ $DYNATRACE_TARGET_URL_REGEX ]]; then
-      echo "Invalid value for parameter --target-url. Example of valid url for deployment with ActiveGate: https://environment-id.live.dynatrace.com"
+      echo "Invalid value for parameter --target-url. Example of valid url for deployment with ActiveGate: https://<your_environment_ID>.live.dynatrace.com"
       exit 1
   elif [[ "$USE_EXISTING_ACTIVE_GATE" == "true" ]] && ! [[ "${TARGET_URL}" =~ $ACTIVE_GATE_TARGET_URL_REGEX ]]; then
-      echo "Invalid value for parameter --target-url. Example of valid url for deployment without ActiveGate: https://environment-active-gate-url:9999/e/environment-id"
+      echo "Invalid value for parameter --target-url. Example of valid url for deployment without ActiveGate: https://<your_activegate_IP_or_hostname>:9999/e/<your_environment_ID>"
       exit 1
   fi
 
-  print_params_deploy
   check_api_token
+  print_params_deploy
 
   set -e
 
