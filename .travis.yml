@@ -3,7 +3,7 @@ env:
   global:
     # include $HOME/.local/bin for `aws`
     - PATH=$HOME/.local/bin:$PATH
-    - AWS_CLOUDWATCH_LOGS_LOG_GROUP='/aws/lambda/XXXXXXXXmyuniquename'
+    - AWS_CLOUDWATCH_LOGS_LOG_GROUP="/aws/lambda/aws-log-forwarder-e2e-build-${TRAVIS_BUILD_NUMBER}"
 language: shell
 notifications:
   email:
@@ -60,9 +60,11 @@ jobs:
       script:
         # deploy log forwarder resources reqiured for e2e to AWS
         - ./dynatrace-aws-logs.sh deploy --target-url $DYNATRACE_ENV_URL --target-api-token $DYNATRACE_API_KEY --use-existing-active-gate true --require-valid-certificate $VERIFY_SSL --stack-name aws-log-forwarder-e2e-build-$TRAVIS_BUILD_NUMBER
-        # execute end-to-end test
-        - ./main.py --log-group-name /aws/lambda/aws-log-forwarder-e2e-build-$TRAVIS_BUILD_NUMBER
+        # create AWS CloudWatch Logs log groups
+        - aws logs create-log-group --log-group-name $AWS_CLOUDWATCH_LOGS_LOG_GROUP
       after_script:
+        # delete AWS CloudWatch Logs log groups
+        - aws logs delete-log-group --log-group-name $AWS_CLOUDWATCH_LOGS_LOG_GROUP
         # delete log forwarder AWS resources
         - aws cloudformation delete-stack --stack-name aws-log-forwarder-e2e-build-$TRAVIS_BUILD_NUMBER
     - stage: deployment
