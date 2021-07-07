@@ -1,3 +1,4 @@
+dist: focal
 env:
   global:
     # include $HOME/.local/bin for `aws`
