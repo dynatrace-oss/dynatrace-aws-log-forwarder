@@ -18,6 +18,9 @@ readonly LAMBDA_ZIP_NAME="dynatrace-aws-log-forwarder-lambda.zip"
 
 readonly DEFAULT_STACK_NAME="dynatrace-aws-logs"
 
+readonly DYNATRACE_TARGET_URL_REGEX="^https:\/\/[-a-zA-Z0-9@:%._+~=]{1,256}[\/]{0,1}$"
+readonly ACTIVE_GATE_TARGET_URL_REGEX="^https:\/\/[-a-zA-Z0-9@:%._+~=]{1,256}\/e\/[-a-z0-9]{1,36}[\/]{0,1}$"
+
 function print_help_main_options {
   echo ""
   printf \
@@ -86,6 +89,24 @@ arguments:
     # 1. The parameter is the last one and has no value
     # 2. The parameter is between other parameters and (as it has no value) the name of the next parameter is taken as its value
     if [ -z $2 ] || [[ $2 == "--"* ]]; then echo "Missing value for parameter $1"; print_help_deploy; exit 1; fi
+  }
+
+  check_api_token() {
+    URL=$(echo "$TARGET_URL" | sed 's:/*$::')
+    if RESPONSE=$(curl -k -s -X POST -d "{\"token\":\"$TARGET_API_TOKEN\"}" "$URL/api/v2/apiTokens/lookup" -w "<<HTTP_CODE>>%{http_code}" -H "accept: application/json; charset=utf-8" -H "Content-Type: application/json; charset=utf-8" -H "Authorization: Api-Token $TARGET_API_TOKEN"); then
+      CODE=$(sed -rn 's/.*<<HTTP_CODE>>(.*)$/\1/p' <<<"$RESPONSE")
+      RESPONSE=$(sed -r 's/(.*)<<HTTP_CODE>>.*$/\1/' <<<"$RESPONSE")
+      if [ "$CODE" -ge 300 ]; then
+        echo -e "\e[93mWARNING: \e[37mFailed to check Dynatrace API token permissions - please verify provided values for parameters: --target-url (${TARGET_URL}) and --target-api-token. $RESPONSE"
+        exit 1
+      fi
+      if ! grep -q '"logs.ingest"' <<<"$RESPONSE"; then
+        echo -e "\e[93mWARNING: \e[37mMissing Ingest logs permission (v2) for the API token"
+        exit 1
+      fi
+    else
+      echo -e "\e[93mWARNING: \e[37mFailed to connect to Dynatrace/ActiveGate endpoint $TARGET_URL to check API token permissions. It can be ignored if Dynatrace/ActiveGate does not allow public access."
+    fi
   }
 
   while (( "$#" )); do
@@ -158,6 +179,15 @@ arguments:
     TENANT_ID="" # NOT USED IN THIS CASE
   fi
 
+  if [[ "$USE_EXISTING_ACTIVE_GATE" == "false" ]] && ! [[ "${TARGET_URL}" =~ $DYNATRACE_TARGET_URL_REGEX ]]; then
+      echo "Invalid value for parameter --target-url. Example of valid url for deployment with ActiveGate: https://<your_environment_ID>.live.dynatrace.com"
+      exit 1
+  elif [[ "$USE_EXISTING_ACTIVE_GATE" == "true" ]] && ! [[ "${TARGET_URL}" =~ $ACTIVE_GATE_TARGET_URL_REGEX ]]; then
+      echo "Invalid value for parameter --target-url. Example of valid url for deployment without ActiveGate: https://<your_activegate_IP_or_hostname>:9999/e/<your_environment_ID>"
+      exit 1
+  fi
+
+  check_api_token
   print_params_deploy
 
   set -e
