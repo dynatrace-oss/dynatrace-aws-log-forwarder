@@ -4,6 +4,7 @@ env:
     # include $HOME/.local/bin for `aws`
     - PATH=$HOME/.local/bin:$PATH
     - AWS_CLOUDWATCH_LOGS_LOG_GROUP="/aws/lambda/aws-log-forwarder-e2e-build-${TRAVIS_BUILD_NUMBER}"
+    - AWS_CLOUDWATCH_LOGS_LOG_STREAM="aws-log-forwarder-e2e-build-${TRAVIS_BUILD_NUMBER}-stream"
 language: shell
 notifications:
   email:
@@ -60,10 +61,13 @@ jobs:
       script:
         # deploy log forwarder resources reqiured for e2e to AWS
         - ./dynatrace-aws-logs.sh deploy --target-url $DYNATRACE_ENV_URL --target-api-token $DYNATRACE_API_KEY --use-existing-active-gate true --require-valid-certificate $VERIFY_SSL --stack-name aws-log-forwarder-e2e-build-$TRAVIS_BUILD_NUMBER
-        # create AWS CloudWatch Logs log groups
+        # create AWS CloudWatch Logs log groups and assign log streams
         - aws logs create-log-group --log-group-name $AWS_CLOUDWATCH_LOGS_LOG_GROUP
+        - aws logs create-log-stream --log-group-name $AWS_CLOUDWATCH_LOGS_LOG_GROUP --log-stream-name $AWS_CLOUDWATCH_LOGS_LOG_STREAM
         # subscribe to AWS CloudWatch Logs log groups
         - ./dynatrace-aws-logs.sh subscribe --log-groups $AWS_CLOUDWATCH_LOGS_LOG_GROUP --stack-name aws-log-forwarder-e2e-build-$TRAVIS_BUILD_NUMBER
+        # execute end-to-end test
+        - ./main.py --log-group-name $AWS_CLOUDWATCH_LOGS_LOG_GROUP --log-stream-name $AWS_CLOUDWATCH_LOGS_LOG_STREAM
       after_script:
         # unsubscribe from AWS CloudWatch Logs log groups
         - ./dynatrace-aws-logs.sh unsubscribe --log-groups $AWS_CLOUDWATCH_LOGS_LOG_GROUP --stack-name aws-log-forwarder-e2e-build-$TRAVIS_BUILD_NUMBER

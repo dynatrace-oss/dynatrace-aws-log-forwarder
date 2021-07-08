@@ -1,3 +1,4 @@
 ###### Requirements without Version Specifiers ######
 argparse
+botocore
 boto3
