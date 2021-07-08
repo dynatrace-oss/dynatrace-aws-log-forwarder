@@ -63,7 +63,7 @@ jobs:
         # create AWS CloudWatch Logs log groups
         - aws logs create-log-group --log-group-name $AWS_CLOUDWATCH_LOGS_LOG_GROUP
         # subscribe to AWS CloudWatch Logs log groups
-        - ./dynatrace-aws-logs.sh subscribe --log-groups $AWS_CLOUDWATCH_LOGS_LOG_GROUP
+        - ./dynatrace-aws-logs.sh subscribe --log-groups $AWS_CLOUDWATCH_LOGS_LOG_GROUP --stack-name aws-log-forwarder-e2e-build-$TRAVIS_BUILD_NUMBER
       after_script:
         # unsubscribe from AWS CloudWatch Logs log groups
         - ./dynatrace-aws-logs.sh unsubscribe --log-groups $AWS_CLOUDWATCH_LOGS_LOG_GROUP
