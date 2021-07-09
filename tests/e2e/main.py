@@ -46,7 +46,7 @@ def generate_log_event(log_group_name,log_stream_name):
             raise(e)
 
 def search_dynatrace_log_records(url_prefix,
-                                 message):
+                                 message_content):
     """
     (using Dynatrace API) return a list of log records matching the specified query
     """
@@ -88,13 +88,19 @@ if __name__ == '__main__':
                         default='',
                         required=True,
                         help='specify AWS CloudWatch Logs log stream name for a given log group')
+    parser.add_argument('--unique-message-content',
+                        '-m',
+                        action='store',
+                        type=str,
+                        default='Dynatrace-AWS-Log-Forwarder-End-to-End-test-message',
+                        help='specify AWS CloudWatch Logs log stream name for a given log group')
     args = parser.parse_args()
 
     epoch_timestamp_in_ms = int(time.time() * 1000)
     request_headers       = {'Authorization': 'Api-Token ' + args.api_token,
                             'Content-Type': 'application/json',
                             'charset': 'utf-8'}
-    message_content       = 'dynatrace-aws-logs-APM-306464'
+    message_content       = 'Dynatrace-AWS-Log-Forwarder-End-to-End-test-' + args.unique_message_content
 
     # Generate a test log event
     generate_log_event(args.log_group_name,
