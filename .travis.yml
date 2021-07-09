@@ -3,7 +3,7 @@ env:
   global:
     # include $HOME/.local/bin for `aws`
     - PATH=$HOME/.local/bin:$PATH
-    - TRAVIS_BUILD_SHARED_STORAGE=&TRAVIS_BUILD_DIR/build-stages-shared-storage/$TRAVIS_BUILD_NUMBER
+    - TRAVIS_BUILD_SHARED_STORAGE="&{TRAVIS_BUILD_DIR}/build-stages-shared-storage/${TRAVIS_BUILD_NUMBER}"
     - AWS_CLOUDWATCH_LOGS_LOG_GROUP="/aws/lambda/aws-log-forwarder-e2e-build-${TRAVIS_BUILD_NUMBER}"
     - AWS_CLOUDWATCH_LOGS_LOG_STREAM="aws-log-forwarder-e2e-build-${TRAVIS_BUILD_NUMBER}-stream"
 language: shell
