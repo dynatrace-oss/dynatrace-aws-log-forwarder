@@ -5,6 +5,7 @@ env:
     - PATH=$HOME/.local/bin:$PATH
     - TRAVIS_BUILD_SHARED_STORAGE="&{TRAVIS_BUILD_DIR}/build-stages-shared-storage/${TRAVIS_BUILD_NUMBER}"
     - AWS_S3_BUILD_SHARED_STORAGE="s3://aws-log-forwarder-travis-build-shared-storage/${TRAVIS_BUILD_NUMBER}"
+    - AWS_CLOUDFORMATION_STACK="aws-log-forwarder-e2e-build-${TRAVIS_BUILD_NUMBER}"
     - AWS_CLOUDWATCH_LOGS_LOG_GROUP="/aws/lambda/aws-log-forwarder-e2e-build-${TRAVIS_BUILD_NUMBER}"
     - AWS_CLOUDWATCH_LOGS_LOG_STREAM="aws-log-forwarder-e2e-build-${TRAVIS_BUILD_NUMBER}-stream"
 language: shell
@@ -62,21 +63,21 @@ jobs:
         - unzip dynatrace-aws-log-forwarder.zip
       script:
         # deploy log forwarder resources reqiured for e2e to AWS
-        - ./dynatrace-aws-logs.sh deploy --target-url $DYNATRACE_ENV_URL --target-api-token $DYNATRACE_API_KEY --use-existing-active-gate true --require-valid-certificate $VERIFY_SSL --stack-name aws-log-forwarder-e2e-build-$TRAVIS_BUILD_NUMBER
+        - ./dynatrace-aws-logs.sh deploy --target-url $DYNATRACE_ENV_URL --target-api-token $DYNATRACE_API_KEY --use-existing-active-gate true --require-valid-certificate $VERIFY_SSL --stack-name $AWS_CLOUDFORMATION_STACK
         # create AWS CloudWatch Logs log groups and assign log streams
         - aws logs create-log-group --log-group-name $AWS_CLOUDWATCH_LOGS_LOG_GROUP
         - aws logs create-log-stream --log-group-name $AWS_CLOUDWATCH_LOGS_LOG_GROUP --log-stream-name $AWS_CLOUDWATCH_LOGS_LOG_STREAM
         # subscribe to AWS CloudWatch Logs log groups
-        - ./dynatrace-aws-logs.sh subscribe --log-groups $AWS_CLOUDWATCH_LOGS_LOG_GROUP --stack-name aws-log-forwarder-e2e-build-$TRAVIS_BUILD_NUMBER
+        - ./dynatrace-aws-logs.sh subscribe --log-groups $AWS_CLOUDWATCH_LOGS_LOG_GROUP --stack-name $AWS_CLOUDFORMATION_STACK
         # execute end-to-end test
         - ./main.py --log-group-name $AWS_CLOUDWATCH_LOGS_LOG_GROUP --log-stream-name $AWS_CLOUDWATCH_LOGS_LOG_STREAM
       after_script:
         # unsubscribe from AWS CloudWatch Logs log groups
-        - ./dynatrace-aws-logs.sh unsubscribe --log-groups $AWS_CLOUDWATCH_LOGS_LOG_GROUP --stack-name aws-log-forwarder-e2e-build-$TRAVIS_BUILD_NUMBER
+        - ./dynatrace-aws-logs.sh unsubscribe --log-groups $AWS_CLOUDWATCH_LOGS_LOG_GROUP --stack-name $AWS_CLOUDFORMATION_STACK
         # delete AWS CloudWatch Logs log groups
         - aws logs delete-log-group --log-group-name $AWS_CLOUDWATCH_LOGS_LOG_GROUP
         # delete log forwarder AWS resources
-        - aws cloudformation delete-stack --stack-name aws-log-forwarder-e2e-build-$TRAVIS_BUILD_NUMBER
+        - aws cloudformation delete-stack --stack-name $AWS_CLOUDFORMATION_STACK
     - stage: deployment
       name: Github Release Deployment
       if: tag =~ /^release.*$/
