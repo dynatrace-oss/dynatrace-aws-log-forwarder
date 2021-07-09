@@ -70,7 +70,7 @@ jobs:
         # subscribe to AWS CloudWatch Logs log groups
         - ./dynatrace-aws-logs.sh subscribe --log-groups $AWS_CLOUDWATCH_LOGS_LOG_GROUP --stack-name $AWS_CLOUDFORMATION_STACK
         # execute end-to-end test
-        - ./main.py --log-group-name $AWS_CLOUDWATCH_LOGS_LOG_GROUP --log-stream-name $AWS_CLOUDWATCH_LOGS_LOG_STREAM
+        - ./main.py --url-prefix $DYNATRACE_ENV_URL --api-token $DYNATRACE_API_KEY --log-group-name $AWS_CLOUDWATCH_LOGS_LOG_GROUP --log-stream-name $AWS_CLOUDWATCH_LOGS_LOG_STREAM
       after_script:
         # unsubscribe from AWS CloudWatch Logs log groups
         - ./dynatrace-aws-logs.sh unsubscribe --log-groups $AWS_CLOUDWATCH_LOGS_LOG_GROUP --stack-name $AWS_CLOUDFORMATION_STACK
