@@ -93,7 +93,7 @@ if __name__ == '__main__':
                         action='store',
                         type=str,
                         default='Dynatrace-AWS-Log-Forwarder-End-to-End-test-message',
-                        help='specify AWS CloudWatch Logs log stream name for a given log group')
+                        help='specify a unique log event message content')
     args = parser.parse_args()
 
     epoch_timestamp_in_ms = int(time.time() * 1000)
