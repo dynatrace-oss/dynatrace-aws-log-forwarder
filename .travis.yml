@@ -4,6 +4,7 @@ env:
     # include $HOME/.local/bin for `aws`
     - PATH=$HOME/.local/bin:$PATH
     - TRAVIS_BUILD_SHARED_STORAGE="&{TRAVIS_BUILD_DIR}/build-stages-shared-storage/${TRAVIS_BUILD_NUMBER}"
+    - AWS_S3_BUILD_SHARED_STORAGE="s3://aws-log-forwarder-travis-build-shared-storage/${TRAVIS_BUILD_NUMBER}"
     - AWS_CLOUDWATCH_LOGS_LOG_GROUP="/aws/lambda/aws-log-forwarder-e2e-build-${TRAVIS_BUILD_NUMBER}"
     - AWS_CLOUDWATCH_LOGS_LOG_STREAM="aws-log-forwarder-e2e-build-${TRAVIS_BUILD_NUMBER}-stream"
 language: shell
@@ -40,7 +41,7 @@ jobs:
         - docker run --rm -v `pwd`:/var/task amazon/aws-sam-cli-build-image-python3.8 bash -c './build-release-package.sh'
       after_success:
         - cp -p dynatrace-aws-log-forwarder.zip $TRAVIS_BUILD_SHARED_STORAGE
-        - aws s3 sync $TRAVIS_BUILD_SHARED_STORAGE s3://aws-log-forwarder-travis-build-shared-storage/$TRAVIS_BUILD_NUMBER
+        - aws s3 sync $TRAVIS_BUILD_SHARED_STORAGE $AWS_S3_BUILD_SHARED_STORAGE
     - stage: e2e_tests
       name: Execute e2e tests
       # if: branch = master OR type = pull_request
@@ -55,7 +56,7 @@ jobs:
       before_script:
         # set up shared storage for build artifacts
         - mkdir -p $TRAVIS_BUILD_SHARED_STORAGE
-        - aws s3 sync s3://aws-log-forwarder-travis-build-shared-storage/$TRAVIS_BUILD_NUMBER $TRAVIS_BUILD_SHARED_STORAGE
+        - aws s3 sync $AWS_S3_BUILD_SHARED_STORAGE $TRAVIS_BUILD_SHARED_STORAGE
         - cp -p $TRAVIS_BUILD_SHARED_STORAGE/dynatrace-aws-log-forwarder.zip ./tests/e2e
         - cd ./tests/e2e
         - unzip dynatrace-aws-log-forwarder.zip
@@ -88,7 +89,7 @@ jobs:
       before_deploy:
         # set up shared storage for build artifacts
         - mkdir -p $TRAVIS_BUILD_SHARED_STORAGE
-        - aws s3 sync s3://aws-log-forwarder-travis-build-shared-storage/$TRAVIS_BUILD_NUMBER $TRAVIS_BUILD_SHARED_STORAGE
+        - aws s3 sync $AWS_S3_BUILD_SHARED_STORAGE $TRAVIS_BUILD_SHARED_STORAGE
       deploy:
         provider: releases
         api_key: $GITHUB_RELEASE_API_KEY
