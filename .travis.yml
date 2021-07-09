@@ -77,6 +77,8 @@ jobs:
         # delete AWS CloudWatch Logs log groups
         - aws logs delete-log-group --log-group-name $AWS_CLOUDWATCH_LOGS_LOG_GROUP
         # delete log forwarder AWS resources
+        - AWS_CLOUDFORMATION_STACK_DELIVERY_S3_BUCKET=$(aws cloudformation list-stack-resources --stack $AWS_CLOUDFORMATION_STACK --query "StackResourceSummaries[?contains(LogicalResourceId, 'DeliveryBucket')].PhysicalResourceId" --output text)
+        - aws s3 rm s3://${AWS_CLOUDFORMATION_STACK_DELIVERY_S3_BUCKET} --recursive
         - aws cloudformation delete-stack --stack-name $AWS_CLOUDFORMATION_STACK
     - stage: deployment
       name: Github Release Deployment
