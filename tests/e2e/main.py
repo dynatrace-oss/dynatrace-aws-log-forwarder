@@ -110,7 +110,7 @@ if __name__ == '__main__':
     dynatrace_log_records_search_results = search_dynatrace_log_records(args.url_prefix,message_content)['results']
     time_elapsed = 0
     while bool(dynatrace_log_records_search_results) is False:
-        print('Waiting for log events to be picked up to the cluster ...')
+        print('Waiting for log events to be picked up by the cluster...')
         time.sleep(10)
         time_elapsed = time_elapsed + 10
         dynatrace_log_records_search_results = search_dynatrace_log_records(args.url_prefix,message_content)['results']
@@ -120,5 +120,5 @@ if __name__ == '__main__':
             sys.exit(1)
             break
     
-    print('Generated logs where found. End-to-end test has passed.')
+    print('Generated log events where found. End-to-end test has passed.')
     print("Generated log event found: %s" % dynatrace_log_records_search_results)
