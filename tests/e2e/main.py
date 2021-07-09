@@ -99,7 +99,7 @@ if __name__ == '__main__':
     generate_log_event(args.log_group_name,
                        args.log_stream_name)
 
-    time.sleep(120)
+    time.sleep(60)
 
     # Search Dynatrace logs for records with specific message content
     print(search_dynatrace_log_records(args.url_prefix,
