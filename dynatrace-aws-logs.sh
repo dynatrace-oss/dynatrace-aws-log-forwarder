@@ -206,7 +206,7 @@ arguments:
      --query "Stacks[0].Outputs[?OutputKey=='LambdaArn'][OutputValue]" --output text)
 
   echo; echo "Deploying Lambda changes to $LAMBDA_ARN"
-  aws lambda update-function-code --function-name "$LAMBDA_ARN" --zip-file fileb://"$LAMBDA_ZIP_NAME"
+  aws lambda update-function-code --function-name "$LAMBDA_ARN" --zip-file fileb://"$LAMBDA_ZIP_NAME" > /dev/null
 
   ;;
 
