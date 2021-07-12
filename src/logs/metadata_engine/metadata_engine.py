@@ -18,6 +18,7 @@ import json
 import os
 import re
 from dataclasses import dataclass
+from math import inf
 from os import listdir
 from os.path import isfile
 from typing import Dict, List, Optional, Any
@@ -26,8 +27,7 @@ from pygrok import Grok
 import jmespath
 
 from util import logging
-from .jmespath import JMESPATH_OPTIONS
-
+from .jmespath import JMESPATH_OPTIONS, jmespath_parser
 
 _CONDITION_COMPARATOR_MAP = {
     "$eq".casefold(): lambda x, y: str(x).casefold() == str(y).casefold(),
@@ -44,6 +44,7 @@ Grok.DEFAULT_PATTERNS_DIRS = []
 @dataclass(frozen=True)
 class Attribute:
     key: str
+    priority: int
     pattern: str
 
 
@@ -88,6 +89,7 @@ class ConfigRule:
     source_matchers: List[SourceMatcher]
     attributes: List[Attribute]
     aws_loggroup_pattern: Optional[str]
+    log_content_parse_type: Optional[str]
 
 
 class MetadataEngine:
@@ -115,7 +117,7 @@ class MetadataEngine:
                         self.default_rule = _create_config_rules(config_json)[0]
                     else:
                         self.rules.extend(_create_config_rules(config_json))
-            except Exception:
+            except Exception as ex:
                 logging.exception(f"Failed to load configuration file: '{config_file_path}'")
 
     def apply(self, record: Dict, parsed_record: Dict):
@@ -127,8 +129,8 @@ class MetadataEngine:
             # No matching rule has been found, applying the default rule
             if self.default_rule:
                 _apply_rule(self.default_rule, record, parsed_record)
-        except Exception:
-            logging.exception(f"Encountered exception when running Rule Engine")
+        except Exception as ex:
+            logging.exception(f"Encountered exception when running Rule Engine. ")
 
 
 def _check_if_rule_applies(rule: ConfigRule, record: Dict, parsed_record: Dict):
@@ -139,14 +141,27 @@ def _apply_rule(rule, record, parsed_record):
     if rule.aws_loggroup_pattern and "log_group" in record:
         extracted_values = parse_aws_loggroup_with_grok_pattern(record["log_group"], rule.aws_loggroup_pattern)
         record.update(extracted_values)
+    if rule.log_content_parse_type == "json":
+        try:
+            record["log_content"] = json.loads(parsed_record.get("content", {}))
+        except Exception as ex:
+            logging.log_error_with_stacktrace(ex, f"Encountered exception when parsing log content as json, requested by rule for {rule.entity_type_name}")
+    else:
+        record["log_content"] = parsed_record.get("content", "")
 
     for attribute in rule.attributes:
         try:
-            value = jmespath.search(attribute.pattern, record, JMESPATH_OPTIONS)
+            value = jmespath_parser.parse(attribute.pattern).search(record, JMESPATH_OPTIONS)
             if value:
                 parsed_record[attribute.key] = value
-        except Exception:
-            logging.exception(f"Encountered exception when evaluating attribute {attribute} of rule for {rule.entity_type_name}")
+
+                # attributes with priority are available for the calculation of further attributes
+                if attribute.priority is not None:
+                    record[attribute.key] = value
+        except Exception as ex:
+            logging.log_error_without_stacktrace(f"Encountered exception when evaluating attribute {attribute} of rule for {rule.entity_type_name}")
+
+    record.pop("log_content", {})
 
 grok_by_pattern = {}
 
@@ -163,7 +178,7 @@ def parse_aws_loggroup_with_grok_pattern(loggroup, pattern) -> dict:
     extracted_values = grok.match(loggroup)
 
     if not extracted_values:
-        logging.exception(f"Failed to match logGroup '{loggroup}' against the pattern '{pattern}'")
+        logging.warning(f"Failed to match logGroup '{loggroup}' against the pattern '{pattern}'")
         return {}
 
     return extracted_values
@@ -194,13 +209,16 @@ def _create_attributes(attributes_json: List[Dict]) -> List[Attribute]:
 
     for source_json in attributes_json:
         key = source_json.get("key", None)
+        priority = source_json.get("priority", None)
         pattern = source_json.get("pattern", None)
 
         if key and pattern:
-            result.append(Attribute(key, pattern))
+            result.append(Attribute(key, priority, pattern))
         else:
             logging.warning(f"Encountered invalid rule attribute with missing parameter, parameters were: key = {key}, pattern = {pattern}")
 
+    # attributes without priority are executed last
+    result.sort(key= lambda attribute: attribute.priority if attribute.priority is not None else inf)
     return result
 
 
@@ -215,13 +233,11 @@ def _create_config_rule(entity_name: str, rule_json: Dict) -> Optional[ConfigRul
         return None
     attributes = _create_attributes(rule_json.get("attributes", []))
 
-    try:
-        aws_loggroup_pattern = rule_json["aws"]["logGroup"]
-    except KeyError:
-        aws_loggroup_pattern = None
+    aws_loggroup_pattern = rule_json.get("aws", {}).get("logGroup", None)
+    log_content_parse_type = rule_json.get("aws", {}).get("logContentParseAs", None)
 
     return ConfigRule(entity_type_name=entity_name, source_matchers=sources, attributes=attributes,
-                      aws_loggroup_pattern=aws_loggroup_pattern)
+                      aws_loggroup_pattern=aws_loggroup_pattern, log_content_parse_type = log_content_parse_type)
 
 
 def _create_config_rules(config_json: Dict) -> List[ConfigRule]:

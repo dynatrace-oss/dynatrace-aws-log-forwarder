@@ -24,15 +24,15 @@
         },
         {
           "key": "aws.arn",
-          "pattern": "format('arn:{}:lambda:{}:{}:function:{}', [partition, region, account_id, function_name])"
+          "pattern": "format_arn('arn:{}:lambda:{}:{}:function:{}', [partition, region, account_id, function_name])"
+        },
+        {
+          "key": "severity",
+          "pattern": "if( starts_with(log_content, '[ERROR]'), &'ERROR', &'INFO', @)"
         },
         {
           "key": "dt.source_entity",
-          "pattern": "dt_meid_md5('AWS_LAMBDA_FUNCTION', format('{}{}_{}', [function_name, region, account_id]))"
-        },
-        {
-          "key": "dt.source_entity_type",
-          "pattern": "'AWS_LAMBDA_FUNCTION'"
+          "pattern": "dt_meid_lambda_function(function_name, region, account_id)"
         }
       ]
     }
