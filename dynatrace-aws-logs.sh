@@ -91,9 +91,8 @@ arguments:
     if [ -z $2 ] || [[ $2 == "--"* ]]; then echo "Missing value for parameter $1"; print_help_deploy; exit 1; fi
   }
 
-  check_api_token() {
-    URL=$(echo "$TARGET_URL" | sed 's:/*$::')
-    if RESPONSE=$(curl -k -s -X POST -d "{\"token\":\"$TARGET_API_TOKEN\"}" "$URL/api/v2/apiTokens/lookup" -w "<<HTTP_CODE>>%{http_code}" -H "accept: application/json; charset=utf-8" -H "Content-Type: application/json; charset=utf-8" -H "Authorization: Api-Token $TARGET_API_TOKEN"); then
+  function check_api_token() {
+    if RESPONSE=$(curl -k -s -X POST -d "{\"token\":\"$TARGET_API_TOKEN\"}" "$TARGET_URL/api/v2/apiTokens/lookup" -w "<<HTTP_CODE>>%{http_code}" -H "accept: application/json; charset=utf-8" -H "Content-Type: application/json; charset=utf-8" -H "Authorization: Api-Token $TARGET_API_TOKEN"); then
       CODE=$(sed -rn 's/.*<<HTTP_CODE>>(.*)$/\1/p' <<<"$RESPONSE")
       RESPONSE=$(sed -r 's/(.*)<<HTTP_CODE>>.*$/\1/' <<<"$RESPONSE")
       if [ "$CODE" -ge 300 ]; then
@@ -107,6 +106,32 @@ arguments:
     else
       echo -e "\e[93mWARNING: \e[37mFailed to connect to Dynatrace/ActiveGate endpoint $TARGET_URL to check API token permissions. It can be ignored if Dynatrace/ActiveGate does not allow public access."
     fi
+  }
+
+  function check_log_ingest_url() {
+  if RESPONSE=$(curl -k -s -X POST -d "$(generate_test_log)" "$TARGET_URL/api/v2/logs/ingest" -w "<<HTTP_CODE>>%{http_code}" -H "accept: application/json; charset=utf-8" -H "Content-Type: application/json; charset=utf-8" -H "Authorization: Api-Token $TARGET_API_TOKEN"); then
+    CODE=$(sed -rn 's/.*<<HTTP_CODE>>(.*)$/\1/p' <<<"$RESPONSE")
+    RESPONSE=$(sed -r 's/(.*)<<HTTP_CODE>>.*$/\1/' <<<"$RESPONSE")
+    if [ "$CODE" -ge 300 ]; then
+      echo -e "\e[93mWARNING: \e[37mFailed to send a test log to Dynatrace - please verify provided log ingest url ($TARGET_URL) and API token. $RESPONSE"
+      exit 1
+    fi
+  else
+    echo -e "\e[93mWARNING: \e[37mFailed to connect with provided log ingest url ($TARGET_URL) to send a test log. It can be ignored if ActiveGate does not allow public access."
+  fi
+}
+
+  function generate_test_log()
+  {
+  DATE=$(date --iso-8601=seconds)
+  cat <<EOF
+{
+"timestamp": "$DATE",
+"cloud.provider": "aws",
+"content": "AWS Log Forwarder installation log",
+"severity": "INFO"
+}
+EOF
   }
 
   while (( "$#" )); do
@@ -187,7 +212,12 @@ arguments:
       exit 1
   fi
 
+  TARGET_URL=$(echo "$TARGET_URL" | sed 's:/*$::')
   check_api_token
+
+  if [[ "$USE_EXISTING_ACTIVE_GATE" == "true" ]]; then
+    check_log_ingest_url
+  fi
   print_params_deploy
 
   set -e
