@@ -202,7 +202,7 @@ arguments:
   LAMBDA_ARN=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" \
      --query "Stacks[0].Outputs[?OutputKey=='LambdaArn'][OutputValue]" --output text)
 
-  echo; echo "Deployed Lambda changes to $LAMBDA_ARN"
+  echo; echo "Updated Lambda code of $LAMBDA_ARN"
   aws lambda update-function-code --function-name "$LAMBDA_ARN" --zip-file fileb://"$LAMBDA_ZIP_NAME" > /dev/null
 
   # SHOW OUTPUTS
