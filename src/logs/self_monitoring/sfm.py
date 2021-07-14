@@ -109,17 +109,19 @@ class SelfMonitoringContext:
         metrics.append(_prepare_cloudwatch_metric(
             "Kinesis record.data decompressed size", self._record_data_decompressed_size, "Bytes", common_dimensions))
 
-        for log_group, log_entries_count in self._log_entries_by_log_group.items():
-            metrics.append(_prepare_cloudwatch_metric(
-                "Log entries by LogGroup", log_entries_count, "None",
-                common_dimensions + [{"Name": "log_group", "Value": log_group}]
-            ))
-
-        for log_group, log_content_len in self._log_content_len_by_log_group.items():
-            metrics.append(_prepare_cloudwatch_metric(
-                "Log content length by LogGroup", log_content_len, "None",
-                common_dimensions + [{"Name": "log_group", "Value": log_group}]
-            ))
+        # TO BE RESTORED IN DIFFERENT WAY IN APM-306046
+        # please remove this then
+        # for log_group, log_entries_count in self._log_entries_by_log_group.items():
+        #     metrics.append(_prepare_cloudwatch_metric(
+        #         "Log entries by LogGroup", log_entries_count, "None",
+        #         common_dimensions + [{"Name": "log_group", "Value": log_group}]
+        #     ))
+        #
+        # for log_group, log_content_len in self._log_content_len_by_log_group.items():
+        #     metrics.append(_prepare_cloudwatch_metric(
+        #         "Log content length by LogGroup", log_content_len, "None",
+        #         common_dimensions + [{"Name": "log_group", "Value": log_group}]
+        #     ))
 
         metrics.append(_prepare_cloudwatch_metric(
             "Batches prepared", self._batches_prepared, "None", common_dimensions))

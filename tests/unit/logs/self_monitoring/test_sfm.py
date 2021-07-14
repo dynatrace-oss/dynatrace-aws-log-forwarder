@@ -64,34 +64,34 @@ def test_self_monitoring_context():
             'Unit': 'Bytes',
             'Values': [2000]
         },
-        {
-            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'},
-                           {'Name': 'log_group', 'Value': 'logGroup1'}],
-            'MetricName': 'Log entries by LogGroup',
-            'Unit': 'None',
-            'Value': 200
-        },
-        {
-            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'},
-                           {'Name': 'log_group', 'Value': 'logGroup2'}],
-            'MetricName': 'Log entries by LogGroup',
-            'Unit': 'None',
-            'Value': 50
-        },
-        {
-            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'},
-                           {'Name': 'log_group', 'Value': 'logGroup1'}],
-            'MetricName': 'Log content length by LogGroup',
-            'Unit': 'None',
-            'Value': 2000
-        },
-        {
-            'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'},
-                           {'Name': 'log_group', 'Value': 'logGroup2'}],
-            'MetricName': 'Log content length by LogGroup',
-            'Unit': 'None',
-            'Value': 2000
-        },
+        # {
+        #     'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'},
+        #                    {'Name': 'log_group', 'Value': 'logGroup1'}],
+        #     'MetricName': 'Log entries by LogGroup',
+        #     'Unit': 'None',
+        #     'Value': 200
+        # },
+        # {
+        #     'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'},
+        #                    {'Name': 'log_group', 'Value': 'logGroup2'}],
+        #     'MetricName': 'Log entries by LogGroup',
+        #     'Unit': 'None',
+        #     'Value': 50
+        # },
+        # {
+        #     'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'},
+        #                    {'Name': 'log_group', 'Value': 'logGroup1'}],
+        #     'MetricName': 'Log content length by LogGroup',
+        #     'Unit': 'None',
+        #     'Value': 2000
+        # },
+        # {
+        #     'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'},
+        #                    {'Name': 'log_group', 'Value': 'logGroup2'}],
+        #     'MetricName': 'Log content length by LogGroup',
+        #     'Unit': 'None',
+        #     'Value': 2000
+        # },
         {
             'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],
             'MetricName': 'Batches prepared',
