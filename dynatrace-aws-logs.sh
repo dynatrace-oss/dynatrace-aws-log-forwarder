@@ -108,6 +108,19 @@ arguments:
     fi
   }
 
+function generate_test_log()
+  {
+  DATE=$(date --iso-8601=seconds)
+  cat <<EOF
+{
+"timestamp": "$DATE",
+"cloud.provider": "aws",
+"content": "AWS Log Forwarder installation log",
+"severity": "INFO"
+}
+EOF
+  }
+
   function check_log_ingest_url() {
   if RESPONSE=$(curl -k -s -X POST -d "$(generate_test_log)" "$TARGET_URL/api/v2/logs/ingest" -w "<<HTTP_CODE>>%{http_code}" -H "accept: application/json; charset=utf-8" -H "Content-Type: application/json; charset=utf-8" -H "Authorization: Api-Token $TARGET_API_TOKEN" --connect-timeout 20); then
     CODE=$(sed -rn 's/.*<<HTTP_CODE>>(.*)$/\1/p' <<<"$RESPONSE")
@@ -121,19 +134,6 @@ arguments:
     exit 1
   fi
 }
-
-  function generate_test_log()
-  {
-  DATE=$(date --iso-8601=seconds)
-  cat <<EOF
-{
-"timestamp": "$DATE",
-"cloud.provider": "aws",
-"content": "AWS Log Forwarder installation log",
-"severity": "INFO"
-}
-EOF
-  }
 
   while (( "$#" )); do
     case "$1" in
