@@ -54,9 +54,6 @@ jobs:
     - stage: deployment
       name: Github Release Deployment
       if: tag =~ /^release.*$/
-      language: shell
-      services: docker
-      script: skip
       deploy:
         provider: releases
         api_key: $GITHUB_RELEASE_API_KEY
