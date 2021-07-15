@@ -91,6 +91,19 @@ arguments:
     if [ -z $2 ] || [[ $2 == "--"* ]]; then echo "Missing value for parameter $1"; print_help_deploy; exit 1; fi
   }
 
+  function check_activegate_state() {
+    if ACTIVE_GATE_STATE=$(curl -ksS "${TARGET_URL}/rest/health" --connect-timeout 20); then
+      if [[ "$ACTIVE_GATE_STATE" != "RUNNING" ]]
+      then
+        echo -e ""
+        echo -e "\e[91mERROR: \e[37mActiveGate endpoint is not reporting RUNNING state. Please verify provided values for parameter: --target-url (${TARGET_URL})."
+        exit 1
+      fi
+    else
+        echo -e "\e[93mWARNING: \e[37mFailed to connect to ActiveGate url $TARGET_URL to check state. It can be ignored if ActiveGate does not allow public access."
+    fi
+  }
+
   function check_api_token() {
     if RESPONSE=$(curl -k -s -X POST -d "{\"token\":\"$TARGET_API_TOKEN\"}" "$TARGET_URL/api/v2/apiTokens/lookup" -w "<<HTTP_CODE>>%{http_code}" -H "accept: application/json; charset=utf-8" -H "Content-Type: application/json; charset=utf-8" -H "Authorization: Api-Token $TARGET_API_TOKEN" --connect-timeout 20); then
       CODE=$(sed -rn 's/.*<<HTTP_CODE>>(.*)$/\1/p' <<<"$RESPONSE")
@@ -214,11 +227,17 @@ EOF
   fi
 
   TARGET_URL=$(echo "$TARGET_URL" | sed 's:/*$::')
+
+  if [[ "$USE_EXISTING_ACTIVE_GATE" == "true" ]]; then
+    check_activegate_state
+  fi
+
   check_api_token
 
   if [[ "$USE_EXISTING_ACTIVE_GATE" == "true" ]]; then
     check_log_ingest_url
   fi
+
   print_params_deploy
 
   set -e
