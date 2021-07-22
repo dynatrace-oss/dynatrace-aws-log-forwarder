@@ -15,12 +15,14 @@
 import json
 import os
 import pytest
+from pathlib import Path
 from types import SimpleNamespace
 from unittest import mock
 from unittest.mock import patch
 
 import index
 
+THIS_DIR = Path(__file__).parent
 
 @mock.patch.dict(
     os.environ, {
@@ -30,6 +32,26 @@ import index
         "DEBUG": "false",
     })
 @pytest.mark.parametrize("testcase", [
+    ({
+        "lambda_event_file": THIS_DIR / "../../../examples/app_runner/kinesis_request_app_runner_application.json",
+        "number_of_logs_expected": 22,
+        "attributes": {
+            "aws.service": "apprunner",
+            "aws.resource.id": "MNA-test-sample",
+            "aws.arn": "arn:aws:apprunner:us-east-1:908047316593:service/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71",
+            "dt.source_entity": "CUSTOM_DEVICE-214C8EFB493B301F"
+        }
+    }),
+    ({
+        "lambda_event_file": THIS_DIR / "../../../examples/app_runner/kinesis_request_app_runner_service.json",
+        "number_of_logs_expected": 6,
+        "attributes": {
+            "aws.service": "apprunner",
+            "aws.resource.id": "MNA-test-sample",
+            "aws.arn": "arn:aws:apprunner:us-east-1:908047316593:service/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71",
+            "dt.source_entity": "CUSTOM_DEVICE-214C8EFB493B301F"
+        }
+    }),
     ({
         "lambda_event": {
             "invocationId": "1545b29a-10ca-4f7f-a60f-54195607c98d",
@@ -82,7 +104,12 @@ import index
     })
 ])
 def test_full_flow(testcase: dict):
-    lambda_event = testcase["lambda_event"]
+    if "lambda_event" in testcase:
+        lambda_event = testcase["lambda_event"]
+    else:
+        with open(testcase["lambda_event_file"]) as json_file:
+            lambda_event = json.load(json_file)
+
     number_of_logs_expected = testcase["number_of_logs_expected"]
     lambda_context = SimpleNamespace(function_name="my-function-name")
 
@@ -108,3 +135,8 @@ def test_full_flow(testcase: dict):
     sent_logs = json.loads(request_body)
 
     assert len(sent_logs) == number_of_logs_expected
+    if "attributes" in testcase:
+        expected_attributes = testcase["attributes"]
+        for i, log in enumerate(sent_logs):
+            for key in expected_attributes.keys():
+                assert log[key] == expected_attributes[key], f'Key: {key}, Log id: {i}'

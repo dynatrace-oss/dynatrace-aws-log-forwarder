@@ -1,0 +1,40 @@
+{
+  "name": "APP_RUNNER",
+  "displayName": "App Runner",
+  "rules": [
+    {
+      "aws": {
+        "logGroup": "/aws/apprunner/%{DATA:resource_id}/%{DATA:service_id}/%{GREEDYDATA:log_type}"
+      },
+      "sources": [
+        {
+          "sourceType": "logs",
+          "source": "log_group",
+          "condition": "$prefix('/aws/apprunner/')"
+        }
+      ],
+      "attributes": [
+        {
+          "key": "aws.service",
+          "pattern": "'apprunner'"
+        },
+        {
+          "key": "aws.resource.id",
+          "pattern": "resource_id"
+        },
+        {
+          "key": "aws.arn",
+          "pattern": "format_arn('arn:{}:apprunner:{}:{}:service/{}/{}', [partition, region, account_id, resource_id, service_id])"
+        },
+        {
+          "key": "severity",
+          "pattern": "if( starts_with(log_content, 'ERROR:'), &'ERROR', &'INFO', @)"
+        },
+        {
+          "key": "dt.source_entity",
+          "pattern": "dt_meid_supporting_service_v2('apprunner', format_arn('arn:{}:apprunner:{}:{}:service/{}', [partition, region, account_id, resource_id]))"
+        }
+      ]
+    }
+  ]
+}

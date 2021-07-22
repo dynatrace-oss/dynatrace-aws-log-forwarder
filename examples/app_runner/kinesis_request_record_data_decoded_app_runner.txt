@@ -1,0 +1,205 @@
+APPLICATION LOGS:
+
+{
+    "messageType": "DATA_MESSAGE",
+    "owner": "908047316593",
+    "logGroup": "/aws/apprunner/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71/application",
+    "logStream": "instance/ee2c02336dbe4222936bea385d900d0a",
+    "subscriptionFilters": ["bmrozinski-aws-logs"],
+    "logEvents": [{
+            "id": "36278401907111421594688977684007571489764321972201324544",
+            "timestamp": 1626779804179,
+            "message": "INFO:     169.254.175.249:60388 - \"GET / HTTP/1.1\" 200 OK"
+        }, {
+            "id": "36278401911705375105586286051163929453929884442433290241",
+            "timestamp": 1626779804385,
+            "message": "INFO:     169.254.175.249:60388 - \"GET /static/favicon.svg HTTP/1.1\" 200 OK"
+        }
+    ]
+}
+
+{
+    "messageType": "DATA_MESSAGE",
+    "owner": "908047316593",
+    "logGroup": "/aws/apprunner/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71/application",
+    "logStream": "instance/ee2c02336dbe4222936bea385d900d0a",
+    "subscriptionFilters": ["bmrozinski-aws-logs"],
+    "logEvents": [{
+            "id": "36278401961369134662713983792185217083645517874211848192",
+            "timestamp": 1626779806612,
+            "message": "INFO:     169.254.175.249:60388 - \"GET / HTTP/1.1\" 200 OK"
+        }, {
+            "id": "36278401965806982957221577797350825019902541813901950977",
+            "timestamp": 1626779806811,
+            "message": "INFO:     169.254.175.249:60388 - \"GET /static/favicon.svg HTTP/1.1\" 200 OK"
+        }, {
+            "id": "36278402021603447443945196897473192138068742301864951810",
+            "timestamp": 1626779809313,
+            "message": "INFO:     169.254.175.249:60388 - \"GET / HTTP/1.1\" 200 OK"
+        }, {
+            "id": "36278402025706784560474831555515764300236040818965348355",
+            "timestamp": 1626779809497,
+            "message": "INFO:     169.254.175.249:60388 - \"GET /static/apprunner_icon.svg HTTP/1.1\" 200 OK"
+        }, {
+            "id": "36278402025840589031666015294364978609871930988001230852",
+            "timestamp": 1626779809503,
+            "message": "INFO:     169.254.175.249:60388 - \"GET /static/twitter_icon.svg HTTP/1.1\" 200 OK"
+        }, {
+            "id": "36278402030033129128989772444973693645129822951125549061",
+            "timestamp": 1626779809691,
+            "message": "INFO:     169.254.175.249:60388 - \"GET /static/fonts/open-sans-v18-latin-regular.woff2 HTTP/1.1\" 200 OK"
+        }, {
+            "id": "36278402034203368481114998972440872962115066552743886854",
+            "timestamp": 1626779809878,
+            "message": "INFO:     169.254.175.249:60388 - \"GET /static/workshop_icon.svg HTTP/1.1\" 200 OK"
+        }, {
+            "id": "36278402038552013794828470485040338025281497046410067975",
+            "timestamp": 1626779810073,
+            "message": "INFO:     169.254.175.249:60388 - \"GET /static/docs_icon.svg HTTP/1.1\" 200 OK"
+        }, {
+            "id": "36278402041941727065005125202553767202724047995319091208",
+            "timestamp": 1626779810225,
+            "message": "INFO:     169.254.175.249:60388 - \"GET /static/external_link_icon.svg HTTP/1.1\" 200 OK"
+        }, {
+            "id": "36278402045108432883196473688651839197440115329168310281",
+            "timestamp": 1626779810367,
+            "message": "INFO:     169.254.175.249:60388 - \"GET /static/background.svg HTTP/1.1\" 200 OK"
+        }
+    ]
+}
+
+{
+    "messageType": "DATA_MESSAGE",
+    "owner": "908047316593",
+    "logGroup": "/aws/apprunner/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71/application",
+    "logStream": "instance/ee2c02336dbe4222936bea385d900d0a",
+    "subscriptionFilters": ["bmrozinski-aws-logs"],
+    "logEvents": [{
+            "id": "36278402048587349134167250904799855060142087531233017856",
+            "timestamp": 1626779810523,
+            "message": "INFO:     169.254.175.249:60388 - \"GET /static/favicon.svg HTTP/1.1\" 200 OK"
+        }, {
+            "id": "36278402116894531677266549587323760129264018824051032065",
+            "timestamp": 1626779813586,
+            "message": "INFO:     169.254.175.249:60388 - \"GET / HTTP/1.1\" 200 OK"
+        }, {
+            "id": "36278402121243176990980021099923225192430449317717213186",
+            "timestamp": 1626779813781,
+            "message": "INFO:     169.254.175.249:60388 - \"GET /static/apprunner_icon.svg HTTP/1.1\" 200 OK"
+        }, {
+            "id": "36278402124565988025561083948012047215055055182108295171",
+            "timestamp": 1626779813930,
+            "message": "INFO:     169.254.175.249:60388 - \"GET /static/fonts/open-sans-v18-latin-regular.woff2 HTTP/1.1\" 200 OK"
+        }, {
+            "id": "36278402125190408891119941395975047326689209304275746820",
+            "timestamp": 1626779813958,
+            "message": "INFO:     169.254.175.249:60394 - \"GET /static/twitter_icon.svg HTTP/1.1\" 200 OK"
+        }, {
+            "id": "36278402125279611871914063888541190199779802750299668485",
+            "timestamp": 1626779813962,
+            "message": "INFO:     169.254.175.249:60394 - \"GET /static/workshop_icon.svg HTTP/1.1\" 200 OK"
+        }, {
+            "id": "36278402125792529011480268220796511720050715064937218054",
+            "timestamp": 1626779813985,
+            "message": "INFO:     169.254.175.249:60388 - \"GET /static/docs_icon.svg HTTP/1.1\" 200 OK"
+        }, {
+            "id": "36278402125881731992274390713362654593141308510961139719",
+            "timestamp": 1626779813989,
+            "message": "INFO:     169.254.175.249:60396 - \"GET /static/external_link_icon.svg HTTP/1.1\" 200 OK"
+        }, {
+            "id": "36278402128624723651693657359771547940677056976196730888",
+            "timestamp": 1626779814112,
+            "message": "INFO:     169.254.175.249:60394 - \"GET /static/background.svg HTTP/1.1\" 200 OK"
+        }, {
+            "id": "36278402132125940647862965192992655709482849732635656201",
+            "timestamp": 1626779814269,
+            "message": "INFO:     169.254.175.249:60394 - \"GET /static/favicon.svg HTTP/1.1\" 200 OK"
+        }
+    ]
+}
+
+
+SERVICE LOGS:
+{
+    "messageType": "DATA_MESSAGE",
+    "owner": "908047316593",
+    "logGroup": "/aws/apprunner/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71/service",
+    "logStream": "events",
+    "subscriptionFilters": ["bmrozinski-aws-logs"],
+    "logEvents": [{
+            "id": "36278412222231910194234589865733768547694223033757335552",
+            "timestamp": 1626780266725,
+            "message": "[AppRunner] Service pause started."
+        }
+    ]
+}
+
+{
+    "messageType": "DATA_MESSAGE",
+    "owner": "908047316593",
+    "logGroup": "/aws/apprunner/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71/service",
+    "logStream": "events",
+    "subscriptionFilters": ["bmrozinski-aws-logs"],
+    "logEvents": [{
+            "id": "36278412234742628250610269448515044290183004986164903936",
+            "timestamp": 1626780267286,
+            "message": "[AppRunner] Service status is set to OPERATION_IN_PROGRESS."
+        }
+    ]
+}
+
+{
+    "messageType": "DATA_MESSAGE",
+    "owner": "908047316593",
+    "logGroup": "/aws/apprunner/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71/service",
+    "logStream": "events",
+    "subscriptionFilters": ["bmrozinski-aws-logs"],
+    "logEvents": [{
+            "id": "36278412331460960176637582018679695718665678823625654272",
+            "timestamp": 1626780271623,
+            "message": "[AppRunner] Service pause completed successfully."
+        }
+    ]
+}
+
+{
+    "messageType": "DATA_MESSAGE",
+    "owner": "908047316593",
+    "logGroup": "/aws/apprunner/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71/service",
+    "logStream": "events",
+    "subscriptionFilters": ["bmrozinski-aws-logs"],
+    "logEvents": [{
+            "id": "36278412338106582245799707715098908212405235687668776960",
+            "timestamp": 1626780271921,
+            "message": "[AppRunner] Service status is set to PAUSED."
+        }
+    ]
+}
+
+{
+    "messageType": "DATA_MESSAGE",
+    "owner": "908047316593",
+    "logGroup": "/aws/apprunner/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71/service",
+    "logStream": "events",
+    "subscriptionFilters": ["bmrozinski-aws-logs"],
+    "logEvents": [{
+            "id": "36278413003114804065982889831904115580430477791031459840",
+            "timestamp": 1626780301741,
+            "message": "[AppRunner] Service resume started."
+        }
+    ]
+}
+
+{
+    "messageType": "DATA_MESSAGE",
+    "owner": "908047316593",
+    "logGroup": "/aws/apprunner/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71/service",
+    "logStream": "events",
+    "subscriptionFilters": ["bmrozinski-aws-logs"],
+    "logEvents": [{
+            "id": "36278413009314411231174403065456379435150204615527694336",
+            "timestamp": 1626780302019,
+            "message": "[AppRunner] Service status is set to OPERATION_IN_PROGRESS."
+        }
+    ]
+}
