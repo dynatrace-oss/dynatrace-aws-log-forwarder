@@ -1,0 +1,44 @@
+{
+  "name": "RDS",
+  "displayName": "Amazon RDS",
+  "rules": [
+    {
+      "aws": {
+        "logGroup": "/aws/rds/instance/%{DATA:resource_id}/%{GREEDYDATA:log_type}"
+      },
+      "sources": [
+        {
+          "sourceType": "logs",
+          "source": "log_group",
+          "condition": "$prefix('/aws/rds/instance/')"
+        }
+      ],
+      "attributes": [
+        {
+          "key": "aws.service",
+          "pattern": "'rds'"
+        },
+        {
+          "key": "aws.resource.id",
+          "pattern": "resource_id"
+        },
+        {
+          "key": "aws.arn",
+          "pattern": "format_arn('arn:{}:rds:{}:{}:db:{}', [partition, region, account_id, resource_id])"
+        },
+        {
+          "key": "dt.source_entity",
+          "pattern": "dt_meid_rds_v2(format_arn('arn:{}:rds:{}:{}:db:{}', [partition, region, account_id, resource_id]))"
+        },
+        {
+          "key": "severity",
+          "pattern": "if(log_type == 'slowquery' || contains(log_content, '[Warning]'), &'WARNING', &if(contains(log_content, '[Error]'), &'ERROR', &'INFO', @), @)"
+        },
+        {
+          "key": "log.source",
+          "pattern": "join( ' - ', ['rds', join(' ', [log_type, 'logs']) ])"
+        }
+      ]
+    }
+  ]
+}
