@@ -538,6 +538,44 @@ CLOUDTRAIL_USER_IDENTITY = {
         "record_data_decoded": {
             "messageType": "DATA_MESSAGE",
             "owner": "444000444",
+            "logGroup": "/aws/apprunner/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71/application",
+            "logStream": "instance/ee2c02336dbe4222936bea385d900d0a",
+            "subscriptionFilters": ["dt-aws-logs"],
+            "logEvents": [{
+                "id": "36278412331460960176637582018679695718665678823625654272",
+                "timestamp": 1626779804180,
+                "message": "WARNING: root: danger! danger!"
+            }
+            ]
+        },
+        "expect_first_log_contains": {
+            'severity': 'WARN'
+        }
+    }, id="testcase_App_Runner_application_logs_severity_warn"),
+
+    pytest.param({
+        "record_data_decoded": {
+            "messageType": "DATA_MESSAGE",
+            "owner": "444000444",
+            "logGroup": "/aws/apprunner/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71/application",
+            "logStream": "instance/ee2c02336dbe4222936bea385d900d0a",
+            "subscriptionFilters": ["dt-aws-logs"],
+            "logEvents": [{
+                "id": "36278412338106582245799707715098908212405235687668776960",
+                "timestamp": 1626779804181,
+                "message": "ERROR This is fine."
+            }
+            ]
+        },
+        "expect_first_log_contains": {
+            'severity': 'ERROR'
+        }
+    }, id="testcase_App_Runner_application_logs_severity_error"),
+
+    pytest.param({
+        "record_data_decoded": {
+            "messageType": "DATA_MESSAGE",
+            "owner": "444000444",
             "logGroup": "/aws/apprunner/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71/service",
             "logStream": "events",
             "subscriptionFilters": ["dt-aws-logs"],
