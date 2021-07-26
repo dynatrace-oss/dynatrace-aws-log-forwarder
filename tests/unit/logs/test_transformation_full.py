@@ -503,6 +503,72 @@ CLOUDTRAIL_USER_IDENTITY = {
             'audit.result': 'Succeeded'}
     }, id="testcase_Cloudtrail_RDS_CreateEventSubscription_multiple_resources_with_source_type"),
 
+    pytest.param({
+        "record_data_decoded": {
+            "logGroup": "/aws/rds/instance/mysql-db-for-logs/audit",
+            "logStream": "mysql-db-for-logs",
+            "messageType": "DATA_MESSAGE",
+            "owner": "444000444",
+            "subscriptionFilters": ["mysql-audit-filter"],
+            "logEvents": [
+                {
+                    "id": "35958590510527767165636549608812769529777864588249006080",
+                    "timestamp": "12345",
+                    "message": "20210722 17:15:28,ip-10-1-3-230,admin,157.25.19.100,13,0,DISCONNECT,testdb,,0,SSL"
+                }
+            ],
+        },
+        "expect_first_log_contains": {
+            "aws.service": "rds",
+            "aws.resource.id": "mysql-db-for-logs",
+            "aws.arn": "arn:aws:rds:us-east-1:444000444:db:mysql-db-for-logs",
+            "dt.source_entity": "RELATIONAL_DATABASE_SERVICE-055A2525EFDA9A63",
+            'content': "20210722 17:15:28,ip-10-1-3-230,admin,157.25.19.100,13,0,DISCONNECT,testdb,,0,SSL",
+            'cloud.provider': 'aws',
+            'cloud.account.id': "444000444",
+            'cloud.region': "us-east-1",
+            'aws.log_group': "/aws/rds/instance/mysql-db-for-logs/audit",
+            'aws.log_stream': "mysql-db-for-logs",
+            'aws.region': "us-east-1",
+            'aws.account.id': "444000444",
+            'severity': 'INFO',
+            'log.source': 'rds - audit logs',
+        }
+    }, id="testcase_rds_mysql_audit_log"),
+
+    pytest.param({
+        "record_data_decoded": {
+            "logGroup": "/aws/rds/instance/mysql-db-for-logs/slowquery",
+            "logStream": "mysql-db-for-logs",
+            "messageType": "DATA_MESSAGE",
+            "owner": "444000444",
+            "subscriptionFilters": ["mysql-audit-filter"],
+            "logEvents": [
+                {
+                    "id": "35958590510527767165636549608812769529777864588249006080",
+                    "timestamp": "12345",
+                    "message": "# Time: 2021-07-22T17:11:45.948278Z \nUser@Host: rdsadmin[rdsadmin] @ localhost [127.0.0.1]  Id:     7\nQuery_time: 0.000964  Lock_time: 0.000000 Rows_sent: 1  Rows_examined: 1\nSET timestamp=1626973905;\nSELECT @@GLOBAL.read_only;"
+                }
+            ],
+        },
+        "expect_first_log_contains": {
+            "aws.service": "rds",
+            "aws.resource.id": "mysql-db-for-logs",
+            "aws.arn": "arn:aws:rds:us-east-1:444000444:db:mysql-db-for-logs",
+            "dt.source_entity": "RELATIONAL_DATABASE_SERVICE-055A2525EFDA9A63",
+            'content': "# Time: 2021-07-22T17:11:45.948278Z \nUser@Host: rdsadmin[rdsadmin] @ localhost [127.0.0.1]  Id:     7\nQuery_time: 0.000964  Lock_time: 0.000000 Rows_sent: 1  Rows_examined: 1\nSET timestamp=1626973905;\nSELECT @@GLOBAL.read_only;",
+            'cloud.provider': 'aws',
+            'cloud.account.id': "444000444",
+            'cloud.region': "us-east-1",
+            'aws.log_group': "/aws/rds/instance/mysql-db-for-logs/slowquery",
+            'aws.log_stream': "mysql-db-for-logs",
+            'aws.region': "us-east-1",
+            'aws.account.id': "444000444",
+            'severity': 'WARNING',
+            'log.source': 'rds - slowquery logs',
+        }
+    }, id="testcase_rds_mysql_slowquery_log"),
+
 ])
 def test_full_transformation(testcase: dict):
     context = Context("function-name", "dt-url", "dt-token", False, False)
