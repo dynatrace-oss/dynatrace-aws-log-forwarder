@@ -60,7 +60,7 @@ def handler(event, lambda_context):
     # try:
     #     context.sfm.push_sfm_to_cloudwatch()
     # except Exception as e:
-    #     log_error_with_stacktrace(e, "SelfMonitoring push to Cloudwatch failed", os.path.basename(__file__) + __name__)
+    #     log_error_with_stacktrace(e, "SelfMonitoring push to Cloudwatch failed", os.path.basename(__file__) + "_" + handler.__name__ + "_3")
 
     return kinesis_data_transformation_response(records, result)
 
