@@ -14,6 +14,7 @@
 
 import base64
 import gzip
+import os
 import time
 from typing import Tuple, List
 
@@ -40,7 +41,8 @@ def check_records_list_if_logs_end_decode(records, context: Context) -> Tuple[bo
             print("Fully decoded logs payloads (base64 decode + ungzip)")
             return True, records_data_plaintext
         except Exception as e:
-            log_error_with_stacktrace(e, "Ungzip failed")
+            log_error_with_stacktrace(e, "Ungzip failed",
+                                      os.path.basename(__file__) + "_" + check_records_list_if_logs_end_decode.__name__)
             return False, []
 
     return False, []
@@ -80,4 +82,5 @@ def sfm_report_kinesis_records_age(records, context):
             context.sfm.kinesis_record_age(age_sec)
 
     except Exception as e:
-        log_error_with_stacktrace(e, "Failed to calculate Kinesis Record Delay Self Monitoring")
+        log_error_with_stacktrace(e, "Failed to calculate Kinesis Record Delay Self Monitoring",
+                                  os.path.basename(__file__) + "_" + sfm_report_kinesis_records_age.__name__)

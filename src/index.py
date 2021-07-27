@@ -48,17 +48,19 @@ def handler(event, lambda_context):
         result = TransformationResult.Ok
 
     except CallThrottlingException:
-        log_multiline_message("Call Throttling Exception, Kinesis batch will be marked as OK, but some data is dropped")
+        log_multiline_message("Call Throttling Exception, Kinesis batch will be marked as OK, but some data is dropped",
+                              os.path.basename(__file__) + "_" + handler.__name__ + "_1")
         result = TransformationResult.Ok
 
     except Exception as e:
-        log_error_with_stacktrace(e, "Exception caught in top-level handler")
+        log_error_with_stacktrace(e, "Exception caught in top-level handler",
+                                  os.path.basename(__file__) + "_" + handler.__name__ + "_2")
         result = TransformationResult.ProcessingFailed
 
     # try:
     #     context.sfm.push_sfm_to_cloudwatch()
     # except Exception as e:
-    #     log_error_with_stacktrace(e, "SelfMonitoring push to Cloudwatch failed")
+    #     log_error_with_stacktrace(e, "SelfMonitoring push to Cloudwatch failed", os.path.basename(__file__) + __name__)
 
     return kinesis_data_transformation_response(records, result)
 
