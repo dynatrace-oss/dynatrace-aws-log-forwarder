@@ -24,11 +24,12 @@
         },
         {
           "key": "aws.arn",
-          "pattern": "format_arn('arn:{}:rds:{}:{}:db:{}', [partition, region, account_id, resource_id])"
+          "pattern": "format_arn('arn:{}:rds:{}:{}:db:{}', [partition, region, account_id, resource_id])",
+          "priority": 10
         },
         {
           "key": "dt.source_entity",
-          "pattern": "dt_meid_rds_v2(format_arn('arn:{}:rds:{}:{}:db:{}', [partition, region, account_id, resource_id]))"
+          "pattern": "dt_meid_rds_v2(\"aws.arn\")"
         },
         {
           "key": "severity",
