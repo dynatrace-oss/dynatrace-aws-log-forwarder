@@ -130,9 +130,9 @@ if __name__ == '__main__':
         dynatrace_log_records_search_results = search_dynatrace_log_records(args.url_prefix,message_content)['results']
         # Fail the test after 5min
         if time_elapsed == 300:
-            print('Generated logs where not found. End-to-end test has failed.')
+            print('Generated logs were not found. End-to-end test has failed.')
             sys.exit(1)
             break
     
-    print('Generated log events where found. End-to-end test has passed.')
+    print('Generated log events were found. End-to-end test has passed.')
     print("Generated log event found: %s" % dynatrace_log_records_search_results)
