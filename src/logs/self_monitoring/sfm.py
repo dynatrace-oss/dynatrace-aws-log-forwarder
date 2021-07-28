@@ -102,12 +102,23 @@ class SelfMonitoringContext:
             "Value": self._function_name,
         }]
 
-        metrics.append(_prepare_cloudwatch_metric(
-            "Kinesis record age", self._kinesis_records_age, "Seconds", common_dimensions))
-        metrics.append(_prepare_cloudwatch_metric(
-            "Kinesis record.data compressed size", self._record_data_compressed_size, "Bytes", common_dimensions))
-        metrics.append(_prepare_cloudwatch_metric(
-            "Kinesis record.data decompressed size", self._record_data_decompressed_size, "Bytes", common_dimensions))
+        metrics.append(_prepare_cloudwatch_metric_statistic(
+            "Kinesis record age", "Seconds", common_dimensions,
+            min(self._kinesis_records_age), max(self._kinesis_records_age),
+            sum(self._kinesis_records_age), len(self._kinesis_records_age)
+        ))
+
+        metrics.append(_prepare_cloudwatch_metric_statistic(
+            "Kinesis record.data compressed size", "Bytes", common_dimensions,
+            min(self._record_data_compressed_size), max(self._record_data_compressed_size),
+            sum(self._record_data_compressed_size), len(self._record_data_compressed_size)
+        ))
+
+        metrics.append(_prepare_cloudwatch_metric_statistic(
+            "Kinesis record.data decompressed size", "Bytes", common_dimensions,
+            min(self._record_data_decompressed_size), max(self._record_data_decompressed_size),
+            sum(self._record_data_decompressed_size), len(self._record_data_decompressed_size)
+        ))
 
         # TO BE RESTORED IN DIFFERENT WAY IN APM-306046
         # please remove this then
@@ -195,3 +206,17 @@ def _prepare_cloudwatch_metric(metric_name, value: Union[int, float, list], unit
         cw_metric["Value"] = value
 
     return cw_metric
+
+
+def _prepare_cloudwatch_metric_statistic(metric_name, unit, dimensions, minimum, maximum, sum, count) -> dict:
+    return {
+        'MetricName': metric_name,
+        'Dimensions': dimensions,
+        'Unit': unit,
+        'StatisticValues': {
+            'SampleCount': count,
+            'Sum': sum,
+            'Minimum': minimum,
+            'Maximum': maximum,
+        }
+    }

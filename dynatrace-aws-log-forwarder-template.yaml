@@ -80,7 +80,7 @@ Resources:
       VpcConfig: !If
         - DeployAGwithVPC
         - SecurityGroupIds: [ !Ref VPCSecurityGroup ]
-          SubnetIds: [ !Ref VPCPublicSubnet1  ]
+          SubnetIds: [ !Ref VPCPrivateSubnet1  ]
         - !Ref "AWS::NoValue"
 
   LambdaRole:
@@ -618,7 +618,7 @@ Resources:
             touch /home/ec2-user/userdata-ag-installation-success
           - DynatraceEnvironmentUrl: !Ref DynatraceEnvironmentUrl
             DynatracePaasToken: !Ref DynatracePaasToken
-      SubnetId: !Ref VPCPublicSubnet1
+      SubnetId: !Ref VPCPrivateSubnet1
 
   VPC:
     Condition: DeployAGwithVPC
@@ -637,6 +637,15 @@ Resources:
       CidrBlock: 172.31.1.0/27
       MapPublicIpOnLaunch: true
 
+  VPCPrivateSubnet1:
+    Condition: DeployAGwithVPC
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [ 0, !GetAZs ]
+      CidrBlock: 172.31.2.0/27
+      MapPublicIpOnLaunch: false
+
   VPCInternetGateway:
     Condition: DeployAGwithVPC
     Type: AWS::EC2::InternetGateway
@@ -648,6 +657,20 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref VPCInternetGateway
+
+  VPCNatGatewayElasticIP:
+    Condition: DeployAGwithVPC
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: VPC
+
+  VPCNatGateway:
+    Condition: DeployAGwithVPC
+    Type: "AWS::EC2::NatGateway"
+    DependsOn: VPCNatGatewayElasticIP
+    Properties:
+      AllocationId: !GetAtt VPCNatGatewayElasticIP.AllocationId
+      SubnetId: !Ref VPCPublicSubnet1
 
   VPCPublicRouteTable:
     Condition: DeployAGwithVPC
@@ -670,6 +693,27 @@ Resources:
     Properties:
       SubnetId: !Ref VPCPublicSubnet1
       RouteTableId: !Ref VPCPublicRouteTable
+
+  VPCPrivateRouteTable:
+    Condition: DeployAGwithVPC
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+
+  VPCPrivateRouteToNat:
+    Condition: DeployAGwithVPC
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref VPCPrivateRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref VPCNatGateway
+
+  VPCPrivateSubnet1RouteTableAssoc:
+    Condition: DeployAGwithVPC
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref VPCPrivateSubnet1
+      RouteTableId: !Ref VPCPrivateRouteTable
 
   VPCSecurityGroup:
     Condition: DeployAGwithVPC

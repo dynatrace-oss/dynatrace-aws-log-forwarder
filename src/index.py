@@ -55,10 +55,10 @@ def handler(event, lambda_context):
         log_error_with_stacktrace(e, "Exception caught in top-level handler")
         result = TransformationResult.ProcessingFailed
 
-    # try:
-    #     context.sfm.push_sfm_to_cloudwatch()
-    # except Exception as e:
-    #     log_error_with_stacktrace(e, "SelfMonitoring push to Cloudwatch failed")
+    try:
+        context.sfm.push_sfm_to_cloudwatch()
+    except Exception as e:
+        log_error_with_stacktrace(e, "SelfMonitoring push to Cloudwatch failed")
 
     return kinesis_data_transformation_response(records, result)
 

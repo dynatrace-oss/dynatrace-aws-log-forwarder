@@ -242,7 +242,7 @@ EOF
 
   set -e
 
-  echo "Deploying stack $STACK_NAME"
+  echo "Deploying stack $STACK_NAME. This might take about 10 minutes if you chose included AG option, or about 5 minutes if you chose existing AG option."
 
   aws cloudformation deploy --stack "$STACK_NAME" --template-file "$TEMPLATE_FILE" --capabilities CAPABILITY_IAM \
     --parameter-overrides DynatraceEnvironmentUrl="$TARGET_URL" DynatraceApiKey="$TARGET_API_TOKEN" VerifySSLTargetActiveGate="$REQUIRE_VALID_CERTIFICATE" \
