@@ -43,7 +43,7 @@ def generate_log_event(log_group_name,log_stream_name):
         print("Generated log event: %s" % log_event)
     except ClientError as e:
         if e.response['Error']['Code'] == 'DataAlreadyAcceptedException' or e.response['Error']['Code'] == 'InvalidSequenceTokenException':
-            print("Given log batch has already been accepeted. Retrying with the following sequence token: " + e.response['expectedSequenceToken'])
+            print("Given log batch has already been accepted. Retrying with the following sequence token: " + e.response['expectedSequenceToken'])
             log_event_retry = aws_client.put_log_events(
                 logGroupName  = log_group_name,
                 logStreamName = log_stream_name,
