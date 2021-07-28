@@ -503,6 +503,106 @@ CLOUDTRAIL_USER_IDENTITY = {
             'audit.result': 'Succeeded'}
     }, id="testcase_Cloudtrail_RDS_CreateEventSubscription_multiple_resources_with_source_type"),
 
+    pytest.param({
+        "record_data_decoded": {
+            "messageType": "DATA_MESSAGE",
+            "owner": "444000444",
+            "logGroup": "/aws/apprunner/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71/application",
+            "logStream": "instance/ee2c02336dbe4222936bea385d900d0a",
+            "subscriptionFilters": ["dt-aws-logs"],
+            "logEvents": [{
+                "id": "36278401907111421594688977684007571489764321972201324544",
+                "timestamp": 1626779804179,
+                "message": "INFO:root:Generating avatar image"
+            }
+            ]
+        },
+        "expect_first_log_contains": {
+            'aws.service': 'apprunner',
+            'aws.resource.id': 'MNA-test-sample',
+            'aws.arn': 'arn:aws:apprunner:us-east-1:444000444:service/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71',
+            'dt.source_entity': 'CUSTOM_DEVICE-502D948277535551',
+            'content': 'INFO:root:Generating avatar image',
+            'cloud.provider': 'aws',
+            'cloud.account.id': '444000444',
+            'cloud.region': 'us-east-1',
+            'aws.log_group': '/aws/apprunner/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71/application',
+            'aws.log_stream': 'instance/ee2c02336dbe4222936bea385d900d0a',
+            'aws.region': 'us-east-1',
+            'aws.account.id': '444000444',
+            'severity': 'INFO',
+            'timestamp': 1626779804179}
+    }, id="testcase_App_Runner_application_logs"),
+
+    pytest.param({
+        "record_data_decoded": {
+            "messageType": "DATA_MESSAGE",
+            "owner": "444000444",
+            "logGroup": "/aws/apprunner/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71/application",
+            "logStream": "instance/ee2c02336dbe4222936bea385d900d0a",
+            "subscriptionFilters": ["dt-aws-logs"],
+            "logEvents": [{
+                "id": "36278412331460960176637582018679695718665678823625654272",
+                "timestamp": 1626779804180,
+                "message": "WARNING: root: danger! danger!"
+            }
+            ]
+        },
+        "expect_first_log_contains": {
+            'severity': 'WARN'
+        }
+    }, id="testcase_App_Runner_application_logs_severity_warn"),
+
+    pytest.param({
+        "record_data_decoded": {
+            "messageType": "DATA_MESSAGE",
+            "owner": "444000444",
+            "logGroup": "/aws/apprunner/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71/application",
+            "logStream": "instance/ee2c02336dbe4222936bea385d900d0a",
+            "subscriptionFilters": ["dt-aws-logs"],
+            "logEvents": [{
+                "id": "36278412338106582245799707715098908212405235687668776960",
+                "timestamp": 1626779804181,
+                "message": "ERROR This is fine."
+            }
+            ]
+        },
+        "expect_first_log_contains": {
+            'severity': 'ERROR'
+        }
+    }, id="testcase_App_Runner_application_logs_severity_error"),
+
+    pytest.param({
+        "record_data_decoded": {
+            "messageType": "DATA_MESSAGE",
+            "owner": "444000444",
+            "logGroup": "/aws/apprunner/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71/service",
+            "logStream": "events",
+            "subscriptionFilters": ["dt-aws-logs"],
+            "logEvents": [{
+                "id": "36278412234742628250610269448515044290183004986164903936",
+                "timestamp": 1626780267286,
+                "message": "[AppRunner] Service status is set to OPERATION_IN_PROGRESS."
+            }
+            ]
+        },
+        "expect_first_log_contains": {
+            'aws.service': 'apprunner',
+            'aws.resource.id': 'MNA-test-sample',
+            'aws.arn': 'arn:aws:apprunner:us-east-1:444000444:service/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71',
+            'dt.source_entity': 'CUSTOM_DEVICE-502D948277535551',
+            'content': '[AppRunner] Service status is set to OPERATION_IN_PROGRESS.',
+            'cloud.provider': 'aws',
+            'cloud.account.id': '444000444',
+            'cloud.region': 'us-east-1',
+            'aws.log_group': '/aws/apprunner/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71/service',
+            'aws.log_stream': 'events',
+            'aws.region': 'us-east-1',
+            'aws.account.id': '444000444',
+            'severity': 'INFO',
+            'timestamp': 1626780267286}
+    }, id="testcase_App_Runner_service_logs"),
+
 ])
 def test_full_transformation(testcase: dict):
     context = Context("function-name", "dt-url", "dt-token", False, False)
