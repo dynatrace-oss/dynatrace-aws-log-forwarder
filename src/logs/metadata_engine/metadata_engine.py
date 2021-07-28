@@ -70,11 +70,11 @@ class SourceMatcher:
 
         if not self._source_value_extractor:
             logging.warning(f"Unsupported source type: '{source}'",
-                            os.path.basename(__file__) + "___init___1")
+                            "metadata-unsupported-source-type")
             self.valid = False
         if not self._evaluator or not self._operand:
             logging.warning(f"Failed to parse condition macro for expression: '{condition}'",
-                            os.path.basename(__file__) + "____init___2")
+                            "metadata-condition-parsing-failure")
             self.valid = False
 
     def match(self, record: Dict, parsed_record: Dict) -> bool:
@@ -121,7 +121,7 @@ class MetadataEngine:
                         self.rules.extend(_create_config_rules(config_json))
             except Exception as ex:
                 logging.exception(f"Failed to load configuration file: '{config_file_path}'",
-                                  os.path.basename(__file__) + "_" + self._load_configs.__name__)
+                                  "config-load-exception")
 
     def apply(self, record: Dict, parsed_record: Dict):
         try:
@@ -134,7 +134,7 @@ class MetadataEngine:
                 _apply_rule(self.default_rule, record, parsed_record)
         except Exception as ex:
             logging.exception(f"Encountered exception when running Rule Engine. ",
-                              os.path.basename(__file__) + "_" + self.apply.__name__)
+                              "rule-engine-exception")
 
 
 def _check_if_rule_applies(rule: ConfigRule, record: Dict, parsed_record: Dict):
@@ -150,7 +150,7 @@ def _apply_rule(rule, record, parsed_record):
             record["log_content"] = json.loads(parsed_record.get("content", {}))
         except Exception as ex:
             logging.log_error_with_stacktrace(ex, f"Encountered exception when parsing log content as json, requested by rule for {rule.entity_type_name}",
-                                              os.path.basename(__file__) + "_" + _apply_rule.__name__ + "_1")
+                                              "json-rule-parsing-exception")
     else:
         record["log_content"] = parsed_record.get("content", "")
 
@@ -163,9 +163,10 @@ def _apply_rule(rule, record, parsed_record):
                 # attributes with priority are available for the calculation of further attributes
                 if attribute.priority is not None:
                     record[attribute.key] = value
+            raise Exception
         except Exception as ex:
             logging.log_error_without_stacktrace(f"Encountered exception when evaluating attribute {attribute} of rule for {rule.entity_type_name}",
-                                                 os.path.basename(__file__) + "_" + _apply_rule.__name__ + "_2")
+                                                 "rule-attribute-evaluation-exception")
 
     record.pop("log_content", {})
 
@@ -185,7 +186,7 @@ def parse_aws_loggroup_with_grok_pattern(loggroup, pattern) -> dict:
 
     if not extracted_values:
         logging.warning(f"Failed to match logGroup '{loggroup}' against the pattern '{pattern}'",
-                        os.path.basename(__file__) + "_" + parse_aws_loggroup_with_grok_pattern.__name__)
+                        "loggroup-pattern-matching-failure")
         return {}
 
     return extracted_values
@@ -206,7 +207,7 @@ def _create_sources(sources_json: List[Dict]) -> List[SourceMatcher]:
             result.append(source_matcher)
         else:
             logging.warning(f"Encountered invalid rule source, parameters were: source= {source}, condition = {condition}",
-                            os.path.basename(__file__) + "_" + _create_sources.__name__)
+                            "metadata-invalid-rule-source")
             return []
 
     return result
@@ -224,7 +225,7 @@ def _create_attributes(attributes_json: List[Dict]) -> List[Attribute]:
             result.append(Attribute(key, priority, pattern))
         else:
             logging.warning(f"Encountered invalid rule attribute with missing parameter, parameters were: key = {key}, pattern = {pattern}",
-                            os.path.basename(__file__) + "_" + _create_attributes.__name__)
+                            "metadata-attribute-missing-parameter")
 
     # attributes without priority are executed last
     result.sort(key= lambda attribute: attribute.priority if attribute.priority is not None else inf)
@@ -235,12 +236,12 @@ def _create_config_rule(entity_name: str, rule_json: Dict) -> Optional[ConfigRul
     sources_json = rule_json.get("sources", [])
     if entity_name != "default" and not sources_json:
         logging.warning(f"Encountered invalid rule with missing sources for config entry named {entity_name}",
-                        os.path.basename(__file__) + "_" + _create_config_rule.__name__ + "_1")
+                        "metadata-rule-missing-sources")
         return None
     sources = _create_sources(sources_json)
     if entity_name != "default" and not sources:
         logging.warning(f"Encountered invalid rule with invalid sources for config entry named {entity_name}: {sources_json}",
-                        os.path.basename(__file__) + "_" + _create_config_rule.__name__ + "_2")
+                        "metadata-rule-invalid-sources")
         return None
     attributes = _create_attributes(rule_json.get("attributes", []))
 

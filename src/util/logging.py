@@ -22,23 +22,18 @@ LOG_THROTTLING_LIMIT_PER_CALLER = 10
 log_call_count = dict()
 
 
-def log_multiline_message(message: Text, caller: Text, count_for_throttling: bool = True):
+def log_multiline_message(message: Text, caller: Text):
 
-    # display logs called from one spot no more than the specified amount of times,
-    # count_for_throttling means we don't add to the counter but can still throttle if it already exceeds the limit
-    if count_for_throttling is True:
-        if log_call_count.get(caller, 0) < LOG_THROTTLING_LIMIT_PER_CALLER:
-            log_call_count[caller] = log_call_count.get(caller, 0) + 1
-        elif log_call_count.get(caller, 0) == LOG_THROTTLING_LIMIT_PER_CALLER:
-            log_call_count[caller] = log_call_count.get(caller, 0) + 1
-            print(f"Logging calls from caller '{caller}' exceeded the throttling limit of \
-            '{LOG_THROTTLING_LIMIT_PER_CALLER}. Further logs from this caller will be discarded")
-            return
-        else:
-            return
+    # display logs called from one spot no more than the specified amount of times
+    if log_call_count.get(caller, 0) < LOG_THROTTLING_LIMIT_PER_CALLER:
+        log_call_count[caller] = log_call_count.get(caller, 0) + 1
+    elif log_call_count.get(caller, 0) == LOG_THROTTLING_LIMIT_PER_CALLER:
+        log_call_count[caller] = log_call_count.get(caller, 0) + 1
+        print(f"Logging calls from caller '{caller}' exceeded the throttling limit of",
+              f"{LOG_THROTTLING_LIMIT_PER_CALLER}. Further logs from this caller will be discarded")
+        return
     else:
-        if log_call_count.get(caller, 0) >= LOG_THROTTLING_LIMIT_PER_CALLER:
-            return
+        return
 
     # need to modify endline char to have multiline log record not split into multiple log entries in CloudWatch:
     message = message.replace('\n', ' ')
@@ -51,8 +46,7 @@ def debug_log_multiline_message(message: Text, context: Context, caller: Text):
 
 
 def log_error_with_stacktrace(e: Exception, msg, caller: Text):
-    log_multiline_message(f"Exception '{e}' occurred. Additional message: '{msg}'", caller, False)
-    log_multiline_message(traceback.format_exc(), caller)
+    log_multiline_message(f"Exception '{e}' occurred. Additional message: '{msg}' " + traceback.format_exc(), caller)
 
 
 def log_error_without_stacktrace(msg, caller: Text):

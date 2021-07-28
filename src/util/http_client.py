@@ -62,5 +62,5 @@ def perform_http_request_for_json(url, encoded_body_bytes, method, headers, veri
     context.sfm.request_finished_with_status_code(status, duration_ms)
 
     log_multiline_message(f"Response: call duration {duration_ms}ms, status code {status}, body '{body}'",
-                          os.path.basename(__file__) + perform_http_request_for_json.__name__)
+                          "http-response-details")
     return status, body

@@ -11,10 +11,12 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
+from unittest.mock import patch
 
 import pytest
 
 from logs.metadata_engine import metadata_engine
+from logs.metadata_engine.metadata_engine import MetadataEngine
 
 
 @pytest.mark.parametrize("testcase", [
@@ -55,3 +57,11 @@ def run_with_clean_engine(input):
     output = {}
     engine.apply(input, output)
     return output
+
+
+"""
+@patch.object(MetadataEngine, 'apply')
+@patch('builtins.print')
+def test_exception_throttling(mock_print, metadata_engine_apply_mock):
+    pass
+"""

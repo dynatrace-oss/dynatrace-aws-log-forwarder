@@ -106,7 +106,7 @@ def prepare_batches(logs: List[Dict], context: Context) -> List[Batch]:
             # shouldn't happen as we are already truncating the content field, but just for safety
             logging.log_multiline_message(f"Dropping entry, as it's size is {next_entry_serialized_len}, "
                                           f"bigger than max entry size: {DYNATRACE_LOG_INGEST_REQUEST_MAX_SIZE}",
-                                          os.path.basename(__file__) + "_" + prepare_batches.__name__)
+                                          "entry-bigger-than-max-size")
 
         batch_length_if_added_entry = new_batch_len + 1 + next_entry_serialized_len  # +1 is for comma
         batch_entries_if_added_entry = len(logs_for_next_batch) + 1
