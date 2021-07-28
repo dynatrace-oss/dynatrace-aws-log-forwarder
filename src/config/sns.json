@@ -4,7 +4,7 @@
   "rules": [
     {
       "aws": {
-        "logGroup": "sns/%{DATA:region_id}/%{DATA:account_id}/%{USERNAME:resource_id}%{GREEDYDATA:failure_suffix}"
+        "logGroup": "sns/%{DATA}/%{DATA}/(?<resource_id>[^/]+)%{GREEDYDATA:failure_suffix}"
       },
       "sources": [
         {
