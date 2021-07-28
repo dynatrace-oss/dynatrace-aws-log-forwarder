@@ -1,0 +1,41 @@
+{
+  "name": "SNS",
+  "displayName": "Simple Notification Service",
+  "rules": [
+    {
+      "aws": {
+        "logGroup": "sns/%{DATA:region_id}/%{DATA:account_id}/%{USERNAME:resource_id}%{GREEDYDATA:failure_suffix}"
+      },
+      "sources": [
+        {
+          "sourceType": "logs",
+          "source": "log_group",
+          "condition": "$prefix('sns/')"
+        }
+      ],
+      "attributes": [
+        {
+          "key": "aws.service",
+          "pattern": "'sns'"
+        },
+        {
+          "key": "aws.resource.id",
+          "pattern": "resource_id"
+        },
+        {
+          "key": "aws.arn",
+          "priority": 1,
+          "pattern": "format_arn('arn:{}:sns:{}:{}:{}', [partition, region, account_id, resource_id])"
+        },
+        {
+          "key": "severity",
+          "pattern": "if( failure_suffix == '', &'INFO', &'ERROR', @)"
+        },
+        {
+          "key": "dt.source_entity",
+          "pattern": "dt_meid_supporting_service_v2('SNS', \"aws.arn\")"
+        }
+      ]
+    }
+  ]
+}

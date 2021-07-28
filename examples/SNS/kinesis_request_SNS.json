@@ -1,0 +1,12 @@
+{
+    "invocationId": "ef9065f8-9662-401c-99cf-12a1c7c51c13",
+    "deliveryStreamArn": "arn:aws:firehose:us-east-1:908047316593:deliverystream/bmrozinski-aws-logs-FirehoseLogStreams-C4lHBmVL8HAn",
+    "region": "us-east-1",
+    "records": [
+        {
+            "recordId": "49620313273163250383962533297699666066097095392192626690000000",
+            "approximateArrivalTimestamp": 1627304586605,
+            "data": "H4sIAAAAAAAAAI1TyW7bMBD9lYJns+Fwl26GkwY9+BKnpyooSGoUCLUlRZQTpIb/veMVPhW9CODwLfNmqB3bYM7hFZ8/B2Qlu58/z38tH1ar+eMDm7H+o8ORyoXwQjsF1hSKyuv+9XHstwPd5C7fbTPHkCcOd7e4u7gZ+z9tl3+3nFCcSJm/IgmGqR9PKqtpxLAhmehBugSBu8YVXKMDHpO1vLHGKS9U8gqIkrcxp7EdprbvvrXrCcfMyp/sxil8nJzYy9Hg4R276YDZsbYmH2VlIUDoQkvjrCqE1cp5EMoYoNaNlM5LUFIaKEBrcEYr45wl76mlUU1hQ6nBSqcI7YldzC4jJPldxbp+aps2hUOLFSupcr5e3pvVdkOlitWuKVCLopEu2saji04E0wiAIASCqtjsSvteHylBOeF1Qi51I7hR0vCga+R1HS2lMMpoPNKmfmjTfOxOrLEraSIlzb+8bqm83VL5zy2dFC/Bj5JSSODCcWm/gCqFLEF9dcJWbE/QGtftO46fp+CX0zmCl40okos8ea25QbA8QjA8GaFcqsE0IR4Na7Jru8sEb1K8/W+K8zuJeEowjP17W+P4hHnou4xH1V1VVYwkn/BtS4bUZHWo00cqG1QIiTudgNPDcDyk6LhVtU7C6BoQDrjZWWF53dRFwUWMMRaKe1XQc3aaFIoUuNcqofGgFJgDbn/K+4Hr9TNNeZmJrz2VwjThZpgOZ6AjjX/a5kVfH1qXQuyvtWOU1Y/Fgv5Z0mP7l/1fkjOX99QDAAA="
+        }
+    ]
+}
