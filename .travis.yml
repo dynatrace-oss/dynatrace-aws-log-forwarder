@@ -47,7 +47,6 @@ jobs:
       name: Execute e2e tests
       if: branch = master OR type = pull_request
       language: shell
-      services: docker
       install:
         # set up awscli packages
         - python3 -m pip install --user awscli
@@ -83,7 +82,6 @@ jobs:
       name: Github Release Deployment
       if: tag =~ /^release.*$/
       language: shell
-      services: docker
       install:
         # set up awscli packages
         - python3 -m pip install --user awscli
