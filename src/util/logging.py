@@ -23,21 +23,28 @@ log_call_count = dict()
 
 
 def log_multiline_message(message: Text, caller: Text):
-
     # display logs called from one spot no more than the specified amount of times
-    if log_call_count.get(caller, 0) < LOG_THROTTLING_LIMIT_PER_CALLER:
-        log_call_count[caller] = log_call_count.get(caller, 0) + 1
-    elif log_call_count.get(caller, 0) == LOG_THROTTLING_LIMIT_PER_CALLER:
-        log_call_count[caller] = log_call_count.get(caller, 0) + 1
-        print(f"Logging calls from caller '{caller}' exceeded the throttling limit of",
-              f"{LOG_THROTTLING_LIMIT_PER_CALLER}. Further logs from this caller will be discarded")
-        return
-    else:
+    if check_if_caller_exceeded_limit(caller):
         return
 
     # need to modify endline char to have multiline log record not split into multiple log entries in CloudWatch:
     message = message.replace('\n', ' ')
     print(message)
+
+
+def check_if_caller_exceeded_limit(caller):
+    log_calls_left = LOG_THROTTLING_LIMIT_PER_CALLER - log_call_count.get(caller, 0)
+
+    if log_calls_left == 0:
+        log_call_count[caller] = log_call_count.get(caller, 0) + 1
+        print(f"Logging calls from caller '{caller}' exceeded the throttling limit of",
+              f"{LOG_THROTTLING_LIMIT_PER_CALLER}. Further logs from this caller will be discarded")
+
+    caller_exceeded_limit = log_calls_left <= 0
+    if not caller_exceeded_limit:
+        log_call_count[caller] = log_call_count.get(caller, 0) + 1
+
+    return caller_exceeded_limit
 
 
 def debug_log_multiline_message(message: Text, context: Context, caller: Text):
