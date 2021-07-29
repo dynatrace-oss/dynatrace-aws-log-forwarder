@@ -57,11 +57,3 @@ def run_with_clean_engine(input):
     output = {}
     engine.apply(input, output)
     return output
-
-
-"""
-@patch.object(MetadataEngine, 'apply')
-@patch('builtins.print')
-def test_exception_throttling(mock_print, metadata_engine_apply_mock):
-    pass
-"""
