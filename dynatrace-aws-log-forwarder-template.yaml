@@ -146,6 +146,11 @@ Resources:
         Rules:
           - ExpirationInDays: '7'
             Status: 'Enabled'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
 
   DeliveryStreamRole:
     Type: AWS::IAM::Role
@@ -578,6 +583,9 @@ Resources:
             DeleteOnTermination: "true"
             VolumeSize: "8"
       SecurityGroupIds: [ !Ref VPCSecurityGroup ]
+      Tags:
+        - Key: Name
+          Value: !Join [ "-", [ !Ref 'AWS::StackName', "active-gate" ] ]
       UserData:
         Fn::Base64:
           !Sub

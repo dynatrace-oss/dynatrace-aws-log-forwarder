@@ -1,0 +1,41 @@
+{
+  "name": "CLOUD_TRAIL",
+  "displayName": "Cloud Trail Management Events / Logs",
+  "rules": [
+    {
+      "aws": {
+        "logContentParseAs": "json"
+      },
+      "sources": [
+        {
+          "sourceType": "logs",
+          "source": "log_group",
+          "condition": "$prefix('aws-cloudtrail-logs')"
+        }
+      ],
+      "attributes": [
+        {
+          "key": "aws.service",
+          "pattern": "'cloudtrail'"
+        },
+        {
+          "key": "audit.action",
+          "pattern": "log_content.eventName"
+        },
+        {
+          "key": "audit.identity",
+          "pattern": "log_content.userIdentity.arn"
+        },
+        {
+          "key": "audit.result",
+          "description": "If a field errorCode exists, then return Failure.{errorCode}, else return Succeeded",
+          "pattern": "if( log_content.errorCode==null, &'Succeeded', &[`Failed`, log_content.errorCode] | [? @!=null ] | join('.', @) , @)"
+        },
+        {
+          "key": "severity",
+          "pattern": "if( log_content.errorCode==null, &'INFO', &'ERROR', @)"
+        }
+      ]
+    }
+  ]
+}

@@ -33,12 +33,14 @@ def log_error_with_stacktrace(e: Exception, msg):
     log_multiline_message(f"Exception '{e}' occurred. Additional message: '{msg}'")
     log_multiline_message(traceback.format_exc())
 
+def log_error_without_stacktrace(msg):
+    log_multiline_message(msg + "Exception details: " + traceback.format_exc(limit=0))
+
 
 # wrappers for metadata_engine (there is different logging approach there):
 
 def exception(msg):
-    log_multiline_message("EXCEPTION: " + msg)
-
+    log_multiline_message(msg + "Exception details: " + traceback.format_exc())
 
 def warning(msg):
     log_multiline_message("WARNING: " + msg)

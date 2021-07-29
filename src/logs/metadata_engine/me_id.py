@@ -20,18 +20,36 @@ int64 = ctypes.c_int64
 
 
 def meid_md5(entity_type: str, hashing_input: str):
+    if hashing_input is None:
+        return None
+
     long_id = _legacy_entity_id_md5(hashing_input)
     identifier = _encode_me_identifier(entity_type, long_id)
     return identifier
 
 
 def meid_murmurhash(entity_type: str, hashing_input: str) -> str:
+    if hashing_input is None:
+        return None
+
     long_id = _murmurhash2_64A(hashing_input)
+    identifier = _encode_me_identifier(entity_type, long_id)
+    return identifier
+
+def meid_murmurhash_awsseed(entity_type: str, hashing_input: str) -> str:
+    if hashing_input is None:
+        return None
+
+    #APM-226544: 0xe17a1465 as default but with casting to int used
+    long_id = _murmurhash2_64A(hashing_input, seed = -512093083)
+
     identifier = _encode_me_identifier(entity_type, long_id)
     return identifier
 
 
 def _legacy_entity_id_md5(hash_input: str) -> int:
+    assert hash_input is not None
+
     md5_digest = hashlib.md5(hash_input.encode("UTF-8"))
     md5_digest_bytes = md5_digest.digest()
     l1 = int.from_bytes(md5_digest_bytes[0:8], "big", signed=True)
@@ -45,6 +63,8 @@ def _zfrs(num, shift):
 
 
 def _murmurhash2_64A(data: str, seed=0xe17a1465) -> int:
+    assert data is not None
+
     buf = bytearray(data.encode("UTF-8"))
     m = int64(0xc6a4a7935bd1e995).value
     r = 47

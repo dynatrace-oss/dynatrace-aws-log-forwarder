@@ -48,7 +48,6 @@ jobs:
       # if: branch = master OR type = pull_request
       if: branch = APM-306464
       language: shell
-      services: docker
       install:
         # set up awscli packages
         - python3 -m pip install --user awscli==1.20.9
@@ -84,7 +83,6 @@ jobs:
       name: Github Release Deployment
       if: tag =~ /^release.*$/
       language: shell
-      services: docker
       install:
         # set up awscli packages
         - python3 -m pip install --user awscli==1.20.9

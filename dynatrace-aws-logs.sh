@@ -18,6 +18,9 @@ readonly LAMBDA_ZIP_NAME="dynatrace-aws-log-forwarder-lambda.zip"
 
 readonly DEFAULT_STACK_NAME="dynatrace-aws-logs"
 
+readonly DYNATRACE_TARGET_URL_REGEX="^(https?:\/\/[-a-zA-Z0-9@:%._+~=]{1,256}\/?)(\/e\/[a-z0-9-]{36}\/?)?$"
+readonly ACTIVE_GATE_TARGET_URL_REGEX="^https:\/\/[-a-zA-Z0-9@:%._+~=]{1,256}\/e\/[-a-z0-9]{1,36}[\/]{0,1}$"
+
 function print_help_main_options {
   echo ""
   printf \
@@ -87,6 +90,63 @@ arguments:
     # 2. The parameter is between other parameters and (as it has no value) the name of the next parameter is taken as its value
     if [ -z $2 ] || [[ $2 == "--"* ]]; then echo "Missing value for parameter $1"; print_help_deploy; exit 1; fi
   }
+
+  function check_activegate_state() {
+    if ACTIVE_GATE_STATE=$(curl -ksS "${TARGET_URL}/rest/health" --connect-timeout 20); then
+      if [[ "$ACTIVE_GATE_STATE" != "RUNNING" ]]
+      then
+        echo -e ""
+        echo -e "\e[91mERROR: \e[37mActiveGate endpoint is not reporting RUNNING state. Please verify provided values for parameter: --target-url (${TARGET_URL})."
+        exit 1
+      fi
+    else
+        echo -e "\e[93mWARNING: \e[37mFailed to connect to ActiveGate url $TARGET_URL to check state. It can be ignored if ActiveGate does not allow public access."
+    fi
+  }
+
+  function check_api_token() {
+    if RESPONSE=$(curl -k -s -X POST -d "{\"token\":\"$TARGET_API_TOKEN\"}" "$TARGET_URL/api/v2/apiTokens/lookup" -w "<<HTTP_CODE>>%{http_code}" -H "accept: application/json; charset=utf-8" -H "Content-Type: application/json; charset=utf-8" -H "Authorization: Api-Token $TARGET_API_TOKEN" --connect-timeout 20); then
+      CODE=$(sed -rn 's/.*<<HTTP_CODE>>(.*)$/\1/p' <<<"$RESPONSE")
+      RESPONSE=$(sed -r 's/(.*)<<HTTP_CODE>>.*$/\1/' <<<"$RESPONSE")
+      if [ "$CODE" -ge 300 ]; then
+        echo -e "\e[91mERROR: \e[37mFailed to check Dynatrace API token permissions - please verify provided values for parameters: --target-url (${TARGET_URL}) and --target-api-token. $RESPONSE"
+        exit 1
+      fi
+      if ! grep -q '"logs.ingest"' <<<"$RESPONSE"; then
+        echo -e "\e[91mERROR: \e[37mMissing Ingest logs permission (v2) for the API token"
+        exit 1
+      fi
+    else
+      echo -e "\e[93mWARNING: \e[37mFailed to connect to Dynatrace/ActiveGate endpoint $TARGET_URL to check API token permissions. It can be ignored if Dynatrace/ActiveGate does not allow public access. Please make sure that provided API token has Ingest logs permission (v2)"
+    fi
+  }
+
+function generate_test_log()
+  {
+  DATE=$(date --iso-8601=seconds)
+  cat <<EOF
+{
+"timestamp": "$DATE",
+"cloud.provider": "aws",
+"content": "AWS Log Forwarder installation log",
+"severity": "INFO"
+}
+EOF
+  }
+
+  function check_log_ingest_url() {
+  if RESPONSE=$(curl -k -s -X POST -d "$(generate_test_log)" "$TARGET_URL/api/v2/logs/ingest" -w "<<HTTP_CODE>>%{http_code}" -H "accept: application/json; charset=utf-8" -H "Content-Type: application/json; charset=utf-8" -H "Authorization: Api-Token $TARGET_API_TOKEN" --connect-timeout 20); then
+    CODE=$(sed -rn 's/.*<<HTTP_CODE>>(.*)$/\1/p' <<<"$RESPONSE")
+    RESPONSE=$(sed -r 's/(.*)<<HTTP_CODE>>.*$/\1/' <<<"$RESPONSE")
+    if [ "$CODE" -ge 300 ]; then
+      echo -e "\e[91mERROR: \e[37mFailed to send a test log to Dynatrace - please verify provided log ingest url ($TARGET_URL) and API token. $RESPONSE"
+      exit 1
+    fi
+  else
+    echo -e "\e[91mERROR: \e[37mFailed to connect with provided log ingest url ($TARGET_URL) to send a test log. Please check if provided ActiveGate is accessible publicly."
+    exit 1
+  fi
+}
 
   while (( "$#" )); do
     case "$1" in
@@ -158,6 +218,26 @@ arguments:
     TENANT_ID="" # NOT USED IN THIS CASE
   fi
 
+  if [[ "$USE_EXISTING_ACTIVE_GATE" == "false" ]] && ! [[ "${TARGET_URL}" =~ $DYNATRACE_TARGET_URL_REGEX ]]; then
+      echo "Invalid value for parameter --target-url. Example of valid url for deployment with ActiveGate: https://<your_environment_ID>.live.dynatrace.com"
+      exit 1
+  elif [[ "$USE_EXISTING_ACTIVE_GATE" == "true" ]] && ! [[ "${TARGET_URL}" =~ $ACTIVE_GATE_TARGET_URL_REGEX ]]; then
+      echo "Invalid value for parameter --target-url. Example of valid url for deployment without ActiveGate: https://<your_activegate_IP_or_hostname>:9999/e/<your_environment_ID>"
+      exit 1
+  fi
+
+  TARGET_URL=$(echo "$TARGET_URL" | sed 's:/*$::')
+
+  if [[ "$USE_EXISTING_ACTIVE_GATE" == "true" ]]; then
+    check_activegate_state
+  fi
+
+  check_api_token
+
+  if [[ "$USE_EXISTING_ACTIVE_GATE" == "true" ]]; then
+    check_log_ingest_url
+  fi
+
   print_params_deploy
 
   set -e
@@ -173,6 +253,7 @@ arguments:
      --query "Stacks[0].Outputs[?OutputKey=='LambdaArn'][OutputValue]" --output text)
 
   aws lambda update-function-code --function-name "$LAMBDA_ARN" --zip-file fileb://"$LAMBDA_ZIP_NAME" > /dev/null
+  echo; echo "Updated Lambda code of $LAMBDA_ARN"; echo
 
   # SHOW OUTPUTS
   aws cloudformation describe-stacks --stack-name "$STACK_NAME" --query "Stacks[0].Outputs"

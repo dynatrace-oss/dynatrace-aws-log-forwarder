@@ -24,7 +24,7 @@
         },
         {
           "key": "aws.arn",
-          "pattern": "format('arn:{}:apigateway:{}::/restapis/{}', [partition, region, api_id])"
+          "pattern": "format_arn('arn:{}:apigateway:{}::/restapis/{}', [partition, region, api_id])"
         }
       ]
     }
