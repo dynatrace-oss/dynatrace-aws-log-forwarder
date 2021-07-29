@@ -36,6 +36,33 @@ from logs.metadata_engine import metadata_engine
         },
     }),
 
+    ({
+        "log_group": 'sns/us-east-1/444000444/sample-sns-logs-generator_123.fifo/Failure',
+        "pattern": 'sns/%{DATA}/%{DATA}/(?<resource_id>[^/]+)%{GREEDYDATA:failure_suffix}',
+        "parse_output": {
+            "resource_id": "sample-sns-logs-generator_123.fifo",
+            "failure_suffix": "/Failure"
+        },
+    }),
+
+    ({
+        "log_group": 'sns/us-east-1/444000444/sample-sns-logs-generator',
+        "pattern": 'sns/%{DATA}/%{DATA}/(?<resource_id>[^/]+)%{GREEDYDATA:failure_suffix}',
+        "parse_output": {
+            "resource_id": "sample-sns-logs-generator",
+            "failure_suffix": ""
+        },
+    }),
+
+    ({
+        "log_group": 'sns/us-east-1/444000444/name_with_not_allowed_characters:#$%{}-but.still.working/Failure',
+        "pattern": 'sns/%{DATA}/%{DATA}/(?<resource_id>[^/]+)%{GREEDYDATA:failure_suffix}',
+        "parse_output": {
+            "resource_id": "name_with_not_allowed_characters:#$%{}-but.still.working",
+            "failure_suffix": "/Failure"
+        },
+    }),
+
 ])
 def test_parse_aws_loggroup_with_grok_pattern(testcase):
     actual_output = metadata_engine.parse_aws_loggroup_with_grok_pattern(testcase["log_group"], testcase["pattern"])
