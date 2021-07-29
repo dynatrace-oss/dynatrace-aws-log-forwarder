@@ -208,15 +208,16 @@ def _prepare_cloudwatch_metric(metric_name, value: Union[int, float, list], unit
     return cw_metric
 
 
-def _prepare_cloudwatch_metric_statistic(metric_name, unit, dimensions, minimum, maximum, sum, count) -> dict:
+def _prepare_cloudwatch_metric_statistic(metric_name, unit, dimensions,
+                                         value_min, value_max, value_sum, value_count) -> dict:
     return {
         'MetricName': metric_name,
         'Dimensions': dimensions,
         'Unit': unit,
         'StatisticValues': {
-            'SampleCount': count,
-            'Sum': sum,
-            'Minimum': minimum,
-            'Maximum': maximum,
+            'SampleCount': value_count,
+            'Sum': value_sum,
+            'Minimum': value_min,
+            'Maximum': value_max,
         }
     }
