@@ -163,7 +163,6 @@ def _apply_rule(rule, record, parsed_record):
                 # attributes with priority are available for the calculation of further attributes
                 if attribute.priority is not None:
                     record[attribute.key] = value
-            raise Exception
         except Exception as ex:
             logging.log_error_without_stacktrace(f"Encountered exception when evaluating attribute {attribute} of rule for {rule.entity_type_name}",
                                                  "rule-attribute-evaluation-exception")
