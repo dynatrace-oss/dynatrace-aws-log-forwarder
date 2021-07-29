@@ -34,7 +34,7 @@ jobs:
       services: docker
       install:
         # set up awscli packages
-        - python3 -m pip install --user awscli=1.20.9
+        - python3 -m pip install --user awscli==1.20.9
       before_script:
         # set up shared storage for build artifacts
         - mkdir -p $TRAVIS_BUILD_SHARED_STORAGE
@@ -50,7 +50,7 @@ jobs:
       services: docker
       install:
         # set up awscli packages
-        - python3 -m pip install --user awscli=1.20.9
+        - python3 -m pip install --user awscli==1.20.9
         # set up e2e packages
         - python3 -m pip install --user -r ./tests/e2e/requirements.txt
       before_script:
@@ -86,7 +86,7 @@ jobs:
       services: docker
       install:
         # set up awscli packages
-        - python3 -m pip install --user awscli=1.20.9
+        - python3 -m pip install --user awscli==1.20.9
       script: skip
       before_deploy:
         # set up shared storage for build artifacts
