@@ -80,7 +80,7 @@ Resources:
       VpcConfig: !If
         - DeployAGwithVPC
         - SecurityGroupIds: [ !Ref VPCSecurityGroup ]
-          SubnetIds: [ !Ref VPCPrivateSubnet1  ]
+          SubnetIds: [ !Ref VPCPrivateSubnet  ]
         - !Ref "AWS::NoValue"
 
   LambdaRole:
@@ -618,7 +618,7 @@ Resources:
             touch /home/ec2-user/userdata-ag-installation-success
           - DynatraceEnvironmentUrl: !Ref DynatraceEnvironmentUrl
             DynatracePaasToken: !Ref DynatracePaasToken
-      SubnetId: !Ref VPCPrivateSubnet1
+      SubnetId: !Ref VPCPrivateSubnet
 
   VPC:
     Condition: DeployAGwithVPC
@@ -628,7 +628,7 @@ Resources:
       EnableDnsSupport: true
       EnableDnsHostnames: true
 
-  VPCPublicSubnet1:
+  VPCPublicSubnet:
     Condition: DeployAGwithVPC
     Type: 'AWS::EC2::Subnet'
     Properties:
@@ -637,7 +637,7 @@ Resources:
       CidrBlock: 172.31.1.0/27
       MapPublicIpOnLaunch: true
 
-  VPCPrivateSubnet1:
+  VPCPrivateSubnet:
     Condition: DeployAGwithVPC
     Type: 'AWS::EC2::Subnet'
     Properties:
@@ -670,7 +670,7 @@ Resources:
     DependsOn: VPCNatGatewayElasticIP
     Properties:
       AllocationId: !GetAtt VPCNatGatewayElasticIP.AllocationId
-      SubnetId: !Ref VPCPublicSubnet1
+      SubnetId: !Ref VPCPublicSubnet
 
   VPCPublicRouteTable:
     Condition: DeployAGwithVPC
@@ -687,11 +687,11 @@ Resources:
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref VPCInternetGateway
 
-  VPCPublicSubnet1RouteTableAssoc:
+  VPCPublicSubnetRouteTableAssoc:
     Condition: DeployAGwithVPC
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref VPCPublicSubnet1
+      SubnetId: !Ref VPCPublicSubnet
       RouteTableId: !Ref VPCPublicRouteTable
 
   VPCPrivateRouteTable:
@@ -708,11 +708,11 @@ Resources:
       DestinationCidrBlock: 0.0.0.0/0
       NatGatewayId: !Ref VPCNatGateway
 
-  VPCPrivateSubnet1RouteTableAssoc:
+  VPCPrivateSubnetRouteTableAssoc:
     Condition: DeployAGwithVPC
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref VPCPrivateSubnet1
+      SubnetId: !Ref VPCPrivateSubnet
       RouteTableId: !Ref VPCPrivateRouteTable
 
   VPCSecurityGroup:
