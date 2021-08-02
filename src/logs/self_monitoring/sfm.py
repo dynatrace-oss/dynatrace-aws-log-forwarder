@@ -104,20 +104,17 @@ class SelfMonitoringContext:
 
         metrics.append(_prepare_cloudwatch_metric_statistic(
             "Kinesis record age", "Seconds", common_dimensions,
-            min(self._kinesis_records_age), max(self._kinesis_records_age),
-            sum(self._kinesis_records_age), len(self._kinesis_records_age)
+            self._kinesis_records_age
         ))
 
         metrics.append(_prepare_cloudwatch_metric_statistic(
             "Kinesis record.data compressed size", "Bytes", common_dimensions,
-            min(self._record_data_compressed_size), max(self._record_data_compressed_size),
-            sum(self._record_data_compressed_size), len(self._record_data_compressed_size)
+            self._record_data_compressed_size
         ))
 
         metrics.append(_prepare_cloudwatch_metric_statistic(
             "Kinesis record.data decompressed size", "Bytes", common_dimensions,
-            min(self._record_data_decompressed_size), max(self._record_data_decompressed_size),
-            sum(self._record_data_decompressed_size), len(self._record_data_decompressed_size)
+            self._record_data_decompressed_size
         ))
 
         # TO BE RESTORED IN DIFFERENT WAY IN APM-306046
@@ -204,16 +201,15 @@ def _prepare_cloudwatch_metric(metric_name, unit, dimensions, value: Union[int, 
     return cw_metric
 
 
-def _prepare_cloudwatch_metric_statistic(metric_name, unit, dimensions,
-                                         value_min, value_max, value_sum, value_count) -> dict:
+def _prepare_cloudwatch_metric_statistic(metric_name, unit, dimensions, values: list) -> dict:
     return {
         'MetricName': metric_name,
         'Dimensions': dimensions,
         'Unit': unit,
         'StatisticValues': {
-            'SampleCount': value_count,
-            'Sum': value_sum,
-            'Minimum': value_min,
-            'Maximum': value_max,
+            'SampleCount': len(values),
+            'Sum': sum(values),
+            'Minimum': min(values),
+            'Maximum': max(values),
         }
     }
