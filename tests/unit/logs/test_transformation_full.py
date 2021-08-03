@@ -505,6 +505,168 @@ CLOUDTRAIL_USER_IDENTITY = {
 
     pytest.param({
         "record_data_decoded": {
+            "messageType": "DATA_MESSAGE",
+            "owner": "444000444",
+            "logGroup": "/aws/apprunner/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71/application",
+            "logStream": "instance/ee2c02336dbe4222936bea385d900d0a",
+            "subscriptionFilters": ["dt-aws-logs"],
+            "logEvents": [{
+                "id": "36278401907111421594688977684007571489764321972201324544",
+                "timestamp": 1626779804179,
+                "message": "INFO:root:Generating avatar image"
+            }
+            ]
+        },
+        "expect_first_log_contains": {
+            'aws.service': 'apprunner',
+            'aws.resource.id': 'MNA-test-sample',
+            'aws.arn': 'arn:aws:apprunner:us-east-1:444000444:service/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71',
+            'dt.source_entity': 'CUSTOM_DEVICE-502D948277535551',
+            'content': 'INFO:root:Generating avatar image',
+            'cloud.provider': 'aws',
+            'cloud.account.id': '444000444',
+            'cloud.region': 'us-east-1',
+            'aws.log_group': '/aws/apprunner/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71/application',
+            'aws.log_stream': 'instance/ee2c02336dbe4222936bea385d900d0a',
+            'aws.region': 'us-east-1',
+            'aws.account.id': '444000444',
+            'severity': 'INFO',
+            'timestamp': 1626779804179}
+    }, id="testcase_App_Runner_application_logs"),
+
+    pytest.param({
+        "record_data_decoded": {
+            "messageType": "DATA_MESSAGE",
+            "owner": "444000444",
+            "logGroup": "/aws/apprunner/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71/application",
+            "logStream": "instance/ee2c02336dbe4222936bea385d900d0a",
+            "subscriptionFilters": ["dt-aws-logs"],
+            "logEvents": [{
+                "id": "36278412331460960176637582018679695718665678823625654272",
+                "timestamp": 1626779804180,
+                "message": "WARNING: root: danger! danger!"
+            }
+            ]
+        },
+        "expect_first_log_contains": {
+            'severity': 'WARN'
+        }
+    }, id="testcase_App_Runner_application_logs_severity_warn"),
+
+    pytest.param({
+        "record_data_decoded": {
+            "messageType": "DATA_MESSAGE",
+            "owner": "444000444",
+            "logGroup": "/aws/apprunner/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71/application",
+            "logStream": "instance/ee2c02336dbe4222936bea385d900d0a",
+            "subscriptionFilters": ["dt-aws-logs"],
+            "logEvents": [{
+                "id": "36278412338106582245799707715098908212405235687668776960",
+                "timestamp": 1626779804181,
+                "message": "ERROR This is fine."
+            }
+            ]
+        },
+        "expect_first_log_contains": {
+            'severity': 'ERROR'
+        }
+    }, id="testcase_App_Runner_application_logs_severity_error"),
+
+    pytest.param({
+        "record_data_decoded": {
+            "messageType": "DATA_MESSAGE",
+            "owner": "444000444",
+            "logGroup": "/aws/apprunner/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71/service",
+            "logStream": "events",
+            "subscriptionFilters": ["dt-aws-logs"],
+            "logEvents": [{
+                "id": "36278412234742628250610269448515044290183004986164903936",
+                "timestamp": 1626780267286,
+                "message": "[AppRunner] Service status is set to OPERATION_IN_PROGRESS."
+            }
+            ]
+        },
+        "expect_first_log_contains": {
+            'aws.service': 'apprunner',
+            'aws.resource.id': 'MNA-test-sample',
+            'aws.arn': 'arn:aws:apprunner:us-east-1:444000444:service/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71',
+            'dt.source_entity': 'CUSTOM_DEVICE-502D948277535551',
+            'content': '[AppRunner] Service status is set to OPERATION_IN_PROGRESS.',
+            'cloud.provider': 'aws',
+            'cloud.account.id': '444000444',
+            'cloud.region': 'us-east-1',
+            'aws.log_group': '/aws/apprunner/MNA-test-sample/0842920903ba4b86bc4914aebfd1fb71/service',
+            'aws.log_stream': 'events',
+            'aws.region': 'us-east-1',
+            'aws.account.id': '444000444',
+            'severity': 'INFO',
+            'timestamp': 1626780267286}
+    }, id="testcase_App_Runner_service_logs"),
+
+    pytest.param({
+        "record_data_decoded": {
+            "messageType": "DATA_MESSAGE",
+            "owner": "444000444",
+            "logGroup": "sns/us-east-1/444000444/sample-sns-logs-generator",
+            "logStream": "b8127c1a-7f79-4e71-bc66-f6573803c831",
+            "subscriptionFilters": ["sample-aws-logs"],
+            "logEvents": [{
+                "id": "36290104942576390643781035518045227821322519144175435776",
+                "timestamp": 1627304586439,
+                "message": "{\"notification\":{\"messageMD5Sum\":\"d7f9e409f27b6f8e7b70a5f011a00e13\",\"messageId\":\"a37084ce-24f0-5325-a4de-ddb69065354e\",\"topicArn\":\"arn:aws:sns:us-east-1:444000444:sample-sns-logs-generator\",\"timestamp\":\"2021-07-26 13:02:13.706\"},\"delivery\":{\"deliveryId\":\"82f09c7b-c844-5e16-b1a5-c5037cd15fab\",\"destination\":\"arn:aws:sqs:us-east-1:444000444:sample-sns-subscriber\",\"providerResponse\":\"{\\\"sqsRequestId\\\":\\\"236a3aac-74c1-5187-acb7-63d4c054d1e1\\\",\\\"sqsMessageId\\\":\\\"7bebbb93-8399-4747-a9ca-843ce5813315\\\"}\",\"dwellTimeMs\":48,\"attempts\":1,\"statusCode\":200},\"status\":\"SUCCESS\"}"
+            }
+            ]
+        },
+        "expect_first_log_contains": {
+            'aws.service': 'sns',
+            'aws.resource.id': 'sample-sns-logs-generator',
+            'aws.arn': 'arn:aws:sns:us-east-1:444000444:sample-sns-logs-generator',
+            'dt.source_entity': 'CUSTOM_DEVICE-F2FBC0402737EF69',
+            'content': '{\"notification\":{\"messageMD5Sum\":\"d7f9e409f27b6f8e7b70a5f011a00e13\",\"messageId\":\"a37084ce-24f0-5325-a4de-ddb69065354e\",\"topicArn\":\"arn:aws:sns:us-east-1:444000444:sample-sns-logs-generator\",\"timestamp\":\"2021-07-26 13:02:13.706\"},\"delivery\":{\"deliveryId\":\"82f09c7b-c844-5e16-b1a5-c5037cd15fab\",\"destination\":\"arn:aws:sqs:us-east-1:444000444:sample-sns-subscriber\",\"providerResponse\":\"{\\\"sqsRequestId\\\":\\\"236a3aac-74c1-5187-acb7-63d4c054d1e1\\\",\\\"sqsMessageId\\\":\\\"7bebbb93-8399-4747-a9ca-843ce5813315\\\"}\",\"dwellTimeMs\":48,\"attempts\":1,\"statusCode\":200},\"status\":\"SUCCESS\"}',
+            'cloud.provider': 'aws',
+            'cloud.account.id': '444000444',
+            'cloud.region': 'us-east-1',
+            'aws.log_group': 'sns/us-east-1/444000444/sample-sns-logs-generator',
+            'aws.log_stream': 'b8127c1a-7f79-4e71-bc66-f6573803c831',
+            'aws.region': 'us-east-1',
+            'aws.account.id': '444000444',
+            'severity': 'INFO',
+            'timestamp': 1627304586439}
+    }, id="testcase_SNS_success"),
+
+    pytest.param({
+        "record_data_decoded": {
+            "messageType": "DATA_MESSAGE",
+            "owner": "444000444",
+            "logGroup": "sns/us-east-1/444000444/sample-sns-logs-generator_123.fifo/Failure",
+            "logStream": "297f5c53-6372-40d5-8129-7a75174a85e2",
+            "subscriptionFilters": ["sample-aws-logs"],
+            "logEvents": [{
+                "id": "36290210055711636225167258963783667929263292187971747840",
+                "timestamp": 1627309299875,
+                "message": "{\"notification\":{\"messageMD5Sum\":\"4fbd6baa3908ceecb6d3a49314bc1d71\",\"messageId\":\"71db8efc-3022-50d3-8b55-d784f706e076\",\"topicArn\":\"arn:aws:sns:us-east-1:444000444:sample-sns-logs-generator\",\"timestamp\":\"2021-07-26 14:21:24.892\"},\"delivery\":{\"deliveryId\":\"587300b1-c463-5014-a540-59c903479503\",\"destination\":\"arn:aws:sqs:us-east-1:444000444:sample-sns-subscriber-2\",\"providerResponse\":\"{\\\"ErrorCode\\\":\\\"AccessDenied\\\",\\\"ErrorMessage\\\":\\\"Access to the resource https://sqs.us-east-1.amazonaws.com/444000444/sample-sns-subscriber-2 is denied.\\\",\\\"sqsRequestId\\\":\\\"Unrecoverable\\\"}\",\"dwellTimeMs\":37,\"attempts\":1,\"statusCode\":403},\"status\":\"FAILURE\"}"
+            }
+            ]
+        },
+        "expect_first_log_contains": {
+            'aws.service': 'sns',
+            'aws.resource.id': 'sample-sns-logs-generator_123.fifo',
+            'aws.arn': 'arn:aws:sns:us-east-1:444000444:sample-sns-logs-generator_123.fifo',
+            'dt.source_entity': 'CUSTOM_DEVICE-C68F57C6DC1F68C1',
+            'content': '{\"notification\":{\"messageMD5Sum\":\"4fbd6baa3908ceecb6d3a49314bc1d71\",\"messageId\":\"71db8efc-3022-50d3-8b55-d784f706e076\",\"topicArn\":\"arn:aws:sns:us-east-1:444000444:sample-sns-logs-generator\",\"timestamp\":\"2021-07-26 14:21:24.892\"},\"delivery\":{\"deliveryId\":\"587300b1-c463-5014-a540-59c903479503\",\"destination\":\"arn:aws:sqs:us-east-1:444000444:sample-sns-subscriber-2\",\"providerResponse\":\"{\\\"ErrorCode\\\":\\\"AccessDenied\\\",\\\"ErrorMessage\\\":\\\"Access to the resource https://sqs.us-east-1.amazonaws.com/444000444/sample-sns-subscriber-2 is denied.\\\",\\\"sqsRequestId\\\":\\\"Unrecoverable\\\"}\",\"dwellTimeMs\":37,\"attempts\":1,\"statusCode\":403},\"status\":\"FAILURE\"}',
+            'cloud.provider': 'aws',
+            'cloud.account.id': '444000444',
+            'cloud.region': 'us-east-1',
+            'aws.log_group': 'sns/us-east-1/444000444/sample-sns-logs-generator_123.fifo/Failure',
+            'aws.log_stream': '297f5c53-6372-40d5-8129-7a75174a85e2',
+            'aws.region': 'us-east-1',
+            'aws.account.id': '444000444',
+            'severity': 'ERROR',
+            'timestamp': 1627309299875}
+    }, id="testcase_SNS_failure"),
+
+    pytest.param({
+        "record_data_decoded": {
             "logGroup": "/aws/rds/instance/mysql-db-for-logs/audit",
             "logStream": "mysql-db-for-logs",
             "messageType": "DATA_MESSAGE",

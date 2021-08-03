@@ -1,7 +1,13 @@
+dist: focal
 env:
   global:
     # include $HOME/.local/bin for `aws`
     - PATH=$HOME/.local/bin:$PATH
+    - TRAVIS_BUILD_SHARED_STORAGE="&{TRAVIS_BUILD_DIR}/build-stages-shared-storage/${TRAVIS_BUILD_NUMBER}"
+    - AWS_S3_BUILD_SHARED_STORAGE="s3://aws-log-forwarder-travis-build-shared-storage/${TRAVIS_BUILD_NUMBER}"
+    - AWS_CLOUDFORMATION_STACK="aws-log-forwarder-e2e-build-${TRAVIS_BUILD_NUMBER}"
+    - AWS_CLOUDWATCH_LOGS_LOG_GROUP="/aws/lambda/aws-log-forwarder-e2e-build-${TRAVIS_BUILD_NUMBER}"
+    - AWS_CLOUDWATCH_LOGS_LOG_STREAM="aws-log-forwarder-e2e-build-${TRAVIS_BUILD_NUMBER}-stream"
 language: shell
 notifications:
   email:
@@ -11,12 +17,6 @@ stages:
 - build
 - e2e_tests
 - deployment
-before_install:
-  # set up awscli packages
-  - pip install --user awscli
-  # set up shared storage for build artifacts
-  - mkdir -p ./build-stages-shared-storage/$TRAVIS_BUILD_NUMBER
-  - aws s3 sync s3://aws-log-forwarder-travis-build-shared-storage/$TRAVIS_BUILD_NUMBER ./build-stages-shared-storage/$TRAVIS_BUILD_NUMBER
 jobs:
   include:
     - stage: unit_tests
@@ -32,35 +32,68 @@ jobs:
       #if: tag =~ /^release.*$/
       language: shell
       services: docker
+      install:
+        # set up awscli packages
+        - python3 -m pip install --user awscli==1.20.9
+      before_script:
+        # set up shared storage for build artifacts
+        - mkdir -p $TRAVIS_BUILD_SHARED_STORAGE
       script:
         - docker run --rm -v `pwd`:/var/task amazon/aws-sam-cli-build-image-python3.8 bash -c './build-release-package.sh'
-        - cp -p dynatrace-aws-log-forwarder.zip ./build-stages-shared-storage/$TRAVIS_BUILD_NUMBER
+      after_success:
+        - cp -p dynatrace-aws-log-forwarder.zip $TRAVIS_BUILD_SHARED_STORAGE
+        - aws s3 sync $TRAVIS_BUILD_SHARED_STORAGE $AWS_S3_BUILD_SHARED_STORAGE
     - stage: e2e_tests
       name: Execute e2e tests
       if: branch = master OR type = pull_request
       language: shell
-      services: docker
+      install:
+        # set up awscli packages
+        - python3 -m pip install --user awscli==1.20.9
+        # set up e2e packages
+        - python3 -m pip install --user -r ./tests/e2e/requirements.txt
       before_script:
-        - mkdir -p ./e2e_tests_tmp
-        - cp -p ./build-stages-shared-storage/$TRAVIS_BUILD_NUMBER/dynatrace-aws-log-forwarder.zip ./e2e_tests_tmp
-        - cd ./e2e_tests_tmp
+        # set up shared storage for build artifacts
+        - mkdir -p $TRAVIS_BUILD_SHARED_STORAGE
+        - aws s3 sync $AWS_S3_BUILD_SHARED_STORAGE $TRAVIS_BUILD_SHARED_STORAGE
+        - cp -p $TRAVIS_BUILD_SHARED_STORAGE/dynatrace-aws-log-forwarder.zip ./tests/e2e
+        - cd ./tests/e2e
         - unzip dynatrace-aws-log-forwarder.zip
       script:
         # deploy log forwarder resources reqiured for e2e to AWS
-        - ./dynatrace-aws-logs.sh deploy --target-url $DYNATRACE_ENV_URL --target-api-token $DYNATRACE_API_KEY --use-existing-active-gate true --require-valid-certificate $VERIFY_SSL --stack-name aws-log-forwarder-e2e-build-$TRAVIS_BUILD_NUMBER
+        - ./dynatrace-aws-logs.sh deploy --target-url $DYNATRACE_ENV_URL --target-api-token $DYNATRACE_API_KEY --use-existing-active-gate true --require-valid-certificate $VERIFY_SSL --stack-name $AWS_CLOUDFORMATION_STACK
+        # create AWS CloudWatch Logs log groups and assign log streams
+        - aws logs create-log-group --log-group-name $AWS_CLOUDWATCH_LOGS_LOG_GROUP
+        - aws logs create-log-stream --log-group-name $AWS_CLOUDWATCH_LOGS_LOG_GROUP --log-stream-name $AWS_CLOUDWATCH_LOGS_LOG_STREAM
+        # subscribe to AWS CloudWatch Logs log groups
+        - ./dynatrace-aws-logs.sh subscribe --log-groups $AWS_CLOUDWATCH_LOGS_LOG_GROUP --stack-name $AWS_CLOUDFORMATION_STACK
+        # execute end-to-end test
+        - ./main.py --api-token $DYNATRACE_E2E_TEST_API_KEY --log-group-name $AWS_CLOUDWATCH_LOGS_LOG_GROUP --log-stream-name $AWS_CLOUDWATCH_LOGS_LOG_STREAM --unique-message-content "${TRAVIS_COMMIT}-${TRAVIS_BUILD_NUMBER}"
       after_script:
+        # unsubscribe from AWS CloudWatch Logs log groups
+        - ./dynatrace-aws-logs.sh unsubscribe --log-groups $AWS_CLOUDWATCH_LOGS_LOG_GROUP --stack-name $AWS_CLOUDFORMATION_STACK
+        # delete AWS CloudWatch Logs log groups
+        - aws logs delete-log-group --log-group-name $AWS_CLOUDWATCH_LOGS_LOG_GROUP
         # delete log forwarder AWS resources
-        - aws cloudformation delete-stack --stack-name aws-log-forwarder-e2e-build-$TRAVIS_BUILD_NUMBER
+        - AWS_CLOUDFORMATION_STACK_DELIVERY_S3_BUCKET=$(aws cloudformation list-stack-resources --stack $AWS_CLOUDFORMATION_STACK --query "StackResourceSummaries[?contains(LogicalResourceId, 'DeliveryBucket')].PhysicalResourceId" --output text)
+        - aws s3 rm s3://${AWS_CLOUDFORMATION_STACK_DELIVERY_S3_BUCKET} --recursive
+        - aws cloudformation delete-stack --stack-name $AWS_CLOUDFORMATION_STACK
     - stage: deployment
       name: Github Release Deployment
       if: tag =~ /^release.*$/
+      language: shell
+      install:
+        # set up awscli packages
+        - python3 -m pip install --user awscli==1.20.9
+      script: skip
+      before_deploy:
+        # set up shared storage for build artifacts
+        - mkdir -p $TRAVIS_BUILD_SHARED_STORAGE
+        - aws s3 sync $AWS_S3_BUILD_SHARED_STORAGE $TRAVIS_BUILD_SHARED_STORAGE
       deploy:
         provider: releases
         api_key: $GITHUB_RELEASE_API_KEY
-        file: ./build-stages-shared-storage/$TRAVIS_BUILD_NUMBER/dynatrace-aws-log-forwarder.zip
+        file: $TRAVIS_BUILD_SHARED_STORAGE/dynatrace-aws-log-forwarder.zip
         skip_cleanup: true
         on:
           tags: true
-
-after_success:
-  - aws s3 sync ./build-stages-shared-storage/$TRAVIS_BUILD_NUMBER s3://aws-log-forwarder-travis-build-shared-storage/$TRAVIS_BUILD_NUMBER
