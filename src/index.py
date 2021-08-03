@@ -57,11 +57,11 @@ def handler(event, lambda_context):
                                   "top-level-handler-exception")
         result = TransformationResult.ProcessingFailed
 
-    # try:
-    #     context.sfm.push_sfm_to_cloudwatch()
-    # except Exception as e:
-    #     log_error_with_stacktrace(e, "SelfMonitoring push to Cloudwatch failed",
-    #                               "sfm-push-exception")
+    try:
+        context.sfm.push_sfm_to_cloudwatch()
+    except Exception as e:
+        log_error_with_stacktrace(e, "SelfMonitoring push to Cloudwatch failed",
+                                   "sfm-push-exception")
 
     return kinesis_data_transformation_response(records, result)
 
