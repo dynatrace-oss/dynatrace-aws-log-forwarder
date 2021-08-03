@@ -19,7 +19,9 @@ def test_self_monitoring_context():
     sfm = SelfMonitoringContext("my-lambda-function")
 
     sfm.kinesis_record_age(5)
+    sfm.kinesis_record_age(10)
     sfm.kinesis_record_decoded(1000, 2000)
+    sfm.kinesis_record_decoded(500, 4000)
 
     sfm.single_record_transformed("logGroup1", 100, 1000)
     sfm.single_record_transformed("logGroup1", 100, 1000)
@@ -50,19 +52,19 @@ def test_self_monitoring_context():
             'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],
             'MetricName': 'Kinesis record age',
             'Unit': 'Seconds',
-            'Values': [5]
+            'StatisticValues': {'Maximum': 10, 'Minimum': 5, 'SampleCount': 2, 'Sum': 15},
         },
         {
             'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],
             'MetricName': 'Kinesis record.data compressed size',
             'Unit': 'Bytes',
-            'Values': [1000]
+            'StatisticValues': {'Maximum': 1000, 'Minimum': 500, 'SampleCount': 2, 'Sum': 1500},
         },
         {
             'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],
             'MetricName': 'Kinesis record.data decompressed size',
             'Unit': 'Bytes',
-            'Values': [2000]
+            'StatisticValues': {'Maximum': 4000, 'Minimum': 2000, 'SampleCount': 2, 'Sum': 6000},
         },
         # {
         #     'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'},

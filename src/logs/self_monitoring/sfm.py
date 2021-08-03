@@ -102,12 +102,20 @@ class SelfMonitoringContext:
             "Value": self._function_name,
         }]
 
-        metrics.append(_prepare_cloudwatch_metric(
-            "Kinesis record age", self._kinesis_records_age, "Seconds", common_dimensions))
-        metrics.append(_prepare_cloudwatch_metric(
-            "Kinesis record.data compressed size", self._record_data_compressed_size, "Bytes", common_dimensions))
-        metrics.append(_prepare_cloudwatch_metric(
-            "Kinesis record.data decompressed size", self._record_data_decompressed_size, "Bytes", common_dimensions))
+        metrics.append(_prepare_cloudwatch_metric_statistic(
+            "Kinesis record age", "Seconds", common_dimensions,
+            self._kinesis_records_age
+        ))
+
+        metrics.append(_prepare_cloudwatch_metric_statistic(
+            "Kinesis record.data compressed size", "Bytes", common_dimensions,
+            self._record_data_compressed_size
+        ))
+
+        metrics.append(_prepare_cloudwatch_metric_statistic(
+            "Kinesis record.data decompressed size", "Bytes", common_dimensions,
+            self._record_data_decompressed_size
+        ))
 
         # TO BE RESTORED IN DIFFERENT WAY IN APM-306046
         # please remove this then
@@ -123,50 +131,46 @@ class SelfMonitoringContext:
         #         common_dimensions + [{"Name": "log_group", "Value": log_group}]
         #     ))
 
-        metrics.append(_prepare_cloudwatch_metric(
-            "Batches prepared", self._batches_prepared, "None", common_dimensions))
-        metrics.append(_prepare_cloudwatch_metric(
-            "Log entries prepared", self._log_entries_prepared, "None", common_dimensions))
-        metrics.append(_prepare_cloudwatch_metric(
-            "Data volume prepared", self._data_volume_prepared, "Bytes", common_dimensions))
+        metrics.append(
+            _prepare_cloudwatch_metric("Batches prepared", "None", common_dimensions, self._batches_prepared))
+        metrics.append(
+            _prepare_cloudwatch_metric("Log entries prepared", "None", common_dimensions, self._log_entries_prepared))
+        metrics.append(
+            _prepare_cloudwatch_metric("Data volume prepared", "Bytes", common_dimensions, self._data_volume_prepared))
 
-        metrics.append(_prepare_cloudwatch_metric(
-            "Batches delivered", self._batches_delivered, "None", common_dimensions))
-        metrics.append(_prepare_cloudwatch_metric(
-            "Log entries delivered", self._log_entries_delivered, "None", common_dimensions))
-        metrics.append(_prepare_cloudwatch_metric(
-            "Data volume delivered", self._data_volume_delivered, "Bytes", common_dimensions))
+        metrics.append(
+            _prepare_cloudwatch_metric("Batches delivered", "None", common_dimensions, self._batches_delivered))
+        metrics.append(
+            _prepare_cloudwatch_metric("Log entries delivered", "None", common_dimensions, self._log_entries_delivered))
+        metrics.append(_prepare_cloudwatch_metric("Data volume delivered", "Bytes", common_dimensions,
+                                                  self._data_volume_delivered))
 
         for issue, count in self._issue_count_by_type.items():
-            metrics.append(_prepare_cloudwatch_metric(
-                "Issues", count, "None",
-                common_dimensions + [{"Name": "type", "Value": issue}]
-            ))
+            metrics.append(
+                _prepare_cloudwatch_metric("Issues", "None", common_dimensions + [{"Name": "type", "Value": issue}],
+                                           count))
 
-        metrics.append(_prepare_cloudwatch_metric(
-            "Log content trimmed", self._log_content_trimmed, "None", common_dimensions))
-        metrics.append(_prepare_cloudwatch_metric(
-            "Log attr trimmed", self._log_attr_trimmed, "None", common_dimensions))
+        metrics.append(
+            _prepare_cloudwatch_metric("Log content trimmed", "None", common_dimensions, self._log_content_trimmed))
+        metrics.append(
+            _prepare_cloudwatch_metric("Log attr trimmed", "None", common_dimensions, self._log_attr_trimmed))
 
         if self._logs_age_min_sec:
-            metrics.append(_prepare_cloudwatch_metric(
-                "Log age min", self._logs_age_min_sec, "Seconds", common_dimensions))
-            metrics.append(_prepare_cloudwatch_metric(
-                "Log age avg", self._logs_age_avg_sec, "Seconds", common_dimensions))
-            metrics.append(_prepare_cloudwatch_metric(
-                "Log age max", self._logs_age_max_sec, "Seconds", common_dimensions))
+            metrics.append(
+                _prepare_cloudwatch_metric("Log age min", "Seconds", common_dimensions, self._logs_age_min_sec))
+            metrics.append(
+                _prepare_cloudwatch_metric("Log age avg", "Seconds", common_dimensions, self._logs_age_avg_sec))
+            metrics.append(
+                _prepare_cloudwatch_metric("Log age max", "Seconds", common_dimensions, self._logs_age_max_sec))
 
-        metrics.append(_prepare_cloudwatch_metric(
-            "Requests sent", self._requests_sent, "None", common_dimensions))
+        metrics.append(_prepare_cloudwatch_metric("Requests sent", "None", common_dimensions, self._requests_sent))
         if self._requests_durations_ms:
-            metrics.append(_prepare_cloudwatch_metric(
-                "Requests duration", self._requests_durations_ms, "Milliseconds", common_dimensions))
+            metrics.append(_prepare_cloudwatch_metric("Requests duration", "Milliseconds", common_dimensions,
+                                                      self._requests_durations_ms))
 
         for status_code, count in self._requests_count_by_status_code.items():
-            metrics.append(_prepare_cloudwatch_metric(
-                "Requests status code count", count, "None",
-                common_dimensions + [{"Name": "status_code", "Value": str(status_code)}]
-            ))
+            metrics.append(_prepare_cloudwatch_metric("Requests status code count", "None", common_dimensions + [
+                {"Name": "status_code", "Value": str(status_code)}], count))
 
         return metrics
 
@@ -182,7 +186,7 @@ class SelfMonitoringContext:
             raise e
 
 
-def _prepare_cloudwatch_metric(metric_name, value: Union[int, float, list], unit, dimensions) -> dict:
+def _prepare_cloudwatch_metric(metric_name, unit, dimensions, value: Union[int, float, list]) -> dict:
     cw_metric = {
         'MetricName': metric_name,
         'Dimensions': dimensions,
@@ -195,3 +199,17 @@ def _prepare_cloudwatch_metric(metric_name, value: Union[int, float, list], unit
         cw_metric["Value"] = value
 
     return cw_metric
+
+
+def _prepare_cloudwatch_metric_statistic(metric_name, unit, dimensions, values: list) -> dict:
+    return {
+        'MetricName': metric_name,
+        'Dimensions': dimensions,
+        'Unit': unit,
+        'StatisticValues': {
+            'SampleCount': len(values),
+            'Sum': sum(values),
+            'Minimum': min(values),
+            'Maximum': max(values),
+        }
+    }
