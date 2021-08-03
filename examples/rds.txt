@@ -58,7 +58,7 @@ RDS MYSQL SLOWQUERY LOGS:
     {
         "messageType": "DATA_MESSAGE",
         "owner": "908047316593",
-        "logGroup": "/aws/rds/instance/mysql-db-for-logs/general",
+        "logGroup": "/aws/rds/instance/mysql-db-for-logs/slowquery",
         "logStream": "mysql-db-for-logs",
         "subscriptionFilters": [
             "mysql-slowquery-filter"
@@ -81,7 +81,7 @@ RDS MYSQL ERROR LOGS:
     {
         "messageType": "DATA_MESSAGE",
         "owner": "908047316593",
-        "logGroup": "/aws/rds/instance/mysql-db-for-logs/general",
+        "logGroup": "/aws/rds/instance/mysql-db-for-logs/error",
         "logStream": "mysql-db-for-logs",
         "subscriptionFilters": [
             "mysql-error-filter"
