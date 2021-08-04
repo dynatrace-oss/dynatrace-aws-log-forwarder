@@ -1,0 +1,111 @@
+RDS MYSQL AUDIT LOGS:
+    {
+        "messageType": "DATA_MESSAGE",
+        "owner": "908047316593",
+        "logGroup": "/aws/rds/instance/mysql-db-for-logs/audit",
+        "logStream": "mysql-db-for-logs",
+        "subscriptionFilters": [
+            "mysql-audit-filter"
+        ],
+        "logEvents": [
+            {
+                "id": "36283723329239606779976941014300561991466727829296513024",
+                "timestamp": 1627018425000,
+                "message": "20210723 05:33:45,ip-10-1-3-230,rdsadmin,localhost,203,0,CONNECT,,,0,SOCKET"
+            },
+            {
+                "id": "36282733332258008410023818770931443951379879892065320960",
+                "timestamp": 1626974032000,
+                "message": "20210726 12:05:10,ip-10-1-3-230,db_user,157.25.19.100,1029,242734,QUERY,`testdb`,'select * from mysql.user\nLIMIT 0, 1000',1142,,"
+            },
+            {
+                "id": "36282735473129547468963640358360398125622584466185256962",
+                "timestamp": 1626974128000,
+                "message": "20210722 17:15:28,ip-10-1-3-230,admin,157.25.19.100,13,0,DISCONNECT,testdb,,0,SSL"
+            }
+        ]
+    }
+
+RDS MYSQL GENERAL LOGS:
+    {
+        "messageType": "DATA_MESSAGE",
+        "owner": "908047316593",
+        "logGroup": "/aws/rds/instance/mysql-db-for-logs/general",
+        "logStream": "mysql-db-for-logs",
+        "subscriptionFilters": [
+            "mysql-general-filter"
+        ],
+        "logEvents": [
+            {
+                "id": "36283739563646893425505853973335389931765810644969062400",
+                "timestamp": 1627019152976,
+                "message": "2021-07-23T05:45:52.976229Z\t  199 Query\tUSE testdb"
+            },
+            {
+                "id": "36283739579569625497256718896391892778436740760239079426",
+                "timestamp": 1627019153690,
+                "message": "2021-07-23T05:45:53.690141Z\t  198 Query\tSHOW FULL TABLES FROM `testdb`"
+            },
+            {
+                "id": "36283739597923138795647421741875788916826342279660961797",
+                "timestamp": 1627019154513,
+                "message": "2021-07-23T05:45:54.513995Z\t  199 Query\tSHOW FULL COLUMNS FROM `testdb`.`customers`"
+            }
+        ]
+    }
+
+RDS MYSQL SLOWQUERY LOGS:
+    {
+        "messageType": "DATA_MESSAGE",
+        "owner": "908047316593",
+        "logGroup": "/aws/rds/instance/mysql-db-for-logs/slowquery",
+        "logStream": "mysql-db-for-logs",
+        "subscriptionFilters": [
+            "mysql-slowquery-filter"
+        ],
+        "logEvents": [
+            {
+                "id": "36283739563646893425505853973335389931765810644969062400",
+                "timestamp": 1627019152976,
+                "message": "# Time: 2021-07-27T05:19:46.522912Z\n# User@Host: rdsadmin[rdsadmin] @ localhost [127.0.0.1]  Id:     9\n# Query_time: 0.000539  Lock_time: 0.000000 Rows_sent: 1  Rows_examined: 1\nSET timestamp=1627363186;\nSELECT 1;"
+            },
+            {
+                "id": "36283739579569625497256718896391892778436740760239079426",
+                "timestamp": 1627019153690,
+                "message": "# Time: 2021-07-27T05:18:31.499713Z\n# User@Host: rdsadmin[rdsadmin] @ localhost [127.0.0.1]  Id:     9\n# Query_time: 0.001489  Lock_time: 0.000578 Rows_sent: 1  Rows_examined: 4\nSET timestamp=1627363111;\nSELECT count(*) from information_schema.TABLES WHERE TABLE_SCHEMA = 'mysql' AND TABLE_NAME = 'rds_heartbeat2';"
+            }
+        ]
+    }
+
+RDS MYSQL ERROR LOGS:
+    {
+        "messageType": "DATA_MESSAGE",
+        "owner": "908047316593",
+        "logGroup": "/aws/rds/instance/mysql-db-for-logs/error",
+        "logStream": "mysql-db-for-logs",
+        "subscriptionFilters": [
+            "mysql-error-filter"
+        ],
+        "logEvents": [
+            {
+                "id": "36283739563646893425505853973335389931765810644969062400",
+                "timestamp": 1627019152976,
+                "message": "2021-07-26T12:37:18.256134Z 12 [Warning] [MY-010055] [Server] IP address '157.25.19.100' could not be resolved: Name or service not known"
+            },
+            {
+                "id": "36283739579569625497256718896391892778436740760239079426",
+                "timestamp": 1627019153690,
+                "message": "2021-07-26T12:35:14.183905Z 0 [System] [MY-010931] [Server] /rdsdbbin/mysql/bin/mysqld: ready for connections. Version: '8.0.25'  socket: '/tmp/mysql.sock'  port: 3306  Source distribution."
+            },
+            {
+                "id": "36283739597923138795647421741875788916826342279660961797",
+                "timestamp": 1627019154513,
+                "message": "2021-07-26T12:35:14.106747Z 0 [Warning] [MY-013414] [Server] Server SSL certificate doesn't verify: unable to get issuer certificate"
+            }
+            {
+                "id": "36283739597923138795647421741875788916826342279660961797",
+                "timestamp": 1627019154513,
+                "message": "2021-07-26T12:11:25.309958Z 0 [Warning] [MY-010909] [Server] /rdsdbbin/mysql/bin/mysqld: Forcing close of thread 1028  user: 'db_user'."
+            }
+        ]
+    }
