@@ -11,7 +11,6 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-
 import statistics
 import time
 from typing import List, Dict
@@ -31,7 +30,8 @@ def process_log_request(decoded_records: List[str], context: Context, batch_meta
 
     print(f"Extracted {len(all_logs)} log entries from {len(decoded_records)} records given")
 
-    debug_log_multiline_message("Log entries to be sent to DT: " + str(all_logs), context)
+    debug_log_multiline_message("Log entries to be sent to DT: " + str(all_logs), context,
+                                "logs-send-details")
 
     sfm_report_logs_age(all_logs, context)
 

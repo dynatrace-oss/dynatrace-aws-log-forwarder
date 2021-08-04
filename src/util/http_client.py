@@ -11,7 +11,6 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-
 import ssl
 import time
 import urllib.error
@@ -61,5 +60,6 @@ def perform_http_request_for_json(url, encoded_body_bytes, method, headers, veri
 
     context.sfm.request_finished_with_status_code(status, duration_ms)
 
-    log_multiline_message(f"Response: call duration {duration_ms}ms, status code {status}, body '{body}'")
+    log_multiline_message(f"Response: call duration {duration_ms}ms, status code {status}, body '{body}'",
+                          "http-response-details")
     return status, body

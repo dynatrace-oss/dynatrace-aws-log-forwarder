@@ -17,30 +17,55 @@ from typing import Text
 
 from util.context import Context
 
+LOG_THROTTLING_LIMIT_PER_CALLER = 10
 
-def log_multiline_message(message: Text):
+log_call_count = dict()
+
+
+def log_multiline_message(message: Text, caller: Text):
+    # display logs called from one spot no more than the specified amount of times
+    if check_if_caller_exceeded_limit(caller):
+        return
+
     # need to modify endline char to have multiline log record not split into multiple log entries in CloudWatch:
     message = message.replace('\n', ' ')
     print(message)
 
 
-def debug_log_multiline_message(message: Text, context: Context):
+def check_if_caller_exceeded_limit(caller):
+    log_calls_performed = log_call_count.get(caller, 0)
+    log_calls_left = LOG_THROTTLING_LIMIT_PER_CALLER - log_calls_performed
+
+    if log_calls_left == 0:
+        log_call_count[caller] = log_calls_performed + 1
+        print(f"Logging calls from caller '{caller}' exceeded the throttling limit of",
+              f"{LOG_THROTTLING_LIMIT_PER_CALLER}. Further logs from this caller will be discarded")
+
+    caller_exceeded_limit = log_calls_left <= 0
+    if not caller_exceeded_limit:
+        log_call_count[caller] = log_calls_performed + 1
+
+    return caller_exceeded_limit
+
+
+def debug_log_multiline_message(message: Text, context: Context, caller: Text):
     if context.debug:
-        log_multiline_message("DEBUG: " + message)
+        log_multiline_message("DEBUG: " + message, caller)
 
 
-def log_error_with_stacktrace(e: Exception, msg):
-    log_multiline_message(f"Exception '{e}' occurred. Additional message: '{msg}'")
-    log_multiline_message(traceback.format_exc())
+def log_error_with_stacktrace(e: Exception, msg, caller: Text):
+    log_multiline_message(f"Exception '{e}' occurred. Additional message: '{msg}' " + traceback.format_exc(), caller)
 
-def log_error_without_stacktrace(msg):
-    log_multiline_message(msg + "Exception details: " + traceback.format_exc(limit=0))
+
+def log_error_without_stacktrace(msg, caller: Text):
+    log_multiline_message(msg + "Exception details: " + traceback.format_exc(limit=0), caller)
 
 
 # wrappers for metadata_engine (there is different logging approach there):
 
-def exception(msg):
-    log_multiline_message(msg + "Exception details: " + traceback.format_exc())
+def exception(msg, caller):
+    log_multiline_message(msg + "Exception details: " + traceback.format_exc(), caller)
 
-def warning(msg):
-    log_multiline_message("WARNING: " + msg)
+
+def warning(msg, caller):
+    log_multiline_message("WARNING: " + msg, caller)
