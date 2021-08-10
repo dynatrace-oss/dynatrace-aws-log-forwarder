@@ -1,5 +1,5 @@
 {
-  'log_stream': "aurora-mysql-instance-1",
+  'log_stream': "2021-02-04-logstream",
   "log_group": "API-Gateway-Execution-Logs_8zcb3dxf4l/DEV",
   "region": "us-east-1",
   "partition": "aws",
