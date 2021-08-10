@@ -53,6 +53,7 @@ def test_metadata_engine_input(metadata_engine_apply_mock):
     metadata_engine_input = first_call_to_metadata_engine.args[0]
 
     assert metadata_engine_input == {
+        "log_stream": "2021-02-04-logstream",
         "log_group": "API-Gateway-Execution-Logs",
         "region": "us-east-1",
         "partition": "aws",
