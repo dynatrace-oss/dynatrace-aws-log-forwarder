@@ -37,7 +37,7 @@
         },
         {
           "key": "log.source",
-          "pattern": "join( ' - ', ['rds', join(' ', [log_type, 'logs']) ])"
+          "pattern": "format('rds - {} logs', [log_type])"
         }
       ]
     }
