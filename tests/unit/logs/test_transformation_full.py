@@ -831,7 +831,7 @@ CLOUDTRAIL_USER_IDENTITY = {
         },
         "perf_check": {
             "repeat_record": 10000,
-            "time_limit_sec": 1
+            "time_limit_sec": 5
             # roughly 1,5MB of content, ~7MB counting whole log entry with metadata
         }
     }, id="testcase_rds_aurora_mysql_general_log"),
