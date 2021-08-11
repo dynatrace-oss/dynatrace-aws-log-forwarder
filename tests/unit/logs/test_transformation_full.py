@@ -831,7 +831,7 @@ CLOUDTRAIL_USER_IDENTITY = {
         },
         "perf_check": {
             "repeat_record": 10000,
-            "time_limit_sec": 5
+            "time_limit_sec": 1
             # roughly 1,5MB of content, ~7MB counting whole log entry with metadata
         }
     }, id="testcase_rds_aurora_mysql_general_log"),
@@ -1022,7 +1022,7 @@ def test_full_transformation(testcase: dict):
         end_sec = time.time()
         duration_sec = end_sec - start_sec
         print(f"PERF_CHECK {duration_sec}")
-        assert duration_sec < time_limit_sec, f"Perf check: duration ({duration_sec}) should be less than limit {time_limit_sec}"
+        assert duration_sec < time_limit_sec, f"Perf check: duration ({duration_sec}s) should be less than limit {time_limit_sec}s"
     else:
         logs_sent = logs.transformation.extract_dt_logs_from_single_record(
             json.dumps(record_data_decoded), BATCH_METADATA, context)
