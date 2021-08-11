@@ -43,13 +43,8 @@
         },
         {
           "key": "severity",
-          "pattern": "if(log_type == 'postgresql', &if(contains(log_content, ':WARNING:'), &'WARNING', &if(contains(log_content, ':ERROR:'), &'ERROR', &'INFO', @), @), &null, @)",
+          "pattern": "if(log_type == 'postgresql', &if(contains(log_content, ':WARNING:'), &'WARNING', &if(contains(log_content, ':ERROR:'), &'ERROR', &'INFO', @), @), &if(contains(log_content, '[Warning]'), &'WARNING', &if(contains(log_content, '[Error]'), &'ERROR', &null, @), @), @)",
           "priority": 12
-        },
-        {
-          "key": "severity",
-          "pattern": "if(contains(log_content, '[Warning]'), &'WARNING', &if(contains(log_content, '[Error]'), &'ERROR', &null, @), @)",
-          "priority": 13
         },
         {
           "key": "log.source",
