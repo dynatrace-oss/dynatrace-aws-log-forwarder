@@ -962,6 +962,39 @@ CLOUDTRAIL_USER_IDENTITY = {
         }
     }, id="testcase_rds_aurora_postgresql_log"),
 
+    pytest.param({
+        "record_data_decoded": {
+            "logGroup": "/aws/rds/cluster/aurora-postresql/postgresql",
+            "logStream": "aurora-postresql-instance-1.0",
+            "messageType": "DATA_MESSAGE",
+            "owner": "444000444",
+            "subscriptionFilters": ["mysql-audit-filter"],
+            "logEvents": [
+                {
+                    "id": "35958590510527767165636549608812769529777864588249006080",
+                    "timestamp": "12345",
+                    "message": "2021-08-10 09:20:53 UTC::@:[7701]:WARNING:  skipping missing configuration file \"/rdsdbdata/db/postgresql.auto.conf\""
+                }
+            ],
+        },
+        "expect_first_log_contains": {
+            "aws.service": "rds",
+            "aws.resource.id": "aurora-postresql",
+            "aws.arn": "arn:aws:rds:us-east-1:444000444:db:aurora-postresql-instance-1",
+            "dt.source_entity": "RELATIONAL_DATABASE_SERVICE-952B74DD9DB9E3DE",
+            'content': "2021-08-10 09:20:53 UTC::@:[7701]:WARNING:  skipping missing configuration file \"/rdsdbdata/db/postgresql.auto.conf\"",
+            'cloud.provider': 'aws',
+            'cloud.account.id': "444000444",
+            'cloud.region': "us-east-1",
+            'aws.log_group': "/aws/rds/cluster/aurora-postresql/postgresql",
+            'aws.log_stream': "aurora-postresql-instance-1.0",
+            'aws.region': "us-east-1",
+            'aws.account.id': "444000444",
+            'severity': 'WARNING',
+            'log.source': 'rds - postgresql logs',
+        }
+    }, id="testcase_rds_aurora_postgresql_log"),
+
 ])
 def test_full_transformation(testcase: dict):
     context = Context("function-name", "dt-url", "dt-token", False, False)
