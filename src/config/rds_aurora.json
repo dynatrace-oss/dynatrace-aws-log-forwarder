@@ -23,13 +23,13 @@
           "pattern": "resource_id"
         },
         {
-          "key": "aws.cluster.instance",
+          "key": "log_stream",
           "pattern": "if(log_type == 'postgresql', &replace_regex(log_stream, '\\.0$', ''), &log_stream, @ )",
           "priority": 9
         },
         {
           "key": "aws.arn",
-          "pattern": "format_arn('arn:{}:rds:{}:{}:db:{}', [partition, region, account_id, \"aws.cluster.instance\"])",
+          "pattern": "format_arn('arn:{}:rds:{}:{}:db:{}', [partition, region, account_id, \"log_stream\"])",
           "priority": 10
         },
         {
