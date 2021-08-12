@@ -14,25 +14,19 @@ notifications:
     on_success: never
 stages:
 - unit_tests
-- perf_tests
 - build
 - e2e_tests
 - deployment
 jobs:
   include:
     - stage: unit_tests
-      name: Execute unit tests & linting
+      name: Execute unit & pref tests + linting
       language: shell
       services: docker
       script:
         - docker build -f pipeline/Dockerfile -t lambda_image .
         - docker run --rm lambda_image bash -c 'python3 -m pylint --rcfile=pipeline/pylint.cfg $(find src/ -name "*.py")'
         - docker run --rm lambda_image bash -c 'cd src && python3 -m pytest -v ../tests/unit'
-    - stage: perf_tests
-      name: Execute perf tests
-      language: shell
-      services: docker
-      script:
         - docker run --rm lambda_image bash -c 'cd src && python3 -m pytest -v ../tests/perf --profile'
     - stage: build
       name: Build AWS Lambda package
