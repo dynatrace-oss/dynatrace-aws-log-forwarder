@@ -1024,7 +1024,7 @@ def test_full_transformation(testcase: dict):
             json.dumps(record_data_decoded), BATCH_METADATA, context)
     end_sec = time.time()
 
-    if "perf_check" in testcase:
+    if time_limit_sec:
         duration_sec = end_sec - start_sec
         print(f"PERF_CHECK {duration_sec}")
         assert duration_sec < time_limit_sec, f"Perf check: duration ({duration_sec}s) should be less than limit {time_limit_sec}s"
