@@ -14,6 +14,7 @@ notifications:
     on_success: never
 stages:
 - unit_tests
+- perf_tests
 - build
 - e2e_tests
 - deployment

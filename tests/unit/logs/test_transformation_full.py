@@ -13,7 +13,6 @@
 #   limitations under the License.
 
 import json
-import time
 
 import pytest
 
@@ -828,11 +827,6 @@ CLOUDTRAIL_USER_IDENTITY = {
             'aws.account.id': "444000444",
             'severity': 'INFO',
             'log.source': 'rds - general logs',
-        },
-        "perf_check": {
-            "repeat_record": 10000,
-            "time_limit_sec": 5
-            # roughly 1,5MB of content, ~7MB counting whole log entry with metadata
         }
     }, id="testcase_rds_aurora_mysql_general_log"),
 
@@ -1008,26 +1002,8 @@ def test_full_transformation(testcase: dict):
     record_data_decoded = testcase["record_data_decoded"]
     expect_first_log_contains = testcase["expect_first_log_contains"]
 
-    logs_sent = []
-
-    if "perf_check" in testcase:
-        perf_check = testcase["perf_check"]
-        repeat_record = perf_check["repeat_record"]
-        time_limit_sec = perf_check["time_limit_sec"]
-    else:
-        repeat_record = 1
-        time_limit_sec = None
-
-    start_sec = time.time()
-    for i in range(repeat_record):
-        logs_sent = logs.transformation.extract_dt_logs_from_single_record(
-            json.dumps(record_data_decoded), BATCH_METADATA, context)
-    end_sec = time.time()
-
-    if time_limit_sec:
-        duration_sec = end_sec - start_sec
-        print(f"PERF_CHECK {duration_sec}")
-        assert duration_sec < time_limit_sec, f"Perf check: duration ({duration_sec}s) should be less than limit {time_limit_sec}s"
+    logs_sent = logs.transformation.extract_dt_logs_from_single_record(
+        json.dumps(record_data_decoded), BATCH_METADATA, context)
 
     assert len(logs_sent) == len(record_data_decoded["logEvents"])
 
