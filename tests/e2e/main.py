@@ -64,9 +64,16 @@ def search_dynatrace_log_records(url_prefix,
     """
     (using Dynatrace API) return a list of log records matching the specified query
     """
-    url = url_prefix + '/logs/search?' + 'from=now-5m&limit=1000&query=aws.service%3D%22lambda%22%20AND%20content%3D%22' + message_content + '%22%20AND%20timestamp%3D%22' + str(epoch_timestamp_in_ms) + '%22&sort=-timestamp'
+    url = url_prefix + '/logs/search'
+    params = {
+        'from': 'now-10m',
+        'limit': '1000',
+        'query': 'content=' + message_content,
+        'sort': '-timestamp'
+    }
     response = requests.get(url,
-                            headers=request_headers)
+                            headers=request_headers,
+                            params=params)
 
     # check, if response status code is OK
     if response.status_code != requests.codes.ok:
