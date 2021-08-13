@@ -66,7 +66,7 @@ def search_dynatrace_log_records(url_prefix,
     (using Dynatrace API) return a list of log records matching the specified query
     """
     url    = url_prefix + '/logs/search'
-    query  = 'content=' + message_content
+    query  = 'content="' + message_content + '"'
     params = {
         'from': 'now-10m',
         'limit': '1000',
