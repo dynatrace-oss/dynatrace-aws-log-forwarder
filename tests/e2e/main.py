@@ -113,7 +113,8 @@ if __name__ == '__main__':
                         '-m',
                         action='store',
                         type=str,
-                        default='Dynatrace-AWS-Log-Forwarder-End-to-End-test-message',
+                        default='',
+                        required=True,
                         help='specify a unique log event message content')
     args = parser.parse_args()
 
@@ -121,7 +122,7 @@ if __name__ == '__main__':
     request_headers       = {'Authorization': 'Api-Token ' + args.api_token,
                             'Content-Type': 'application/json',
                             'charset': 'utf-8'}
-    message_content       = 'Dynatrace-AWS-Log-Forwarder-End-to-End-test-' + args.unique_message_content
+    message_content       = args.unique_message_content
 
     # Generate a test log event
     generate_log_event(args.log_group_name,
