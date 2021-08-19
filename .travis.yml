@@ -20,7 +20,7 @@ stages:
 jobs:
   include:
     - stage: unit_tests
-      name: Execute unit & pref tests + linting
+      name: Execute unit & perf tests + linting
       language: shell
       services: docker
       script:
