@@ -1,0 +1,142 @@
+RDS ORACLE - AUDIT LOGS:
+    {
+        "messageType": "DATA_MESSAGE",
+        "owner": "908047316593",
+        "logGroup": "/aws/rds/instance/oracle-db/audit",
+        "logStream": "oracle-db",
+        "subscriptionFilters": [
+            "oracle-filter"
+        ],
+        "logEvents": [
+            {
+                "id": "36283723329239606779976941014300561991466727829296513024",
+                "timestamp": 1627018425000,
+                "message": "
+                    Mon Aug  9 20:15:20 2021 +00:00
+                    LENGTH : '263'
+                    ACTION :[7] 'CONNECT'
+                    DATABASE USER:[1] '/'
+                    PRIVILEGE :[6] 'SYSDBA'
+                    CLIENT USER:[5] 'rdsdb'
+                    CLIENT TERMINAL:[5] 'pts/0'
+                    STATUS:[1] '0'
+                    DBID:[10] '1599412981'
+                    SESSIONID:[10] '4294967295'
+                    USERHOST:[13] 'ip-10-1-0-106'
+                    CLIENT ADDRESS:[0] ''
+                    ACTION NUMBER:[3] '100'"
+            },
+            {
+                "id": "36282733332258008410023818770931443951379879892065320960",
+                "timestamp": 1626974032000,
+                "message": "
+                    Mon Aug  9 20:15:00 2021 +00:00
+                    LENGTH : '402'
+                    ACTION :[146] 'select 'ERROR:'||error||':' as error, 'LOG_SEQUENCE:'||log_sequence||':' as log_sequence from v$archive_dest where status = 'ERROR' and rownum = 1'
+                    DATABASE USER:[1] '/'
+                    PRIVILEGE :[6] 'SYSDBA'
+                    CLIENT USER:[5] 'rdsdb'
+                    CLIENT TERMINAL:[5] 'pts/0'
+                    STATUS:[1] '0'
+                    DBID:[10] '1599412981'
+                    SESSIONID:[10] '4294967295'
+                    USERHOST:[13] 'ip-10-1-0-106'
+                    CLIENT ADDRESS:[0] ''
+                    ACTION NUMBER:[1] '3'"
+            }
+        ]
+    }
+
+RDS ORACLE LISTENER LOGS:
+    {
+        "messageType": "DATA_MESSAGE",
+        "owner": "908047316593",
+        "logGroup": "/aws/rds/instance/oracle-db/listener",
+        "logStream": "oracle-db",
+        "subscriptionFilters": [
+            "oracle-filter"
+        ],
+        "logEvents": [
+            {
+                "id": "36283739563646893425505853973335389931765810644969062400",
+                "timestamp": 1627019152976,
+                "message": "09-AUG-2021 20:18:51 * (CONNECT_DATA=(SID=ORCL)(CID=(PROGRAM=SQL Developer)(HOST=__jdbc__)(USER=maria.swiatkowska))) * (ADDRESS=(PROTOCOL=tcp)(HOST=157.25.19.100)(PORT=19278)) * establish * ORCL * 0"
+            },
+            {
+                "id": "36283739579569625497256718896391892778436740760239079426",
+                "timestamp": 1627019153690,
+                "message": "09-AUG-2021 20:19:00 * (CONNECT_DATA=(CID=(PROGRAM=JDBC Thin Client)(HOST=__jdbc__)(USER=rdshm))(SID=ORCL)(SERVER=DEDICATED)) * (ADDRESS=(PROTOCOL=tcp)(HOST=127.0.0.1)(PORT=62909)) * establish * ORCL * 0"
+            },
+            {
+                "id": "36283739597923138795647421741875788916826342279660961797",
+                "timestamp": 1627019154513,
+                "message": "09-AUG-2021 20:41:29 * service_update * ORCL * 0"
+            }
+        ]
+    }
+
+RDS ORACLE ALERT LOGS:
+    {
+        "messageType": "DATA_MESSAGE",
+        "owner": "908047316593",
+        "logGroup": "/aws/rds/instance/oracle-db/alert",
+        "logStream": "oracle-db",
+        "subscriptionFilters": [
+            "oracle-filter"
+        ],
+        "logEvents": [
+            {
+                "id": "36283739563646893425505853973335389931765810644969062400",
+                "timestamp": 1627019152976,
+                "message": "
+                    2021-08-09T20:44:43.931847+00:00
+                    Archived Log entry 155 added for T-1.S-166 ID 0x5f54d4f5 LAD:1"
+            },
+            {
+                "id": "36283739579569625497256718896391892778436740760239079426",
+                "timestamp": 1627019153690,
+                "message": "
+                    Thread 1 advanced to log sequence 167 (LGWR switch)
+                    Current log# 1 seq# 167 mem# 0: /rdsdbdata/db/ORCL_A/onlinelog/o1_mf_1_j91jd4t5_.log"
+            }
+        ]
+    }
+
+RDS ORACLE TRACE LOGS:
+    {
+        "messageType": "DATA_MESSAGE",
+        "owner": "908047316593",
+        "logGroup": "/aws/rds/instance/oracle-db/trace",
+        "logStream": "oracle-db",
+        "subscriptionFilters": [
+            "oracle-filter"
+        ],
+        "logEvents": [
+            {
+                "id": "36283739563646893425505853973335389931765810644969062400",
+                "timestamp": 1627019152976,
+                "message": "*** SESSION ID:(22.27908) 2021-08-09T17:14:41.136938+00:00"
+            },
+            {
+                "id": "36283739579569625497256718896391892778436740760239079426",
+                "timestamp": 1627019153690,
+                "message": "
+                    *** CLIENT DRIVER:() 2021-08-09T17:14:41.136958+00:00
+                    Control file resized from 526 to 598 blocks
+                    kccrsd_append: rectype = 11, lbn = 263, recs = 1008"
+            },
+            {
+                "id": "36283739597923138795647421741875788916826342279660961797",
+                "timestamp": 1627019154513,
+                "message": "
+                *** 2021-08-09T09:48:43.999258+00:00
+                kgsksysstop: blocking mode (2) timestamp: 7232708838
+                kgsksysstop: successful; Total stall time = 0 ms.
+                PQQ: Skipping service checks
+                kgsksysresume: successful
+                START RESOURCE MANAGER PLAN/CONSUMER GROUP DUMP
+                PLAN INTERNAL_PLAN
+                END RESOURCE MANAGER PLAN/CONSUMER GROUP DUMP"
+            }
+        ]
+    }
