@@ -24,7 +24,8 @@ import requests
 # Create AWS CloudWatch client
 aws_client = boto3.client('logs')
 
-def generate_log_event(log_group_name,log_stream_name):
+def generate_log_event(log_group_name,
+                       log_stream_name):
     """
     Upload a log event to the specified AWS CloudWatch Logs log group
     """
@@ -64,9 +65,19 @@ def search_dynatrace_log_records(url_prefix,
     """
     (using Dynatrace API) return a list of log records matching the specified query
     """
-    url = url_prefix + '/logs/search?' + 'from=now-5m&limit=1000&query=aws.service%3D%22lambda%22%20AND%20content%3D%22' + message_content + '%22%20AND%20timestamp%3D%22' + str(epoch_timestamp_in_ms) + '%22&sort=-timestamp'
+    url    = url_prefix + '/logs/search'
+    query  = 'content="' + message_content + '"'
+    params = {
+        'from': 'now-10m',
+        'limit': '1000',
+        # 'query': 'aws.service%3D%22lambda%22%20AND%20content%3D%22' + message_content + '%22%20AND%20timestamp%3D%22' + str(epoch_timestamp_in_ms) + '%22',
+        # 'query': 'timestamp=' + str(epoch_timestamp_in_ms),
+        'query': query,
+        'sort': '-timestamp'
+    }
     response = requests.get(url,
-                            headers=request_headers)
+                            headers=request_headers,
+                            params=params)
 
     # check, if response status code is OK
     if response.status_code != requests.codes.ok:
@@ -106,7 +117,8 @@ if __name__ == '__main__':
                         '-m',
                         action='store',
                         type=str,
-                        default='Dynatrace-AWS-Log-Forwarder-End-to-End-test-message',
+                        default='',
+                        required=True,
                         help='specify a unique log event message content')
     args = parser.parse_args()
 
@@ -114,20 +126,22 @@ if __name__ == '__main__':
     request_headers       = {'Authorization': 'Api-Token ' + args.api_token,
                             'Content-Type': 'application/json',
                             'charset': 'utf-8'}
-    message_content       = 'Dynatrace-AWS-Log-Forwarder-End-to-End-test-' + args.unique_message_content
+    message_content       = args.unique_message_content + '-' + str(epoch_timestamp_in_ms)
 
     # Generate a test log event
     generate_log_event(args.log_group_name,
                        args.log_stream_name)
 
     # Search Dynatrace logs for records with specific message content and timestamp
-    dynatrace_log_records_search_results = search_dynatrace_log_records(args.url_prefix,message_content)['results']
+    dynatrace_log_records_search_results = search_dynatrace_log_records(args.url_prefix,
+                                                                        message_content)['results']
     time_elapsed = 0
     while bool(dynatrace_log_records_search_results) is False:
         print('Waiting for log events to be picked up by the cluster...')
-        time.sleep(10)
-        time_elapsed = time_elapsed + 10
-        dynatrace_log_records_search_results = search_dynatrace_log_records(args.url_prefix,message_content)['results']
+        time.sleep(20)
+        time_elapsed = time_elapsed + 20
+        dynatrace_log_records_search_results = search_dynatrace_log_records(args.url_prefix,
+                                                                            message_content)['results']
         # Fail the test after 5min
         if time_elapsed == 300:
             print('Generated logs were not found. End-to-end test has failed.')

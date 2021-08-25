@@ -1,0 +1,45 @@
+RDS POSTGRESQL LOGS:
+    {
+        "messageType": "DATA_MESSAGE",
+        "owner": "908047316593",
+        "logGroup": "/aws/rds/instance/aws-postgres/postgresql",
+        "logStream": "aws-postgres.0",
+        "subscriptionFilters": [
+            "aws-postgres"
+        ],
+        "logEvents": [
+            {
+                "id": "36283723329239606779976941014300561991466727829296513024",
+                "timestamp": 1627018425000,
+                "message": "2021-08-06 06:14:51 UTC::@:[5163]:LOG:  checkpoint complete: wrote 1 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.106 s, sync=0.003 s, total=0.121 s; sync files=1, longest=0.003 s, average=0.003 s; distance=65536 kB, estimate=65541 kB"
+            },
+            {
+                "id": "36282733332258008410023818770931443951379879892065320960",
+                "timestamp": 1626974032000,
+                "message": "2021-08-06 06:13:02.822 GMT [24615] LOG:  skipping missing configuration file "/rdsdbdata/config/recovery.conf""
+            }
+        ]
+    }
+
+RDS POSTGRESQL UPGRADE LOGS:
+    {
+        "messageType": "DATA_MESSAGE",
+        "owner": "908047316593",
+        "logGroup": "/aws/rds/instance/aws-postgres/upgrade",
+        "logStream": "aws-postgres.0",
+        "subscriptionFilters": [
+            "aws-postgres"
+        ],
+        "logEvents": [
+            {
+                "id": "36283739563646893425505853973335389931765810644969062400",
+                "timestamp": 1627019152976,
+                "message": "2021-08-06 08:28:24.003 GMT [19240] LOG:  database system is ready to accept connections"
+            },
+            {
+                "id": "36283739579569625497256718896391892778436740760239079426",
+                "timestamp": 1627019153690,
+                "message": "waiting for server to start....2021-08-06 08:28:23.037 GMT [19182] LOG:  pgaudit extension initialized"
+            }
+        ]
+    }
