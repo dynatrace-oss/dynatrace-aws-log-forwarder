@@ -1,0 +1,56 @@
+{
+  "name": "Aurora RDS",
+  "displayName": "Amazon Aurora RDS",
+  "rules": [
+    {
+      "aws": {
+        "logGroup": "/aws/rds/cluster/%{DATA:resource_id}/%{GREEDYDATA:log_type}"
+      },
+      "sources": [
+        {
+          "sourceType": "logs",
+          "source": "log_group",
+          "condition": "$prefix('/aws/rds/cluster/')"
+        }
+      ],
+      "attributes": [
+        {
+          "key": "aws.service",
+          "pattern": "'rds'"
+        },
+        {
+          "key": "aws.resource.id",
+          "pattern": "resource_id"
+        },
+        {
+          "key": "log_stream",
+          "pattern": "if(log_type == 'postgresql', &replace_regex(log_stream, '\\.0$', ''), &log_stream, @ )",
+          "priority": 9
+        },
+        {
+          "key": "aws.arn",
+          "pattern": "format_arn('arn:{}:rds:{}:{}:db:{}', [partition, region, account_id, \"log_stream\"])",
+          "priority": 10
+        },
+        {
+          "key": "dt.source_entity",
+          "pattern": "dt_meid_rds_v2(\"aws.arn\")"
+        },
+        {
+          "key": "severity",
+          "pattern": "if(log_type == 'slowquery', &'WARNING', &null, @)",
+          "priority": 11
+        },
+        {
+          "key": "severity",
+          "pattern": "if(log_type == 'postgresql', &if(contains(log_content, ':WARNING:'), &'WARNING', &if(contains(log_content, ':ERROR:'), &'ERROR', &'INFO', @), @), &if(contains(log_content, '[Warning]'), &'WARNING', &if(contains(log_content, '[Error]'), &'ERROR', &null, @), @), @)",
+          "priority": 12
+        },
+        {
+          "key": "log.source",
+          "pattern": "format('rds - {} logs', [log_type])"
+        }
+      ]
+    }
+  ]
+}

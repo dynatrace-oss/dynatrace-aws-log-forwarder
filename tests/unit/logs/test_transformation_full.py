@@ -797,6 +797,203 @@ CLOUDTRAIL_USER_IDENTITY = {
         }
     }, id="testcase_rds_mysql_slowquery_log"),
 
+    pytest.param({
+        "record_data_decoded": {
+            "logGroup": "/aws/rds/cluster/aurora-mysql/general",
+            "logStream": "aurora-mysql-instance-1",
+            "messageType": "DATA_MESSAGE",
+            "owner": "444000444",
+            "subscriptionFilters": ["mysql-audit-filter"],
+            "logEvents": [
+                {
+                    "id": "35958590510527767165636549608812769529777864588249006080",
+                    "timestamp": "12345",
+                    "message": "2021-08-10T09:57:26.077268Z    2 Query	SELECT durable_lsn, current_read_point, server_id, last_update_timestamp FROM information_schema.replica_host_status;"
+                }
+            ],
+        },
+        "expect_first_log_contains": {
+            "aws.service": "rds",
+            "aws.resource.id": "aurora-mysql",
+            "aws.arn": "arn:aws:rds:us-east-1:444000444:db:aurora-mysql-instance-1",
+            "dt.source_entity": "RELATIONAL_DATABASE_SERVICE-FC361C8F808383AE",
+            'content': "2021-08-10T09:57:26.077268Z    2 Query	SELECT durable_lsn, current_read_point, server_id, last_update_timestamp FROM information_schema.replica_host_status;",
+            'cloud.provider': 'aws',
+            'cloud.account.id': "444000444",
+            'cloud.region': "us-east-1",
+            'aws.log_group': "/aws/rds/cluster/aurora-mysql/general",
+            'aws.log_stream': "aurora-mysql-instance-1",
+            'aws.region': "us-east-1",
+            'aws.account.id': "444000444",
+            'severity': 'INFO',
+            'log.source': 'rds - general logs',
+        }
+    }, id="testcase_rds_aurora_mysql_general_log"),
+
+    pytest.param({
+        "record_data_decoded": {
+            "logGroup": "/aws/rds/cluster/aurora-mysql/slowquery",
+            "logStream": "aurora-mysql-instance-1",
+            "messageType": "DATA_MESSAGE",
+            "owner": "444000444",
+            "subscriptionFilters": ["mysql-audit-filter"],
+            "logEvents": [
+                {
+                    "id": "35958590510527767165636549608812769529777864588249006080",
+                    "timestamp": "12345",
+                    "message": "# Time: 2021-08-10T11:28:20.581705Z\n# User@Host: rdsadmin[rdsadmin] @ localhost []  Id:     3\n# Query_time: 0.000216  Lock_time: 0.000000 Rows_sent: 0  Rows_examined: 0\nSET timestamp=1628594900;\nCOMMIT;"
+                }
+            ],
+        },
+        "expect_first_log_contains": {
+            "aws.service": "rds",
+            "aws.resource.id": "aurora-mysql",
+            "aws.arn": "arn:aws:rds:us-east-1:444000444:db:aurora-mysql-instance-1",
+            "dt.source_entity": "RELATIONAL_DATABASE_SERVICE-FC361C8F808383AE",
+            'content': "# Time: 2021-08-10T11:28:20.581705Z\n# User@Host: rdsadmin[rdsadmin] @ localhost []  Id:     3\n# Query_time: 0.000216  Lock_time: 0.000000 Rows_sent: 0  Rows_examined: 0\nSET timestamp=1628594900;\nCOMMIT;",
+            'cloud.provider': 'aws',
+            'cloud.account.id': "444000444",
+            'cloud.region': "us-east-1",
+            'aws.log_group': "/aws/rds/cluster/aurora-mysql/slowquery",
+            'aws.log_stream': "aurora-mysql-instance-1",
+            'aws.region': "us-east-1",
+            'aws.account.id': "444000444",
+            'severity': 'WARNING',
+            'log.source': 'rds - slowquery logs',
+        }
+    }, id="testcase_rds_aurora_mysql_slowquery_log"),
+
+    pytest.param({
+        "record_data_decoded": {
+            "logGroup": "/aws/rds/cluster/aurora-mysql/error",
+            "logStream": "aurora-mysql-instance-1",
+            "messageType": "DATA_MESSAGE",
+            "owner": "444000444",
+            "subscriptionFilters": ["mysql-audit-filter"],
+            "logEvents": [
+                {
+                    "id": "35958590510527767165636549608812769529777864588249006080",
+                    "timestamp": "12345",
+                    "message": "2021-08-10T09:20:23.582919Z 0 [Warning] InnoDB: Setting innodb_checksums to OFF is DEPRECATED. This option may be removed in future releases. You should set innodb_checksum_algorithm=NONE instead."
+                }
+            ],
+        },
+        "expect_first_log_contains": {
+            "aws.service": "rds",
+            "aws.resource.id": "aurora-mysql",
+            "aws.arn": "arn:aws:rds:us-east-1:444000444:db:aurora-mysql-instance-1",
+            "dt.source_entity": "RELATIONAL_DATABASE_SERVICE-FC361C8F808383AE",
+            'content': "2021-08-10T09:20:23.582919Z 0 [Warning] InnoDB: Setting innodb_checksums to OFF is DEPRECATED. This option may be removed in future releases. You should set innodb_checksum_algorithm=NONE instead.",
+            'cloud.provider': 'aws',
+            'cloud.account.id': "444000444",
+            'cloud.region': "us-east-1",
+            'aws.log_group': "/aws/rds/cluster/aurora-mysql/error",
+            'aws.log_stream': "aurora-mysql-instance-1",
+            'aws.region': "us-east-1",
+            'aws.account.id': "444000444",
+            'severity': 'WARNING',
+            'log.source': 'rds - error logs',
+        }
+    }, id="testcase_rds_aurora_mysql_error_log"),
+
+    pytest.param({
+        "record_data_decoded": {
+            "logGroup": "/aws/rds/cluster/aurora-mysql/error",
+            "logStream": "aurora-mysql-instance-1",
+            "messageType": "DATA_MESSAGE",
+            "owner": "444000444",
+            "subscriptionFilters": ["mysql-audit-filter"],
+            "logEvents": [
+                {
+                    "id": "35958590510527767165636549608812769529777864588249006080",
+                    "timestamp": "12345",
+                    "message": "2021-08-10T09:20:26.366088Z 0 [Note] /rdsdbbin/oscar/bin/mysqld: ready for connections.\nVersion: '5.7.12-log'  socket: '/tmp/mysql.sock'  port: 3306  MySQL Community Server (GPL)\n  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\n  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n100     8  100     8    0     0   8000      0 --:--:-- --:--:-- --:--:--  8000\n"
+                }
+            ],
+        },
+        "expect_first_log_contains": {
+            "aws.service": "rds",
+            "aws.resource.id": "aurora-mysql",
+            "aws.arn": "arn:aws:rds:us-east-1:444000444:db:aurora-mysql-instance-1",
+            "dt.source_entity": "RELATIONAL_DATABASE_SERVICE-FC361C8F808383AE",
+            'content': "2021-08-10T09:20:26.366088Z 0 [Note] /rdsdbbin/oscar/bin/mysqld: ready for connections.\nVersion: '5.7.12-log'  socket: '/tmp/mysql.sock'  port: 3306  MySQL Community Server (GPL)\n  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\n  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n100     8  100     8    0     0   8000      0 --:--:-- --:--:-- --:--:--  8000\n",
+            'cloud.provider': 'aws',
+            'cloud.account.id': "444000444",
+            'cloud.region': "us-east-1",
+            'aws.log_group': "/aws/rds/cluster/aurora-mysql/error",
+            'aws.log_stream': "aurora-mysql-instance-1",
+            'aws.region': "us-east-1",
+            'aws.account.id': "444000444",
+            'severity': 'INFO',
+            'log.source': 'rds - error logs',
+        }
+    }, id="testcase_rds_aurora_mysql_error_log"),
+
+    pytest.param({
+        "record_data_decoded": {
+            "logGroup": "/aws/rds/cluster/aurora-postresql/postgresql",
+            "logStream": "aurora-postresql-instance-1.0",
+            "messageType": "DATA_MESSAGE",
+            "owner": "444000444",
+            "subscriptionFilters": ["mysql-audit-filter"],
+            "logEvents": [
+                {
+                    "id": "35958590510527767165636549608812769529777864588249006080",
+                    "timestamp": "12345",
+                    "message": "2021-08-10 09:20:53 UTC::@:[7701]:LOG:  skipping missing configuration file \"/rdsdbdata/db/postgresql.auto.conf\""
+                }
+            ],
+        },
+        "expect_first_log_contains": {
+            "aws.service": "rds",
+            "aws.resource.id": "aurora-postresql",
+            "aws.arn": "arn:aws:rds:us-east-1:444000444:db:aurora-postresql-instance-1",
+            "dt.source_entity": "RELATIONAL_DATABASE_SERVICE-952B74DD9DB9E3DE",
+            'content': "2021-08-10 09:20:53 UTC::@:[7701]:LOG:  skipping missing configuration file \"/rdsdbdata/db/postgresql.auto.conf\"",
+            'cloud.provider': 'aws',
+            'cloud.account.id': "444000444",
+            'cloud.region': "us-east-1",
+            'aws.log_group': "/aws/rds/cluster/aurora-postresql/postgresql",
+            'aws.log_stream': "aurora-postresql-instance-1.0",
+            'aws.region': "us-east-1",
+            'aws.account.id': "444000444",
+            'severity': 'INFO',
+            'log.source': 'rds - postgresql logs',
+        }
+    }, id="testcase_rds_aurora_postgresql_log"),
+
+    pytest.param({
+        "record_data_decoded": {
+            "logGroup": "/aws/rds/cluster/aurora-postresql/postgresql",
+            "logStream": "aurora-postresql-instance-1.0",
+            "messageType": "DATA_MESSAGE",
+            "owner": "444000444",
+            "subscriptionFilters": ["mysql-audit-filter"],
+            "logEvents": [
+                {
+                    "id": "35958590510527767165636549608812769529777864588249006080",
+                    "timestamp": "12345",
+                    "message": "2021-08-10 09:20:53 UTC::@:[7701]:WARNING:  skipping missing configuration file \"/rdsdbdata/db/postgresql.auto.conf\""
+                }
+            ],
+        },
+        "expect_first_log_contains": {
+            "aws.service": "rds",
+            "aws.resource.id": "aurora-postresql",
+            "aws.arn": "arn:aws:rds:us-east-1:444000444:db:aurora-postresql-instance-1",
+            "dt.source_entity": "RELATIONAL_DATABASE_SERVICE-952B74DD9DB9E3DE",
+            'content': "2021-08-10 09:20:53 UTC::@:[7701]:WARNING:  skipping missing configuration file \"/rdsdbdata/db/postgresql.auto.conf\"",
+            'cloud.provider': 'aws',
+            'cloud.account.id': "444000444",
+            'cloud.region': "us-east-1",
+            'aws.log_group': "/aws/rds/cluster/aurora-postresql/postgresql",
+            'aws.log_stream': "aurora-postresql-instance-1.0",
+            'aws.region': "us-east-1",
+            'aws.account.id': "444000444",
+            'severity': 'WARNING',
+            'log.source': 'rds - postgresql logs',
+        }
+    }, id="testcase_rds_aurora_postgresql_log"),
 
 ])
 def test_full_transformation(testcase: dict):

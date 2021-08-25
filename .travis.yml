@@ -20,13 +20,14 @@ stages:
 jobs:
   include:
     - stage: unit_tests
-      name: Execute unit tests & linting
+      name: Execute unit & perf tests + linting
       language: shell
       services: docker
       script:
         - docker build -f pipeline/Dockerfile -t lambda_image .
         - docker run --rm lambda_image bash -c 'python3 -m pylint --rcfile=pipeline/pylint.cfg $(find src/ -name "*.py")'
         - docker run --rm lambda_image bash -c 'cd src && python3 -m pytest -v ../tests/unit'
+        - docker run --rm lambda_image bash -c 'cd src && python3 -m pytest -v ../tests/perf --profile'
     - stage: build
       name: Build AWS Lambda package
       #if: tag =~ /^release.*$/

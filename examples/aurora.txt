@@ -1,0 +1,154 @@
+AURORA RDS MYSQL AUDIT LOGS:
+    {
+        "messageType": "DATA_MESSAGE",
+        "owner": "908047316593",
+        "logGroup": "/aws/rds/cluster/aurora-mysql/audit",
+        "logStream": "aurora-mysql-instance-1",
+        "subscriptionFilters": [
+            "mysql-audit-filter"
+        ],
+        "logEvents": [
+            {
+                "id": "36283723329239606779976941014300561991466727829296513024",
+                "timestamp": 1627018425000,
+                "message": "20210723 05:33:45,ip-10-1-3-230,rdsadmin,localhost,203,0,CONNECT,,,0,SOCKET"
+            },
+            {
+                "id": "36282733332258008410023818770931443951379879892065320960",
+                "timestamp": 1626974032000,
+                "message": "20210726 12:05:10,ip-10-1-3-230,db_user,157.25.19.100,1029,242734,QUERY,`testdb`,'select * from mysql.user\nLIMIT 0, 1000',1142,,"
+            },
+            {
+                "id": "36282735473129547468963640358360398125622584466185256962",
+                "timestamp": 1626974128000,
+                "message": "20210722 17:15:28,ip-10-1-3-230,admin,157.25.19.100,13,0,DISCONNECT,testdb,,0,SSL"
+            }
+        ]
+    }
+
+AURORA RDS MYSQL GENERAL LOGS:
+    {
+        "messageType": "DATA_MESSAGE",
+        "owner": "908047316593",
+        "logGroup": "/aws/rds/cluster/aurora-mysql/general",
+        "logStream": "aurora-mysql-instance-1",
+        "subscriptionFilters": [
+            "aurora-mysal"
+        ],
+        "logEvents": [
+            {
+                "timestamp": 1628597521470,
+                "message": "2021-08-10T12:12:01.470865Z    2 Query\t/* mysql-connector-java-5.1.46 ( Revision: 9cc87a48e75c2d2e87c1a293b2862ce651cb256e ) */SELECT  @@session.auto_increment_increment AS auto_increment_increment, @@character_set_client AS character_set_client, @@character_set_connection AS character_set_connection, @@character_set_results AS character_set_results, @@character_set_server AS character_set_server, @@collation_server AS collation_server, @@init_connect AS init_connect, @@interactive_timeout AS interactive_timeout, @@license AS license, @@lower_case_table_names AS lower_case_table_names, @@max_allowed_packet AS max_allowed_packet, @@net_buffer_length AS net_buffer_length, @@net_write_timeout AS net_write_timeout, @@query_cache_size AS query_cache_size, @@query_cache_type AS query_cache_type, @@sql_mode AS sql_mode, @@system_time_zone AS system_time_zone, @@time_zone AS time_zone, @@tx_isolation AS transaction_isolation, @@wait_timeout AS wait_timeout",
+                "ingestionTime": 1628597522247
+            },
+            {
+                "timestamp": 1628597521538,
+                "message": "2021-08-10T12:12:01.538770Z    2 Query\tSET NAMES utf8",
+                "ingestionTime": 1628597522247
+            },
+            {
+                "timestamp": 1628597521540,
+                "message": "2021-08-10T12:12:01.540332Z    2 Query\tSET character_set_results = NULL",
+                "ingestionTime": 1628597522247
+            }
+        ]
+    }
+
+AURORA RDS MYSQL SLOWQUERY LOGS:
+    {
+        "messageType": "DATA_MESSAGE",
+        "owner": "908047316593",
+        "logGroup": "/aws/rds/cluster/aurora-mysql/slowquery",
+        "logStream": "aurora-mysql-instance-1",
+        "subscriptionFilters": [
+            "aurora-mysal"
+        ],
+        "logEvents": [
+            {
+                "timestamp": 1628598268044,
+                "message": "# Time: 2021-08-10T12:24:28.044347Z\n# User@Host: rdsadmin[rdsadmin] @ localhost []  Id:     5\n# Query_time: 0.000051  Lock_time: 0.000000 Rows_sent: 0  Rows_examined: 0\nSET timestamp=1628598268;\nset local oscar_local_only_replica_host_status=0;",
+                "ingestionTime": 1628598268194
+            },
+            {
+                "timestamp": 1628598268553,
+                "message": "# Time: 2021-08-10T12:24:28.553519Z\n# User@Host: rdsadmin[rdsadmin] @ localhost []  Id:     7\n# Query_time: 0.000093  Lock_time: 0.000000 Rows_sent: 1  Rows_examined: 0\nSET timestamp=1628598268;\nSELECT @@aurora_oom_response;",
+                "ingestionTime": 1628598269182
+            },
+            {
+                "timestamp": 1628598268567,
+                "message": "# Time: 2021-08-10T12:24:28.567324Z\n# User@Host: rdsadmin[rdsadmin] @ localhost []  Id:     7\n# Query_time: 0.000097  Lock_time: 0.000000 Rows_sent: 1  Rows_examined: 0\nSET timestamp=1628598268;\nSELECT @@aurora_memory_recovery_small_instance_response;",
+                "ingestionTime": 1628598269182
+            }
+        ]
+    }
+
+AURORA RDS MYSQL ERROR LOGS:
+    {
+        "messageType": "DATA_MESSAGE",
+        "owner": "908047316593",
+        "logGroup": "/aws/rds/cluster/aurora-mysql/error",
+        "logStream": "aurora-mysql-instance-1",
+        "subscriptionFilters": [
+            "aurora-mysal"
+        ],
+        "logEvents": [
+             {
+                "timestamp": 1628597517000,
+                "message": "2021-08-10 12:11:57 0x2b74eef87d00[IB_LOG_LEVEL_INFO]:Initializing buffer pool, size = 630.0M (srv0start.cc:4057)",
+                "ingestionTime": 1628597519885
+            },
+            {
+                "timestamp": 1628597517000,
+                "message": "2021-08-10 12:11:57 0x2b74eef87d00[IB_LOG_LEVEL_INFO]:Initializing buffer pool, size = 630.0M (srv0start.cc:4057)",
+                "ingestionTime": 1628598001859
+            },
+            {
+                "timestamp": 1628597517223,
+                "message": "2021-08-10T12:11:57.223238Z 0 [Warning] The syntax '--secure-auth' is deprecated and will be removed in a future release",
+                "ingestionTime": 1628597519885
+            },
+            {
+                "timestamp": 1628597517223,
+                "message": "2021-08-10T12:11:57.223520Z 0 [Warning] 'NO_AUTO_CREATE_USER' sql mode was not set.",
+                "ingestionTime": 1628597519885
+            }
+        ]
+    }
+
+AURORA RDS POSTGRESQL LOGS:
+    {
+        "messageType": "DATA_MESSAGE",
+        "owner": "908047316593",
+        "logGroup": "/aws/rds/cluster/aurora-postresql/postgresql",
+        "logStream": "aurora-postresql-instance-1.0",
+        "subscriptionFilters": [
+            "aurora-postgresql"
+        ],
+        "logEvents": [
+            {
+                "timestamp": 1628597784000,
+                "message": "2021-08-10 12:16:24 UTC::@:[29865]:LOG:  redirecting log output to logging collector process",
+                "ingestionTime": 1628597787177
+            },
+            {
+                "timestamp": 1628597784000,
+                "message": "2021-08-10 12:16:24 UTC::@:[29865]:HINT:  Future log output will appear in directory \"/rdsdbdata/log/error\".",
+                "ingestionTime": 1628597787177
+            },
+            {
+                "timestamp": 1628597785000,
+                "message": "2021-08-10 12:16:25 UTC:[local]:rdsadmin@rdsadmin:[30090]:FATAL:  the database system is starting up",
+                "ingestionTime": 1628597787146
+            },
+            {
+                "timestamp": 1628597785000,
+                "message": "2021-08-10 12:16:25 UTC::@:[30089]:LOG:  database system was interrupted; last known up at 2021-08-10 12:15:45 UTC",
+                "ingestionTime": 1628597787146
+            },
+            {
+                "timestamp": 1628597785000,
+                "message": "2021-08-10 12:16:25 UTC::@:[30089]:LOG:  Outbound recovery is not required",
+                "ingestionTime": 1628597787146
+            }
+        ]
+    }

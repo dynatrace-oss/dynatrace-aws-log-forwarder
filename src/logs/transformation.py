@@ -68,6 +68,7 @@ def transform_single_log_entry(log_event, batch_metadata, record_metadata) -> Di
         parsed_record["timestamp"] = log_event["timestamp"]
 
     record = {
+        'log_stream': record_metadata.log_stream,
         'log_group': record_metadata.log_group,
         'region': batch_metadata.region,
         'partition': batch_metadata.partition,
