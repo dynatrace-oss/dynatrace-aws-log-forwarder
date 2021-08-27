@@ -38,7 +38,7 @@
         },
         {
           "key": "severity",
-          "description": "If a field log_type equal postgresql then will check in log_content for :WARNING: or :ERROR: and set correct else INFO, else if not postgresql then the same approach but will check in log_content for [Warning] or [Error] and set correct else INFO",
+          "description": "If a field log_type equal postgresql then will check in log_content for :WARNING: or :ERROR: and set correct else INFO, else if not postgresql (mysql, mariadb) then the same approach but will check in log_content for [Warning] or [Error] and set correct else INFO",
           "pattern": "if(log_type == 'postgresql', &if(contains(log_content, ':WARNING:'), &'WARNING', &if(contains(log_content, ':ERROR:'), &'ERROR', &'INFO', @), @), &if(contains(log_content, '[Warning]'), &'WARNING', &if(contains(log_content, '[Error]'), &'ERROR', &null, @), @), @)",
           "priority": 12
         },
