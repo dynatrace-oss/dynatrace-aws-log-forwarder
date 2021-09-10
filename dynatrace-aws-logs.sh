@@ -63,12 +63,14 @@ arguments:
   --target-url TARGET_URL
                         The URL to Your Dynatrace SaaS logs ingest target.
                         If you choose new ActiveGate deployment (--use-existing-active-gate=false), provide Tenant URL (https://<your_environment_ID>.live.dynatrace.com).
-                        If you choose to use existing ActiveGate (--use-existing-active-gate=true), provide ActiveGate endpoint: https://<active_gate_address>:9999/e/<environment_id> (e.g. https://22.111.98.222:9999/e/abc12345).
+                        If you choose to use existing ActiveGate (--use-existing-active-gate=true), provide ActiveGate endpoint:
+                          - for Public ActiveGate: https://<your_environment_ID>.live.dynatrace.com
+                          - for Environment ActiveGate: https://<active_gate_address>:9999/e/<environment_id> (e.g. https://22.111.98.222:9999/e/abc12345)
   --target-api-token TARGET_API_TOKEN
                         Dynatrace API token. Integration requires API v1 Log import Token permission.
   --use-existing-active-gate {true|false}
                         If you choose new ActiveGate deployment, put 'false'. In such case, new EC2 with ActiveGate will be added to log forwarder deployment (enclosed in VPC with log forwarder).
-                        If you choose to use existing ActiveGate, put 'true'.
+                        If you choose to use existing ActiveGate (either Public AG or Environment AG), put 'true'.
   --target-paas-token TARGET_PAAS_TOKEN
                         Optional. Only needed when --use-existing-active-gate=false. PaaS token generated in Integration/Platform as a Service. Used for ActiveGate installation.
   --require-valid-certificate {true|false}
@@ -219,10 +221,12 @@ EOF
   fi
 
   if [[ "$USE_EXISTING_ACTIVE_GATE" == "false" ]] && ! [[ "${TARGET_URL}" =~ $DYNATRACE_TARGET_URL_REGEX ]]; then
-      echo "Invalid value for parameter --target-url. Example of valid url for deployment with ActiveGate: https://<your_environment_ID>.live.dynatrace.com"
+      echo "Invalid value for parameter --target-url. Example of valid url for deployment with new ActiveGate: https://<your_environment_ID>.live.dynatrace.com"
       exit 1
-  elif [[ "$USE_EXISTING_ACTIVE_GATE" == "true" ]] && ! [[ "${TARGET_URL}" =~ $ACTIVE_GATE_TARGET_URL_REGEX ]]; then
-      echo "Invalid value for parameter --target-url. Example of valid url for deployment without ActiveGate: https://<your_activegate_IP_or_hostname>:9999/e/<your_environment_ID>"
+  elif [[ "$USE_EXISTING_ACTIVE_GATE" == "true" ]] && ! ([[ "${TARGET_URL}" =~ $ACTIVE_GATE_TARGET_URL_REGEX ]] || [[ "${TARGET_URL}" =~ $DYNATRACE_TARGET_URL_REGEX ]]); then
+      echo "Invalid value for parameter --target-url. Example of valid url for deployment with existing ActiveGate:"
+      echo "  - for Public ActiveGate: https://<your_environment_ID>.live.dynatrace.com"
+      echo "  - for Environment ActiveGate: https://<your_activegate_IP_or_hostname>:9999/e/<your_environment_ID>"
       exit 1
   fi
 
