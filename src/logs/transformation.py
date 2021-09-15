@@ -46,8 +46,6 @@ def extract_dt_logs_from_single_record(
     log_content_lens = [len(  log["content"] )   for log in logs    if log.get("content", None) is not None ]
     log_content_lens_sum = sum(log_content_lens)
 
-    context.sfm.single_record_transformed(record_metadata.log_group, len(logs), log_content_lens_sum)
-
     return logs
 
 
