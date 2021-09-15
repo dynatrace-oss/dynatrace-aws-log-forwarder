@@ -997,13 +997,11 @@ CLOUDTRAIL_USER_IDENTITY = {
 
 ])
 def test_full_transformation(testcase: dict):
-    context = Context("function-name", "dt-url", "dt-token", False, False)
-
     record_data_decoded = testcase["record_data_decoded"]
     expect_first_log_contains = testcase["expect_first_log_contains"]
 
     logs_sent = logs.transformation.extract_dt_logs_from_single_record(
-        json.dumps(record_data_decoded), BATCH_METADATA, context)
+        json.dumps(record_data_decoded), BATCH_METADATA)
 
     assert len(logs_sent) == len(record_data_decoded["logEvents"])
 
