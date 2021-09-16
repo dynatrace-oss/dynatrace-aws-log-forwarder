@@ -18,7 +18,6 @@ from typing import List, Dict
 
 from logs.metadata_engine.metadata_engine import MetadataEngine
 from logs.models.batch_metadata import BatchMetadata
-from util.context import Context
 
 metadata_engine = MetadataEngine()
 
