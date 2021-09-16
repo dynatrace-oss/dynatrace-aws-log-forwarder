@@ -368,7 +368,7 @@ arguments:
 
   for LOG_GROUP in "${LOG_GROUPS[@]}"
   do
-    echo -n "Subscribing to log group '$LOG_GROUP' "
+    echo -n "Subscribing stack $STACK_NAME to log group '$LOG_GROUP' "
     ((LOG_GROUPS_TOTAL++))
 
     aws logs put-subscription-filter --log-group-name "$LOG_GROUP" --filter-name "$SUBSCRIPTION_FILTER_NAME" \
