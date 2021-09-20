@@ -26,7 +26,7 @@ def process_log_request(decoded_records: List[str], context: Context, batch_meta
     all_logs: List[Dict] = []
 
     for record in decoded_records:
-        all_logs.extend(extract_dt_logs_from_single_record(record, batch_metadata, context))
+        all_logs.extend(extract_dt_logs_from_single_record(record, batch_metadata))
 
     print(f"Extracted {len(all_logs)} log entries from {len(decoded_records)} records given")
 

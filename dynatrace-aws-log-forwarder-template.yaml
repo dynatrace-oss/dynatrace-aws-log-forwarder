@@ -297,14 +297,14 @@ Resources:
               "type": "metric",
               "properties": {
                 "metrics": [
-                [ { "expression": "SEARCH('{DT/LogsStreaming,function_name,log_group} function_name=\"${__LambdaName__}\" MetricName=\"Log entries by LogGroup\"', 'Sum', 60)", "label": "Log entries - [${!PROP('Dim.log_group')}]", "id": "e1", "region": "${__Region__}" } ]
+                [ { "expression": "SEARCH('{AWS/Logs,FilterName,LogGroupName,DestinationType} FilterName=\"${__StackName__}\" MetricName=\"ForwardedLogEvents\"', 'Sum', 60)", "label": "[${!PROP('Dim.LogGroupName')}]", "id": "e1", "region": "${__Region__}" } ]
                 ],
                 "view": "timeSeries",
                 "stacked": false,
                 "region": "${__Region__}",
                 "period": 300,
                 "stat": "Average",
-                "title": "Log Groups - log entries"
+                "title": "Log Groups - log entries received from CloudWatch"
               }
             },
             {
@@ -315,14 +315,14 @@ Resources:
               "type": "metric",
               "properties": {
                 "metrics": [
-                [ { "expression": "SEARCH('{DT/LogsStreaming,function_name,log_group} function_name=\"${__LambdaName__}\" MetricName=\"Log content length by LogGroup\"', 'Sum', 60)", "label": "Log content length -  [${!PROP('Dim.log_group')}]", "id": "e1", "region": "${__Region__}" } ]
+                [ { "expression": "SEARCH('{AWS/Logs,FilterName,LogGroupName,DestinationType} FilterName=\"${__StackName__}\" MetricName=\"ForwardedBytes\"', 'Sum', 60)", "label": "[${!PROP('Dim.LogGroupName')}]", "id": "e1", "region": "${__Region__}" } ]
                 ],
                 "view": "timeSeries",
                 "stacked": false,
                 "region": "${__Region__}",
                 "period": 300,
                 "stat": "Average",
-                "title": "Log Groups - log content length"
+                "title": "Log Groups - bytes received from CloudWatch"
               }
             },
             {
@@ -567,6 +567,7 @@ Resources:
           }
         - __Region__: !Ref 'AWS::Region'
           __LambdaName__: !Ref Lambda
+          __StackName__: !Ref 'AWS::StackName'
 
   EC2ActiveGate:
     Condition: DeployAGwithVPC

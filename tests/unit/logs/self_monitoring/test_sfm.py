@@ -23,10 +23,6 @@ def test_self_monitoring_context():
     sfm.kinesis_record_decoded(1000, 2000)
     sfm.kinesis_record_decoded(500, 4000)
 
-    sfm.single_record_transformed("logGroup1", 100, 1000)
-    sfm.single_record_transformed("logGroup1", 100, 1000)
-    sfm.single_record_transformed("logGroup2", 50, 2000)
-
     sfm.batch_prepared(100, 3000)
     sfm.batch_prepared(100, 3000)
 
@@ -66,34 +62,6 @@ def test_self_monitoring_context():
             'Unit': 'Bytes',
             'StatisticValues': {'Maximum': 4000, 'Minimum': 2000, 'SampleCount': 2, 'Sum': 6000},
         },
-        # {
-        #     'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'},
-        #                    {'Name': 'log_group', 'Value': 'logGroup1'}],
-        #     'MetricName': 'Log entries by LogGroup',
-        #     'Unit': 'None',
-        #     'Value': 200
-        # },
-        # {
-        #     'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'},
-        #                    {'Name': 'log_group', 'Value': 'logGroup2'}],
-        #     'MetricName': 'Log entries by LogGroup',
-        #     'Unit': 'None',
-        #     'Value': 50
-        # },
-        # {
-        #     'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'},
-        #                    {'Name': 'log_group', 'Value': 'logGroup1'}],
-        #     'MetricName': 'Log content length by LogGroup',
-        #     'Unit': 'None',
-        #     'Value': 2000
-        # },
-        # {
-        #     'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'},
-        #                    {'Name': 'log_group', 'Value': 'logGroup2'}],
-        #     'MetricName': 'Log content length by LogGroup',
-        #     'Unit': 'None',
-        #     'Value': 2000
-        # },
         {
             'Dimensions': [{'Name': 'function_name', 'Value': 'my-lambda-function'}],
             'MetricName': 'Batches prepared',

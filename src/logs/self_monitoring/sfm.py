@@ -27,9 +27,6 @@ class SelfMonitoringContext:
         self._record_data_compressed_size = []
         self._record_data_decompressed_size = []
 
-        self._log_entries_by_log_group = defaultdict(lambda: 0)
-        self._log_content_len_by_log_group = defaultdict(lambda: 0)
-
         self._batches_prepared = 0
         self._log_entries_prepared = 0
         self._data_volume_prepared = 0
@@ -57,10 +54,6 @@ class SelfMonitoringContext:
     def kinesis_record_decoded(self, record_data_compressed_size, record_data_decompressed_size):
         self._record_data_compressed_size.append(record_data_compressed_size)
         self._record_data_decompressed_size.append(record_data_decompressed_size)
-
-    def single_record_transformed(self, log_group, log_entries_count, log_content_len):
-        self._log_entries_by_log_group[log_group] += log_entries_count
-        self._log_content_len_by_log_group[log_group] += log_content_len
 
     def batch_prepared(self, log_entries_count, data_volume):
         self._batches_prepared += 1
@@ -116,20 +109,6 @@ class SelfMonitoringContext:
             "Kinesis record.data decompressed size", "Bytes", common_dimensions,
             self._record_data_decompressed_size
         ))
-
-        # TO BE RESTORED IN DIFFERENT WAY IN APM-306046
-        # please remove this then
-        # for log_group, log_entries_count in self._log_entries_by_log_group.items():
-        #     metrics.append(_prepare_cloudwatch_metric(
-        #         "Log entries by LogGroup", log_entries_count, "None",
-        #         common_dimensions + [{"Name": "log_group", "Value": log_group}]
-        #     ))
-        #
-        # for log_group, log_content_len in self._log_content_len_by_log_group.items():
-        #     metrics.append(_prepare_cloudwatch_metric(
-        #         "Log content length by LogGroup", log_content_len, "None",
-        #         common_dimensions + [{"Name": "log_group", "Value": log_group}]
-        #     ))
 
         metrics.append(
             _prepare_cloudwatch_metric("Batches prepared", "None", common_dimensions, self._batches_prepared))
