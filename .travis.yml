@@ -40,6 +40,8 @@ jobs:
         # set up shared storage for build artifacts
         - mkdir -p $TRAVIS_BUILD_SHARED_STORAGE
       script:
+        - echo $TRAVIS_COMMIT
+        - echo $TRAVIS_TAG
         - docker run --rm -v `pwd`:/var/task amazon/aws-sam-cli-build-image-python3.8 bash -c './build-release-package.sh'
       after_success:
         - cp -p dynatrace-aws-log-forwarder.zip $TRAVIS_BUILD_SHARED_STORAGE
