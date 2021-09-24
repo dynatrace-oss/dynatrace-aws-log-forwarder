@@ -30,7 +30,6 @@ jobs:
         - docker run --rm lambda_image bash -c 'cd src && python3 -m pytest -v ../tests/perf --profile'
     - stage: build
       name: Build AWS Lambda package
-      #if: tag =~ /^release.*$/
       language: shell
       services: docker
       install:
@@ -40,13 +39,13 @@ jobs:
         # set up shared storage for build artifacts
         - mkdir -p $TRAVIS_BUILD_SHARED_STORAGE
       script:
-        - docker run --rm -v `pwd`:/var/task amazon/aws-sam-cli-build-image-python3.8 bash -c './build-release-package.sh'
+        - docker run --rm -e TRAVIS_TAG -e TRAVIS_COMMIT -v `pwd`:/var/task amazon/aws-sam-cli-build-image-python3.8 bash -c './build-release-package.sh'
       after_success:
         - cp -p dynatrace-aws-log-forwarder.zip $TRAVIS_BUILD_SHARED_STORAGE
         - aws s3 sync $TRAVIS_BUILD_SHARED_STORAGE $AWS_S3_BUILD_SHARED_STORAGE
     - stage: e2e_tests
       name: Execute e2e tests
-      if: branch = master OR type = pull_request
+      if: branch = master OR type = pull_request OR tag =~ /^release.*$/
       language: shell
       install:
         # set up awscli packages
