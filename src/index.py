@@ -31,10 +31,12 @@ def handler(event, lambda_context):
     try:
         with open('version.txt') as versionFile:
             version = versionFile.readline()
-    except:
+    except Exception as e:
         version = "?"
+        log_error_with_stacktrace(e, "Couldn't read stack version", "version-reading-exception")
+
     log_multiline_message("LOG FORWARDER version=" + version, "handler")
-    
+
     ensure_credentials_provided(dt_token, dt_url)
 
     records = event['records']
