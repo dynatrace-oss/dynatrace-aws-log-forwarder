@@ -33,7 +33,7 @@ def handler(event, lambda_context):
             version = versionFile.readline()
     except Exception as e:
         version = "?"
-        log_error_with_stacktrace(e, "Couldn't read stack version", "version-reading-exception")
+        log_multiline_message(f"Couldn't read stack version. Exception: '{e}'.", "version-reading-exception")
 
     log_multiline_message("LOG FORWARDER version=" + version, "handler")
 
