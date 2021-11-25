@@ -28,6 +28,15 @@ def handler(event, lambda_context):
     dt_token = os.environ.get('DYNATRACE_API_KEY')
     verify_SSL = os.environ.get('VERIFY_SSL', 'false') == 'true'
 
+    try:
+        with open('version.txt') as versionFile:
+            version = versionFile.readline()
+    except Exception as e:
+        version = "?"
+        log_multiline_message(f"Couldn't read stack version. Exception: '{e}'.", "version-reading-exception")
+
+    log_multiline_message("LOG FORWARDER version=" + version, "handler")
+
     ensure_credentials_provided(dt_token, dt_url)
 
     records = event['records']
