@@ -72,7 +72,7 @@ jobs:
         # subscribe to AWS CloudWatch Logs log groups
         - ./dynatrace-aws-logs.sh subscribe --log-groups $AWS_CLOUDWATCH_LOGS_LOG_GROUP --stack-name $AWS_CLOUDFORMATION_STACK
         # execute end-to-end test
-        - ./main.py --api-token $DYNATRACE_E2E_TEST_API_KEY --log-group-name $AWS_CLOUDWATCH_LOGS_LOG_GROUP --log-stream-name $AWS_CLOUDWATCH_LOGS_LOG_STREAM --unique-message-content "$(cut -c 1-8 <<< ${TRAVIS_COMMIT})-${TRAVIS_BUILD_NUMBER}"
+        - ./main.py --api-token $DYNATRACE_E2E_TEST_API_KEY --url-prefix $DYNATRACE_API_V2_URL --log-group-name $AWS_CLOUDWATCH_LOGS_LOG_GROUP --log-stream-name $AWS_CLOUDWATCH_LOGS_LOG_STREAM --unique-message-content "$(cut -c 1-8 <<< ${TRAVIS_COMMIT})-${TRAVIS_BUILD_NUMBER}"
       after_script:
         # unsubscribe from AWS CloudWatch Logs log groups
         - ./dynatrace-aws-logs.sh unsubscribe --log-groups $AWS_CLOUDWATCH_LOGS_LOG_GROUP --stack-name $AWS_CLOUDFORMATION_STACK
