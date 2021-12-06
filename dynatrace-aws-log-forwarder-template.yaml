@@ -83,6 +83,12 @@ Resources:
           SubnetIds: [ !Ref VPCPrivateSubnet  ]
         - !Ref "AWS::NoValue"
 
+  LambdaLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/codebuild/${Lambda}"
+      RetentionInDays: 90
+
   LambdaRole:
     Type: AWS::IAM::Role
     Properties:
