@@ -259,6 +259,12 @@ EOF
   aws lambda update-function-code --function-name "$LAMBDA_ARN" --zip-file fileb://"$LAMBDA_ZIP_NAME" > /dev/null
   echo; echo "Updated Lambda code of $LAMBDA_ARN"; echo
 
+  LAMBDA_NAME=$(aws cloudformation describe-stack-resource --stack-name "$STACK_NAME" \
+     --logical-resource-id Lambda --query "StackResourceDetail.PhysicalResourceId" --output text)
+    
+  aws logs put-retention-policy --log-group-name "/aws/lambda/$LAMBDA_NAME" --retention-in-days 90
+  echo; echo "Adding log retention policy of 90 days"; echo
+
   # SHOW OUTPUTS
   aws cloudformation describe-stacks --stack-name "$STACK_NAME" --query "Stacks[0].Outputs"
   ;;
