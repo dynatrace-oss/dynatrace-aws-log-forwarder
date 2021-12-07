@@ -85,6 +85,7 @@ Resources:
 
   LambdaLogGroup:
     Type: AWS::Logs::LogGroup
+    DependsOn: Lambda
     Properties:
       LogGroupName: !Sub "/aws/lambda/${Lambda}"
       RetentionInDays: 90
