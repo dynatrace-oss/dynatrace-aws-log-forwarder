@@ -86,7 +86,7 @@ Resources:
   LambdaLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Sub "/aws/codebuild/${Lambda}"
+      LogGroupName: !Sub "/aws/lambda/${Lambda}"
       RetentionInDays: 90
 
   LambdaRole:
