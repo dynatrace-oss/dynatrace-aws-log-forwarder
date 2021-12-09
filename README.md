@@ -1,5 +1,15 @@
 # Dynatrace AWS Log Forwarder
 
+## Contributing
+
+Please follow these steps:
+1. Fork repository and apply your changes.
+2. Create a PR to some feature branch in our repo (not to master!)
+3. We will review your changes and pull them as our feature branch.
+4. Then we will be able to run test pipeline on it, merge to our master and release. 
+
+Thank you! 
+
 ## Overview
 See the [official project documentation](https://www.dynatrace.com/support/help/technology-support/cloud-platforms/amazon-web-services/aws-log-forwarder/) for overview and user's manual. This readme contains only additional technical details.
 
