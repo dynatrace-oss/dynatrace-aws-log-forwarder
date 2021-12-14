@@ -13,6 +13,8 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
+# BŁ here is a good source of bash examples in live code
+
 readonly TEMPLATE_FILE="dynatrace-aws-log-forwarder-template.yaml"
 readonly LAMBDA_ZIP_NAME="dynatrace-aws-log-forwarder-lambda.zip"
 
