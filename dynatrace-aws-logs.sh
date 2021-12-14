@@ -13,6 +13,8 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
+#dt_be_fork_from_last_release touch
+
 readonly TEMPLATE_FILE="dynatrace-aws-log-forwarder-template.yaml"
 readonly LAMBDA_ZIP_NAME="dynatrace-aws-log-forwarder-lambda.zip"
 
