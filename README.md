@@ -1,5 +1,7 @@
 # Dynatrace AWS Log Forwarder
 
+dt_be_fork_from_last_release happened here
+
 ## Overview
 See the [official project documentation](https://www.dynatrace.com/support/help/technology-support/cloud-platforms/amazon-web-services/aws-log-forwarder/) for overview and user's manual. This readme contains only additional technical details.
 
