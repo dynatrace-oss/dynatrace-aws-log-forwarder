@@ -31,6 +31,7 @@ jobs:
         - docker run --rm lambda_image bash -c 'cd src && python3 -m pytest -v ../tests/perf --profile'
     - stage: build
       name: Build AWS Lambda package
+      if: branch = master OR tag =~ /^release.*$/
       language: shell
       services: docker
       install:
