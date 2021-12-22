@@ -48,7 +48,6 @@ jobs:
         - aws s3 sync $TRAVIS_BUILD_SHARED_STORAGE $AWS_S3_BUILD_SHARED_STORAGE
     - stage: e2e_tests
       name: Execute e2e tests
-      if: tag =~ /^release.*$/
       language: shell
       install:
         # setup PIP
