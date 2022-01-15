@@ -72,6 +72,8 @@ class Test(TestCase):
 
         logs_sender.DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH = 50
         logs_sender.DYNATRACE_LOG_INGEST_REQUEST_MAX_SIZE = 115
+        logs_sender.DYNATRACE_LOG_INGEST_CONTENT_MARK_TRIMMED = "[TRUNCATED]"
+
         batches = logs_sender.prepare_batches(logs, context)
 
         self.assertGreaterEqual(len(batches), 1)
@@ -83,9 +85,9 @@ class Test(TestCase):
 
             for entry in entries:
                 content_len = len(entry["content"])
-                self.assertTrue (content_len == 50)
+                self.assertTrue(content_len == 50)
                 self.assertTrue(content_len <= logs_sender.DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH)
-                self.assertTrue(entry["content"] == 'WALTHAM, Mass.--(BUSINESS WIRE)-- Software intelli' )
+                self.assertTrue(entry["content"] == 'WALTHAM, Mass.--(BUSINESS WIRE)-- Softw[TRUNCATED]')
 
             self.assertTrue(len(batch.serialized_json) <= logs_sender.DYNATRACE_LOG_INGEST_REQUEST_MAX_SIZE)
 
