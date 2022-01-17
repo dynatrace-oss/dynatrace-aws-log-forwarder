@@ -72,7 +72,6 @@ class Test(TestCase):
 
         logs_sender.DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH = 50
         logs_sender.DYNATRACE_LOG_INGEST_REQUEST_MAX_SIZE = 115
-        logs_sender.DYNATRACE_LOG_INGEST_CONTENT_MARK_TRIMMED = "[TRUNCATED]"
 
         batches = logs_sender.prepare_batches(logs, context)
 
