@@ -22,6 +22,14 @@ from logs.models.batch_metadata import BatchMetadata
 from util.context import Context
 
 
+def get_context(log_forwarder_setup="log.forwarder"):
+    return Context("function-name", "dt-url", "dt-token", False, False, log_forwarder_setup)
+
+
+def get_batch_metadata():
+    return BatchMetadata("444000444", "us-east-1", "aws")
+
+
 @patch.object(MetadataEngine, 'apply')
 def test_metadata_engine_input(metadata_engine_apply_mock):
     input_entry = json.dumps({
@@ -43,9 +51,8 @@ def test_metadata_engine_input(metadata_engine_apply_mock):
         ],
     })
 
-    batch_metadata = BatchMetadata("444000444", "us-east-1", "aws")
     actual_output = logs.transformation.extract_dt_logs_from_single_record(
-        input_entry, batch_metadata)
+        input_entry, get_batch_metadata(), get_context())
 
     assert metadata_engine_apply_mock.call_count == 2
 
@@ -77,8 +84,33 @@ def test_control_message():
         ],
     })
 
-    batch_metadata = BatchMetadata("444000444", "us-east-1", "aws")
     parsed_logs = logs.transformation.extract_dt_logs_from_single_record(
-        control_record, batch_metadata)
+        control_record, get_batch_metadata(), get_context())
 
     assert len(parsed_logs) == 0
+
+
+def test_log_forwarder_setup():
+    # given
+    test_record = json.dumps({
+        "messageType": "DATA_MESSAGE",
+        "owner": "444652832050",
+        "logGroup": "API-Gateway-Execution-Logs",
+        "logStream": "2021-02-04-logstream",
+        "subscriptionFilters": ["b-SubscriptionFilter0-1I0DE5MAAFV5G"],
+        "logEvents": [
+            {
+                "id": "35958590510527767165636549608812769529777864588249006080",
+                "timestamp": "12345",
+                "message": "Test message",
+            }
+        ]
+    })
+
+    # when
+    forwarder_setup = "MyLogForwarderSetup"
+    actual_output = logs.transformation.extract_dt_logs_from_single_record(
+        test_record, get_batch_metadata(), get_context(forwarder_setup))
+
+    # then
+    assert actual_output[0]['log.forwarder.setup'] == forwarder_setup

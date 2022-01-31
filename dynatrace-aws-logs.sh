@@ -131,7 +131,8 @@ function generate_test_log()
 "timestamp": "$DATE",
 "cloud.provider": "aws",
 "content": "AWS Log Forwarder installation log",
-"severity": "INFO"
+"severity": "INFO",
+"log.forwarder.setup": "$STACK_NAME"
 }
 EOF
   }
@@ -250,7 +251,7 @@ EOF
 
   aws cloudformation deploy --stack "$STACK_NAME" --template-file "$TEMPLATE_FILE" --capabilities CAPABILITY_IAM \
     --parameter-overrides DynatraceEnvironmentUrl="$TARGET_URL" DynatraceApiKey="$TARGET_API_TOKEN" VerifySSLTargetActiveGate="$REQUIRE_VALID_CERTIFICATE" \
-    UseExistingActiveGate="$USE_EXISTING_ACTIVE_GATE" TenantId="$TENANT_ID" DynatracePaasToken="$TARGET_PAAS_TOKEN" \
+    LogForwarderSetupName="$STACK_NAME" UseExistingActiveGate="$USE_EXISTING_ACTIVE_GATE" TenantId="$TENANT_ID" DynatracePaasToken="$TARGET_PAAS_TOKEN" \
     --no-fail-on-empty-changeset
 
   LAMBDA_ARN=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" \
