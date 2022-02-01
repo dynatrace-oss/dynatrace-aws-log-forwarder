@@ -27,7 +27,7 @@ def handler(event, lambda_context):
     dt_url = os.environ.get('DYNATRACE_ENV_URL')
     dt_token = os.environ.get('DYNATRACE_API_KEY')
     verify_SSL = os.environ.get('VERIFY_SSL', 'false') == 'true'
-    dt_log_forwarder_setup = os.environ.get('LOG_FORWARDER_SETUP_NAME', "")
+    cloud_log_forwarder = os.environ.get('CLOUD_LOG_FORWARDER', "")
 
     try:
         with open('version.txt') as versionFile:
@@ -43,7 +43,7 @@ def handler(event, lambda_context):
     records = event['records']
 
     context = Context(function_name=lambda_context.function_name, dt_url=dt_url, dt_token=dt_token, debug=debug_flag,
-                      verify_SSL=verify_SSL, dt_log_forwarder_setup=dt_log_forwarder_setup)
+                      verify_SSL=verify_SSL, cloud_log_forwarder=cloud_log_forwarder)
 
     try:
         is_logs, plaintext_records = input_records_decoder.check_records_list_if_logs_end_decode(records, context)

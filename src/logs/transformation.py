@@ -57,7 +57,7 @@ def transform_single_log_entry(log_event, batch_metadata, record_metadata, conte
         'aws.region': batch_metadata.region,
         'aws.account.id': batch_metadata.account_id,
         'severity': 'INFO',
-        'log.forwarder.setup': context.dt_log_forwarder_setup
+        'cloud.log_forwarder': context.cloud_log_forwarder
     }
 
     if "timestamp" in log_event:

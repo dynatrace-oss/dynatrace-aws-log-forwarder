@@ -19,11 +19,11 @@ from logs.self_monitoring.sfm import SelfMonitoringContext
 
 class Context:
     def __init__(self, function_name: Text, dt_url: str, dt_token: str, debug: bool, verify_SSL: bool,
-                 dt_log_forwarder_setup: str):
+                 cloud_log_forwarder: str):
         self.function_name: Text = function_name
         self.dt_url = dt_url
         self.dt_token = dt_token
         self.debug: bool = debug
         self.verify_SSL: bool = verify_SSL
-        self.dt_log_forwarder_setup = dt_log_forwarder_setup
+        self.cloud_log_forwarder = cloud_log_forwarder
         self.sfm = SelfMonitoringContext(function_name)

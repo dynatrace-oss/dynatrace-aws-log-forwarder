@@ -21,13 +21,11 @@ from logs.metadata_engine.metadata_engine import MetadataEngine
 from logs.models.batch_metadata import BatchMetadata
 from util.context import Context
 
+BATCH_METADATA = BatchMetadata("444000444", "us-east-1", "aws")
+
 
 def get_context(log_forwarder_setup="log.forwarder"):
     return Context("function-name", "dt-url", "dt-token", False, False, log_forwarder_setup)
-
-
-def get_batch_metadata():
-    return BatchMetadata("444000444", "us-east-1", "aws")
 
 
 @patch.object(MetadataEngine, 'apply')
@@ -52,7 +50,7 @@ def test_metadata_engine_input(metadata_engine_apply_mock):
     })
 
     actual_output = logs.transformation.extract_dt_logs_from_single_record(
-        input_entry, get_batch_metadata(), get_context())
+        input_entry, BATCH_METADATA, get_context())
 
     assert metadata_engine_apply_mock.call_count == 2
 
@@ -85,7 +83,7 @@ def test_control_message():
     })
 
     parsed_logs = logs.transformation.extract_dt_logs_from_single_record(
-        control_record, get_batch_metadata(), get_context())
+        control_record, BATCH_METADATA, get_context())
 
     assert len(parsed_logs) == 0
 
@@ -110,7 +108,7 @@ def test_log_forwarder_setup():
     # when
     forwarder_setup = "MyLogForwarderSetup"
     actual_output = logs.transformation.extract_dt_logs_from_single_record(
-        test_record, get_batch_metadata(), get_context(forwarder_setup))
+        test_record, BATCH_METADATA, get_context(forwarder_setup))
 
     # then
-    assert actual_output[0]['log.forwarder.setup'] == forwarder_setup
+    assert actual_output[0]['cloud.log_forwarder'] == forwarder_setup

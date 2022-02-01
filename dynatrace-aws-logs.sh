@@ -123,6 +123,13 @@ arguments:
     fi
   }
 
+function get_cloud_log_forwarder()
+{
+   ACCOUNT_ID=$(aws sts get-caller-identity --query "Account")
+   REGION=$(aws configure get region)
+   echo "$ACCOUNT_ID:$REGION:$STACK_NAME"
+}
+
 function generate_test_log()
   {
   DATE=$(date --iso-8601=seconds)
@@ -132,7 +139,7 @@ function generate_test_log()
 "cloud.provider": "aws",
 "content": "AWS Log Forwarder installation log",
 "severity": "INFO",
-"log.forwarder.setup": "$STACK_NAME"
+"cloud.log_forwarder": "$(get_cloud_log_forwarder)"
 }
 EOF
   }
@@ -251,7 +258,7 @@ EOF
 
   aws cloudformation deploy --stack "$STACK_NAME" --template-file "$TEMPLATE_FILE" --capabilities CAPABILITY_IAM \
     --parameter-overrides DynatraceEnvironmentUrl="$TARGET_URL" DynatraceApiKey="$TARGET_API_TOKEN" VerifySSLTargetActiveGate="$REQUIRE_VALID_CERTIFICATE" \
-    LogForwarderSetupName="$STACK_NAME" UseExistingActiveGate="$USE_EXISTING_ACTIVE_GATE" TenantId="$TENANT_ID" DynatracePaasToken="$TARGET_PAAS_TOKEN" \
+    UseExistingActiveGate="$USE_EXISTING_ACTIVE_GATE" TenantId="$TENANT_ID" DynatracePaasToken="$TARGET_PAAS_TOKEN" \
     --no-fail-on-empty-changeset
 
   LAMBDA_ARN=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" \

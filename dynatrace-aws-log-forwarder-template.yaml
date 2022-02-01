@@ -48,9 +48,6 @@ Parameters:
     # https://aws.amazon.com/blogs/compute/query-for-the-latest-amazon-linux-ami-ids-using-aws-systems-manager-parameter-store/
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
-  LogForwarderSetupName:
-    Type: String
-    Description: "Name of log forwarder setup to distinguish logs ingested by multiple setups and published to the same tenant"
 
 Conditions:
   DeployAGwithVPC: !Equals [ !Ref UseExistingActiveGate, 'false' ]
@@ -79,7 +76,7 @@ Resources:
                 TenantId: !Ref TenantId
             - !Ref DynatraceEnvironmentUrl
           VERIFY_SSL: !Ref VerifySSLTargetActiveGate
-          LOG_FORWARDER_SETUP_NAME: !Ref LogForwarderSetupName
+          CLOUD_LOG_FORWARDER: !Sub '${AWS::AccountId}:${AWS::Region}:${AWS::StackName}'
       Role: !GetAtt LambdaRole.Arn
       VpcConfig: !If
         - DeployAGwithVPC
