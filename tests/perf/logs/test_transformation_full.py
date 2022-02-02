@@ -23,6 +23,7 @@ from logs.models.batch_metadata import BatchMetadata
 from util.context import Context
 
 BATCH_METADATA = BatchMetadata("444000444", "us-east-1", "aws")
+CONTEXT = Context("function-name", "dt-url", "dt-token", False, False, "log.forwarder")
 
 CLOUDTRAIL_USER_IDENTITY = {
     "type": "AssumedRole",
@@ -104,7 +105,7 @@ def test_full_transformation(testcase: dict):
     start_sec = time.time()
     for i in range(repeat_record):
         logs_sent = logs.transformation.extract_dt_logs_from_single_record(
-            json.dumps(record_data_decoded), BATCH_METADATA)
+            json.dumps(record_data_decoded), BATCH_METADATA, CONTEXT)
     end_sec = time.time()
 
     if time_limit_sec:
