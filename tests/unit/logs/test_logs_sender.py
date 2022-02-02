@@ -41,7 +41,7 @@ def create_log_entry_with_random_len_msg(min_length = 1, max_length = len(log_me
 class Test(TestCase):
 
     def test_prepare_serialized_batches(self):
-        context = Context("function-name", "dt-url", "dt-token", False, False)
+        context = Context("function-name", "dt-url", "dt-token", False, False, "log.forwarder")
         how_many_logs = 20000
         logs = [create_log_entry_with_random_len_msg() for x in range(how_many_logs)]
 
@@ -66,7 +66,7 @@ class Test(TestCase):
         self.assertGreater(batches_total_length, logs_total_length)
 
     def test_request_and_content_length(self):
-        context = Context("function-name", "dt-url", "dt-token", False, False)
+        context = Context("function-name", "dt-url", "dt-token", False, False, "log.forwarder")
         how_many_logs = 10
         logs = [create_log_entry_with_random_len_msg(750, 900) for x in range(how_many_logs)]
 
@@ -106,7 +106,7 @@ class Test(TestCase):
         self.assertGreater(batches_total_length, logs_total_length)
 
     def test_entries_in_batch(self):
-        context = Context("function-name", "dt-url", "dt-token", False, False)
+        context = Context("function-name", "dt-url", "dt-token", False, False, "log.forwarder")
         how_many_logs = 20000
         logs = [create_log_entry_with_random_len_msg() for x in range(how_many_logs)]
 
@@ -136,7 +136,7 @@ class Test(TestCase):
         self.assertGreater(batches_total_length, logs_total_length)
 
     def test_trim_fields(self):
-        context = Context("function-name", "dt-url", "dt-token", False, False)
+        context = Context("function-name", "dt-url", "dt-token", False, False, "log.forwarder")
         string_with_900_chars = log_message
 
         logs_sender.DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH = 600
