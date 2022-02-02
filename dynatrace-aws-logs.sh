@@ -123,13 +123,6 @@ arguments:
     fi
   }
 
-function get_cloud_log_forwarder()
-{
-   ACCOUNT_ID=$(aws sts get-caller-identity --query "Account")
-   REGION=$(aws configure get region)
-   echo "$ACCOUNT_ID:$REGION:$STACK_NAME"
-}
-
 function generate_test_log()
   {
   DATE=$(date --iso-8601=seconds)
@@ -138,8 +131,7 @@ function generate_test_log()
 "timestamp": "$DATE",
 "cloud.provider": "aws",
 "content": "AWS Log Forwarder installation log",
-"severity": "INFO",
-"cloud.log_forwarder": "$(get_cloud_log_forwarder)"
+"severity": "INFO"
 }
 EOF
   }
