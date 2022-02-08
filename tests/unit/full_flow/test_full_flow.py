@@ -28,6 +28,7 @@ import index
         "DYNATRACE_API_KEY": "token",
         "VERIFY_SSL": "false",
         "DEBUG": "false",
+        "CLOUD_LOG_FORWARDER": "444652832050:us-east-1:log_forwarder"
     })
 @pytest.mark.parametrize("testcase", [
     ({
@@ -108,3 +109,6 @@ def test_full_flow(testcase: dict):
     sent_logs = json.loads(request_body)
 
     assert len(sent_logs) == number_of_logs_expected
+
+    for log in sent_logs:
+        assert log["cloud.log_forwarder"] == "444652832050:us-east-1:log_forwarder"

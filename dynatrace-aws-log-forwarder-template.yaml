@@ -76,6 +76,7 @@ Resources:
                 TenantId: !Ref TenantId
             - !Ref DynatraceEnvironmentUrl
           VERIFY_SSL: !Ref VerifySSLTargetActiveGate
+          CLOUD_LOG_FORWARDER: !Sub '${AWS::AccountId}:${AWS::Region}:${AWS::StackName}'
       Role: !GetAtt LambdaRole.Arn
       VpcConfig: !If
         - DeployAGwithVPC
