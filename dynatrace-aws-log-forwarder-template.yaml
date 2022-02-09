@@ -747,10 +747,14 @@ Outputs:
   FirehoseArn:
     Description: "Firehose ARN"
     Value: !GetAtt FirehoseLogStreams.Arn
+    Export:
+      Name: !Join [ ":", [ !Ref "AWS::StackName", FirehoseARN ] ]
 
   CloudWatchLogsRoleArn:
     Description: "CloudWatch Logs role ARN allowing streaming to Firehose"
     Value: !GetAtt CloudWatchLogsRole.Arn
+    Export:
+      Name: !Join [ ":", [ !Ref "AWS::StackName", CloudWatchARN ] ]
 
   EC2ActiveGateHostname:
     Description: "EC2ActiveGateHostname"
