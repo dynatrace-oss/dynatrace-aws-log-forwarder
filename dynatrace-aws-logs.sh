@@ -18,8 +18,8 @@ readonly LAMBDA_ZIP_NAME="dynatrace-aws-log-forwarder-lambda.zip"
 
 readonly DEFAULT_STACK_NAME="dynatrace-aws-logs"
 
-readonly DYNATRACE_TARGET_URL_REGEX="^(https?:\/\/[-a-zA-Z0-9@:%._+~=]{1,256}\/?)(\/e\/[a-z0-9-]{36}\/?)?$"
-readonly ACTIVE_GATE_TARGET_URL_REGEX="^https:\/\/[-a-zA-Z0-9@:%._+~=]{1,256}\/e\/[-a-z0-9]{1,36}[\/]{0,1}$"
+readonly DYNATRACE_TARGET_URL_REGEX="^(https?:\/\/[-a-zA-Z0-9@:%._+~=]{1,255}\/?)(\/e\/[a-z0-9-]{36}\/?)?$"
+readonly ACTIVE_GATE_TARGET_URL_REGEX="^https:\/\/[-a-zA-Z0-9@:%._+~=]{1,255}\/e\/[-a-z0-9]{1,36}[\/]{0,1}$"
 
 function print_help_main_options {
   echo ""
@@ -263,6 +263,7 @@ EOF
      --logical-resource-id Lambda --query "StackResourceDetail.PhysicalResourceId" --output text)
     
   aws logs put-retention-policy --log-group-name "/aws/lambda/$LAMBDA_NAME" --retention-in-days 90
+  echo "${LAMBDA_NAME}"
   echo; echo "Adding log retention policy of 90 days"; echo
 
   # SHOW OUTPUTS
