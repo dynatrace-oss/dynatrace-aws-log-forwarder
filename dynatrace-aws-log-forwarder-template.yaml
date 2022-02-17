@@ -56,7 +56,7 @@ Resources:
   Lambda:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: !Join [".", [!Ref AWS::StackName, "aws-log-fwd.function"]]
+      FunctionName: !Join ["-", [!Ref AWS::StackName, "aws-log-fwd-function"]]
       Code:
         ZipFile: |
           def handler(event, context):
