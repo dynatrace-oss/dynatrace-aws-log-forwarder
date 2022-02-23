@@ -56,6 +56,7 @@ Resources:
   Lambda:
     Type: AWS::Lambda::Function
     Properties:
+      FunctionName: !Join ["-", [!Ref AWS::StackName, "aws-log-fwd-function"]]
       Code:
         ZipFile: |
           def handler(event, context):
@@ -87,6 +88,7 @@ Resources:
   LambdaRole:
     Type: AWS::IAM::Role
     Properties:
+      RoleName: !Join [".", [!Ref AWS::StackName, "aws-log-fwd.function-role"]]
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -121,7 +123,8 @@ Resources:
 
   FirehoseLogStreams:
     Type: AWS::KinesisFirehose::DeliveryStream
-    Properties:
+    Properties: 
+      DeliveryStreamName: !Join [".", [!Ref AWS::StackName, "aws-log-fwd.delivery-stream"]]
       DeliveryStreamType: DirectPut
       ExtendedS3DestinationConfiguration:
         BucketARN: !GetAtt DeliveryBucket.Arn
@@ -143,6 +146,7 @@ Resources:
   DeliveryBucket:
     Type: AWS::S3::Bucket
     Properties:
+      BucketName: !Join [".", [!Ref AWS::StackName, "aws-log-fwd.s3-bucket"]]
       LifecycleConfiguration:
         Rules:
           - ExpirationInDays: '7'
@@ -156,6 +160,7 @@ Resources:
   DeliveryStreamRole:
     Type: AWS::IAM::Role
     Properties:
+      RoleName: !Join [".", [!Ref AWS::StackName, "aws-log-fwd.delivery-stream-role"]]
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -194,6 +199,7 @@ Resources:
   CloudWatchLogsRole:
     Type: AWS::IAM::Role
     Properties:
+      RoleName: !Join [".", [!Ref AWS::StackName, "aws-log-fwd.cloudwatch-logs-role"]]
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -587,7 +593,7 @@ Resources:
       SecurityGroupIds: [ !Ref VPCSecurityGroup ]
       Tags:
         - Key: Name
-          Value: !Join [ "-", [ !Ref 'AWS::StackName', "active-gate" ] ]
+          Value: !Join [ ".", [ !Ref 'AWS::StackName', "aws-log-fwd.active-gate" ] ]
       UserData:
         Fn::Base64:
           !Sub
@@ -634,6 +640,9 @@ Resources:
       CidrBlock: "172.31.0.0/16"
       EnableDnsSupport: true
       EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: !Join [ ".", [ !Ref 'AWS::StackName', "aws-log-fwd.active-gate" ] ]
 
   VPCPublicSubnet:
     Condition: DeployAGwithVPC
@@ -643,6 +652,9 @@ Resources:
       AvailabilityZone: !Select [ 0, !GetAZs ]
       CidrBlock: 172.31.1.0/27
       MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Join [ ".", [ !Ref 'AWS::StackName', "aws-log-fwd.active-gate" ] ]
 
   VPCPrivateSubnet:
     Condition: DeployAGwithVPC
@@ -652,11 +664,18 @@ Resources:
       AvailabilityZone: !Select [ 0, !GetAZs ]
       CidrBlock: 172.31.2.0/27
       MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Join [ ".", [ !Ref 'AWS::StackName', "aws-log-fwd.active-gate" ] ]
 
   VPCInternetGateway:
     Condition: DeployAGwithVPC
     Type: AWS::EC2::InternetGateway
     DependsOn: VPC
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Join [ ".", [ !Ref 'AWS::StackName', "aws-log-fwd.active-gate" ] ]
 
   VPCInternetGatewayAttach:
     Condition: DeployAGwithVPC
@@ -664,12 +683,18 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref VPCInternetGateway
+      Tags:
+        - Key: Name
+          Value: !Join [ ".", [ !Ref 'AWS::StackName', "aws-log-fwd.active-gate" ] ]
 
   VPCNatGatewayElasticIP:
     Condition: DeployAGwithVPC
     Type: AWS::EC2::EIP
     Properties:
       Domain: VPC
+      Tags:
+        - Key: Name
+          Value: !Join [ ".", [ !Ref 'AWS::StackName', "aws-log-fwd.active-gate" ] ]
 
   VPCNatGateway:
     Condition: DeployAGwithVPC
@@ -678,12 +703,18 @@ Resources:
     Properties:
       AllocationId: !GetAtt VPCNatGatewayElasticIP.AllocationId
       SubnetId: !Ref VPCPublicSubnet
+      Tags:
+        - Key: Name
+          Value: !Join [ ".", [ !Ref 'AWS::StackName', "aws-log-fwd.active-gate" ] ]
 
   VPCPublicRouteTable:
     Condition: DeployAGwithVPC
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Join [ ".", [ !Ref 'AWS::StackName', "aws-log-fwd.active-gate" ] ]
 
   VPCPublicRouteInternet:
     Condition: DeployAGwithVPC
@@ -693,6 +724,9 @@ Resources:
       RouteTableId: !Ref VPCPublicRouteTable
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref VPCInternetGateway
+      Tags:
+        - Key: Name
+          Value: !Join [ ".", [ !Ref 'AWS::StackName', "aws-log-fwd.active-gate" ] ]
 
   VPCPublicSubnetRouteTableAssoc:
     Condition: DeployAGwithVPC
@@ -700,12 +734,18 @@ Resources:
     Properties:
       SubnetId: !Ref VPCPublicSubnet
       RouteTableId: !Ref VPCPublicRouteTable
+      Tags:
+        - Key: Name
+          Value: !Join [ ".", [ !Ref 'AWS::StackName', "aws-log-fwd.active-gate" ] ]
 
   VPCPrivateRouteTable:
     Condition: DeployAGwithVPC
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Join [ ".", [ !Ref 'AWS::StackName', "aws-log-fwd.active-gate" ] ]
 
   VPCPrivateRouteToNat:
     Condition: DeployAGwithVPC
@@ -714,6 +754,9 @@ Resources:
       RouteTableId: !Ref VPCPrivateRouteTable
       DestinationCidrBlock: 0.0.0.0/0
       NatGatewayId: !Ref VPCNatGateway
+      Tags:
+        - Key: Name
+          Value: !Join [ ".", [ !Ref 'AWS::StackName', "aws-log-fwd.active-gate" ] ]
 
   VPCPrivateSubnetRouteTableAssoc:
     Condition: DeployAGwithVPC
@@ -721,6 +764,9 @@ Resources:
     Properties:
       SubnetId: !Ref VPCPrivateSubnet
       RouteTableId: !Ref VPCPrivateRouteTable
+      Tags:
+        - Key: Name
+          Value: !Join [ ".", [ !Ref 'AWS::StackName', "aws-log-fwd.active-gate" ] ]
 
   VPCSecurityGroup:
     Condition: DeployAGwithVPC
@@ -728,6 +774,9 @@ Resources:
     Properties:
       GroupDescription: Allow ActiveGate ingress
       VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Join [ ".", [ !Ref 'AWS::StackName', "aws-log-fwd.active-gate" ] ]
 
   VPCSecurityGroupActiveGateInbound:
     Condition: DeployAGwithVPC
@@ -738,6 +787,9 @@ Resources:
       FromPort: '9999'
       ToPort: '9999'
       SourceSecurityGroupId: !GetAtt VPCSecurityGroup.GroupId
+      Tags:
+        - Key: Name
+          Value: !Join [ ".", [ !Ref 'AWS::StackName', "aws-log-fwd.active-gate" ] ]
 
 Outputs:
   LambdaArn:
