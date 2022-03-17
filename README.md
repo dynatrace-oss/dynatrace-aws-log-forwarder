@@ -17,8 +17,6 @@ See the [official project documentation](https://www.dynatrace.com/support/help/
 
 CloudWatch Log Groups are subscribed to using Subscription Filters. Their target is Kinesis Data Firehose to which logs are streamed. It aggregates them into batches and sends those batches to a Lambda function for processing. The function processes the received logs and forwards them through Active Gate to Dynatrace Logs API.
 
-Active Gate is required to forward logs to your Dynatrace cluster. You can run it in the same region as the AWS stack or anywhere else as long as you ensure connectivity (especially: open port 9999). In order to install an Active Gate, follow [this instruction](https://www.dynatrace.com/support/help/setup-and-configuration/dynatrace-activegate/installation/install-an-environment-activegate/).
-
 ![Architecture](./img/architecture.png)
 
 
