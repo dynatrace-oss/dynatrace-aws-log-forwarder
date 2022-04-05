@@ -683,15 +683,12 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref VPCInternetGateway
-      Tags:
-        - Key: Name
-          Value: !Join [ ".", [ !Ref 'AWS::StackName', "aws-log-fwd.active-gate" ] ]
 
   VPCNatGatewayElasticIP:
     Condition: DeployAGwithVPC
     Type: AWS::EC2::EIP
     Properties:
-      Domain: VPC
+      Domain: vpc
       Tags:
         - Key: Name
           Value: !Join [ ".", [ !Ref 'AWS::StackName', "aws-log-fwd.active-gate" ] ]
@@ -699,7 +696,6 @@ Resources:
   VPCNatGateway:
     Condition: DeployAGwithVPC
     Type: "AWS::EC2::NatGateway"
-    DependsOn: VPCNatGatewayElasticIP
     Properties:
       AllocationId: !GetAtt VPCNatGatewayElasticIP.AllocationId
       SubnetId: !Ref VPCPublicSubnet
@@ -724,9 +720,6 @@ Resources:
       RouteTableId: !Ref VPCPublicRouteTable
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref VPCInternetGateway
-      Tags:
-        - Key: Name
-          Value: !Join [ ".", [ !Ref 'AWS::StackName', "aws-log-fwd.active-gate" ] ]
 
   VPCPublicSubnetRouteTableAssoc:
     Condition: DeployAGwithVPC
@@ -734,9 +727,6 @@ Resources:
     Properties:
       SubnetId: !Ref VPCPublicSubnet
       RouteTableId: !Ref VPCPublicRouteTable
-      Tags:
-        - Key: Name
-          Value: !Join [ ".", [ !Ref 'AWS::StackName', "aws-log-fwd.active-gate" ] ]
 
   VPCPrivateRouteTable:
     Condition: DeployAGwithVPC
@@ -754,9 +744,6 @@ Resources:
       RouteTableId: !Ref VPCPrivateRouteTable
       DestinationCidrBlock: 0.0.0.0/0
       NatGatewayId: !Ref VPCNatGateway
-      Tags:
-        - Key: Name
-          Value: !Join [ ".", [ !Ref 'AWS::StackName', "aws-log-fwd.active-gate" ] ]
 
   VPCPrivateSubnetRouteTableAssoc:
     Condition: DeployAGwithVPC
@@ -764,9 +751,6 @@ Resources:
     Properties:
       SubnetId: !Ref VPCPrivateSubnet
       RouteTableId: !Ref VPCPrivateRouteTable
-      Tags:
-        - Key: Name
-          Value: !Join [ ".", [ !Ref 'AWS::StackName', "aws-log-fwd.active-gate" ] ]
 
   VPCSecurityGroup:
     Condition: DeployAGwithVPC
@@ -787,9 +771,6 @@ Resources:
       FromPort: '9999'
       ToPort: '9999'
       SourceSecurityGroupId: !GetAtt VPCSecurityGroup.GroupId
-      Tags:
-        - Key: Name
-          Value: !Join [ ".", [ !Ref 'AWS::StackName', "aws-log-fwd.active-gate" ] ]
 
 Outputs:
   LambdaArn:
