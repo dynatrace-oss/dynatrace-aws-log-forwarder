@@ -688,7 +688,7 @@ Resources:
     Condition: DeployAGwithVPC
     Type: AWS::EC2::EIP
     Properties:
-      Domain: vpc
+      Domain: VPC
       Tags:
         - Key: Name
           Value: !Join [ ".", [ !Ref 'AWS::StackName', "aws-log-fwd.active-gate" ] ]
