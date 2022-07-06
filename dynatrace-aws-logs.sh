@@ -56,7 +56,7 @@ case $MAIN_OPTION in
 
   function print_help_deploy {
     printf "
-usage: dynatrace-aws-logs.sh deploy --target-url TARGET_URL --target-api-token TARGET_API_TOKEN --use-existing-active-gate {true|false} [--target-paas-token TARGET_PAAS_TOKEN] [--require-valid-certificate {true|false}] [--stack-name STACK_NAME]
+usage: dynatrace-aws-logs.sh deploy --target-url TARGET_URL --target-api-token TARGET_API_TOKEN [--use-existing-active-gate {true|false}] [--target-paas-token TARGET_PAAS_TOKEN] [--require-valid-certificate {true|false}] [--stack-name STACK_NAME]
 
 arguments:
   -h, --help            show this help message and exit
@@ -204,7 +204,7 @@ EOF
   if [ -z "$TARGET_API_TOKEN" ]; then echo "No --target-api-token"; print_help_deploy; exit 1; fi
   if [ -z "$REQUIRE_VALID_CERTIFICATE" ]; then REQUIRE_VALID_CERTIFICATE="false"; fi
   if [ -z "$STACK_NAME" ]; then STACK_NAME=$DEFAULT_STACK_NAME; fi
-  if [ -z "$USE_EXISTING_ACTIVE_GATE" ]; then echo "No --use-existing-active-gate"; print_help_deploy; exit 1; fi
+  if [ -z "$USE_EXISTING_ACTIVE_GATE" ]; then USE_EXISTING_ACTIVE_GATE="true"; fi
 
   if [[ "$REQUIRE_VALID_CERTIFICATE" != "true" ]] && [[ "$REQUIRE_VALID_CERTIFICATE" != "false" ]];
     then echo "Invalid value for parameter --require-valid-certificate. Provide 'true' or 'false'"; print_help_deploy; exit 1; fi
