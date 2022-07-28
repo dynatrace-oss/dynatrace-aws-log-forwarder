@@ -224,7 +224,9 @@ EOF
     then echo "Invalid value for parameter --use-existing-active-gate. Provide 'true' or 'false'"; print_help_deploy; exit 1; fi
   if [[ "$USE_EXISTING_ACTIVE_GATE" == "false" ]] && [ -z "$TARGET_PAAS_TOKEN" ];
     then echo "No --target-paas-token"; print_help_deploy; exit 1; fi
-  if ! [[ $$MAX_LOG_CONTENT_LENGTH =~ '^[0-9]+$' ]];
+    
+  IS_NUMBER_REGEX="^[0-9]+$"
+  if ! [[ $MAX_LOG_CONTENT_LENGTH =~ $IS_NUMBER_REGEX ]];
     then echo "Invalid value for parameter --max-log-length. Please provide an integer."; print_help_deploy; exit 1; fi
 
   if [[ "$USE_EXISTING_ACTIVE_GATE" == "false" ]]; then
