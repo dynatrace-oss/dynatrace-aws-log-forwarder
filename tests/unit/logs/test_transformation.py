@@ -25,7 +25,7 @@ BATCH_METADATA = BatchMetadata("444000444", "us-east-1", "aws")
 
 
 def get_context(log_forwarder_setup="log.forwarder"):
-    return Context("function-name", "dt-url", "dt-token", False, False, log_forwarder_setup)
+    return Context("function-name", "dt-url", "dt-token", False, False, log_forwarder_setup, 8192)
 
 
 @patch.object(MetadataEngine, 'apply')

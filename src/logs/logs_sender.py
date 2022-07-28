@@ -24,7 +24,6 @@ ENCODING = "utf-8"
 LOGS_API_PATH = "/api/v2/logs/ingest"
 
 DYNATRACE_LOG_INGEST_CONTENT_MARK_TRIMMED = "[TRUNCATED]"
-DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH = 8192
 DYNATRACE_LOG_INGEST_ATTRIBUTE_MAX_LENGTH = 250
 DYNATRACE_LOG_INGEST_REQUEST_MAX_SIZE = 1048576  # 1MB
 DYNATRACE_LOG_INGEST_MAX_RECORD_AGE = 86340  # 1 day
@@ -146,9 +145,9 @@ def ensure_fields_length(log_entry, context):
 def ensure_content_length(log_entry, context):
     log_content = log_entry.get("content", "")
     log_content_len = len(log_content)
-    if log_content_len > DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH:
+    if log_content_len > context.max_log_length:
         context.sfm.log_content_trimmed()
-        trimmed_len = DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH - len(DYNATRACE_LOG_INGEST_CONTENT_MARK_TRIMMED)
+        trimmed_len = context.max_log_length - len(DYNATRACE_LOG_INGEST_CONTENT_MARK_TRIMMED)
         log_entry["content"] = log_content[0: trimmed_len] + DYNATRACE_LOG_INGEST_CONTENT_MARK_TRIMMED
 
 

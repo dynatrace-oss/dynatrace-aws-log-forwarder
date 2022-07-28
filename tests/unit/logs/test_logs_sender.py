@@ -41,7 +41,7 @@ def create_log_entry_with_random_len_msg(min_length = 1, max_length = len(log_me
 class Test(TestCase):
 
     def test_prepare_serialized_batches(self):
-        context = Context("function-name", "dt-url", "dt-token", False, False, "log.forwarder")
+        context = Context("function-name", "dt-url", "dt-token", False, False, "log.forwarder", 8192)
         how_many_logs = 20000
         logs = [create_log_entry_with_random_len_msg() for x in range(how_many_logs)]
 
@@ -66,11 +66,10 @@ class Test(TestCase):
         self.assertGreater(batches_total_length, logs_total_length)
 
     def test_request_and_content_length(self):
-        context = Context("function-name", "dt-url", "dt-token", False, False, "log.forwarder")
+        context = Context("function-name", "dt-url", "dt-token", False, False, "log.forwarder", 50)
         how_many_logs = 10
         logs = [create_log_entry_with_random_len_msg(750, 900) for x in range(how_many_logs)]
 
-        logs_sender.DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH = 50
         logs_sender.DYNATRACE_LOG_INGEST_REQUEST_MAX_SIZE = 115
 
         batches = logs_sender.prepare_batches(logs, context)
@@ -85,7 +84,7 @@ class Test(TestCase):
             for entry in entries:
                 content_len = len(entry["content"])
                 self.assertTrue(content_len == 50)
-                self.assertTrue(content_len <= logs_sender.DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH)
+                self.assertTrue(content_len <= context.max_log_length)
                 self.assertTrue(entry["content"] == 'WALTHAM, Mass.--(BUSINESS WIRE)-- Softw[TRUNCATED]')
 
             self.assertTrue(len(batch.serialized_json) <= logs_sender.DYNATRACE_LOG_INGEST_REQUEST_MAX_SIZE)
@@ -106,11 +105,10 @@ class Test(TestCase):
         self.assertGreater(batches_total_length, logs_total_length)
 
     def test_entries_in_batch(self):
-        context = Context("function-name", "dt-url", "dt-token", False, False, "log.forwarder")
+        context = Context("function-name", "dt-url", "dt-token", False, False, "log.forwarder", 500)
         how_many_logs = 20000
         logs = [create_log_entry_with_random_len_msg() for x in range(how_many_logs)]
 
-        logs_sender.DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH = 500
         logs_sender.DYNATRACE_LOG_INGEST_MAX_ENTRIES_COUNT = 2
         batches = logs_sender.prepare_batches(logs, context)
 
@@ -136,13 +134,12 @@ class Test(TestCase):
         self.assertGreater(batches_total_length, logs_total_length)
 
     def test_trim_fields(self):
-        context = Context("function-name", "dt-url", "dt-token", False, False, "log.forwarder")
+        context = Context("function-name", "dt-url", "dt-token", False, False, "log.forwarder", 600)
         string_with_900_chars = log_message
 
-        logs_sender.DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH = 600
         # sanity checks
         self.assertTrue(len(string_with_900_chars) > logs_sender.DYNATRACE_LOG_INGEST_ATTRIBUTE_MAX_LENGTH)
-        self.assertTrue(len(string_with_900_chars) > logs_sender.DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH)
+        self.assertTrue(len(string_with_900_chars) > context.max_log_length)
 
         log_entry = create_log_entry_with_random_len_msg()
         log_entry["timestamp"] = string_with_900_chars
@@ -157,7 +154,7 @@ class Test(TestCase):
 
         self.assertTrue(log_entry["timestamp"] == string_with_900_chars)
         self.assertTrue(log_entry["severity"] == string_with_900_chars)
-        self.assertTrue(len(log_entry["content"]) == logs_sender.DYNATRACE_LOG_INGEST_CONTENT_MAX_LENGTH)
+        self.assertTrue(len(log_entry["content"]) == context.max_log_length)
         self.assertTrue(len(log_entry["cloud.provider"]) == logs_sender.DYNATRACE_LOG_INGEST_ATTRIBUTE_MAX_LENGTH)
         self.assertTrue(len(log_entry["aws.service"]) == logs_sender.DYNATRACE_LOG_INGEST_ATTRIBUTE_MAX_LENGTH)
         self.assertTrue(len(log_entry["someMetadataYetUnknown"]) == logs_sender.DYNATRACE_LOG_INGEST_ATTRIBUTE_MAX_LENGTH)

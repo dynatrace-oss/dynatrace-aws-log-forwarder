@@ -19,7 +19,7 @@ from logs.self_monitoring.sfm import SelfMonitoringContext
 
 class Context:
     def __init__(self, function_name: Text, dt_url: str, dt_token: str, debug: bool, verify_SSL: bool,
-                 cloud_log_forwarder: str):
+                 cloud_log_forwarder: str, max_log_content_length: int):
         self.function_name: Text = function_name
         self.dt_url = dt_url
         self.dt_token = dt_token
@@ -27,3 +27,4 @@ class Context:
         self.verify_SSL: bool = verify_SSL
         self.cloud_log_forwarder = cloud_log_forwarder
         self.sfm = SelfMonitoringContext(function_name)
+        self.max_log_length = max_log_content_length

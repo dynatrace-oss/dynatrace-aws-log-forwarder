@@ -30,6 +30,10 @@ Parameters:
     Default: 'false'
     Description: "If false, expect target ActiveGate to have a self-signed SSL certificate and do not verify its validity"
     Type: String
+  MaxLogContentLength:
+    Type: Number
+    MinValue: 1
+    MaxValue: 65536
   UseExistingActiveGate:
     Type: String
     AllowedValues:
@@ -77,6 +81,7 @@ Resources:
                 TenantId: !Ref TenantId
             - !Ref DynatraceEnvironmentUrl
           VERIFY_SSL: !Ref VerifySSLTargetActiveGate
+          MAX_LOG_CONTENT_LENGTH: !Ref MaxLogContentLength
           CLOUD_LOG_FORWARDER: !Sub '${AWS::AccountId}:${AWS::Region}:${AWS::StackName}'
       Role: !GetAtt LambdaRole.Arn
       VpcConfig: !If

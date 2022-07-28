@@ -22,7 +22,7 @@ from logs.models.batch_metadata import BatchMetadata
 from util.context import Context
 
 BATCH_METADATA = BatchMetadata("444000444", "us-east-1", "aws")
-CONTEXT = Context("function-name", "dt-url", "dt-token", False, False, "log.forwarder")
+CONTEXT = Context("function-name", "dt-url", "dt-token", False, False, "log.forwarder", 8192)
 
 CLOUDTRAIL_USER_IDENTITY = {
     "type": "AssumedRole",
