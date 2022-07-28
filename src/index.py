@@ -23,12 +23,6 @@ from util.logging import log_error_with_stacktrace, log_multiline_message
 
 
 def handler(event, lambda_context):
-    debug_flag = os.environ.get('DEBUG', 'false') == 'true'
-    dt_url = os.environ.get('DYNATRACE_ENV_URL')
-    dt_token = os.environ.get('DYNATRACE_API_KEY')
-    verify_SSL = os.environ.get('VERIFY_SSL', 'false') == 'true'
-    cloud_log_forwarder = os.environ.get('CLOUD_LOG_FORWARDER', "")
-    max_log_content_length = os.environ.get("MAX_LOG_CONTENT_LENGTH", 8192)
 
     try:
         with open('version.txt') as versionFile:
@@ -39,13 +33,9 @@ def handler(event, lambda_context):
 
     log_multiline_message("LOG FORWARDER version=" + version, "handler")
 
-    ensure_credentials_provided(dt_token, dt_url)
+    context = get_context(lambda_context)
 
     records = event['records']
-
-    context = Context(function_name=lambda_context.function_name, dt_url=dt_url, dt_token=dt_token, debug=debug_flag,
-                      verify_SSL=verify_SSL, cloud_log_forwarder=cloud_log_forwarder,
-                      max_log_content_length=max_log_content_length)
 
     try:
         is_logs, plaintext_records = input_records_decoder.check_records_list_if_logs_end_decode(records, context)
@@ -73,6 +63,22 @@ def handler(event, lambda_context):
                                    "sfm-push-exception")
 
     return kinesis_data_transformation_response(records, result)
+
+
+def get_context(lambda_context):
+    debug_flag = os.environ.get('DEBUG', 'false') == 'true'
+    dt_url = os.environ.get('DYNATRACE_ENV_URL')
+    dt_token = os.environ.get('DYNATRACE_API_KEY')
+    verify_SSL = os.environ.get('VERIFY_SSL', 'false') == 'true'
+    cloud_log_forwarder = os.environ.get('CLOUD_LOG_FORWARDER', "")
+    max_log_content_length = os.environ.get("MAX_LOG_CONTENT_LENGTH", 8192)
+
+    ensure_credentials_provided(dt_token, dt_url)
+
+    context = Context(function_name=lambda_context.function_name, dt_url=dt_url, dt_token=dt_token, debug=debug_flag,
+                      verify_SSL=verify_SSL, cloud_log_forwarder=cloud_log_forwarder,
+                      max_log_content_length=max_log_content_length)
+    return context
 
 
 def read_batch_metadata(event):
