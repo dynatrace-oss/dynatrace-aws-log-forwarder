@@ -21,6 +21,9 @@ readonly DEFAULT_STACK_NAME="dynatrace-aws-logs"
 readonly DYNATRACE_TARGET_URL_REGEX="^(https?:\/\/[-a-zA-Z0-9@:%._+~=]{1,255}\/?)(\/e\/[a-z0-9-]{36}\/?)?$"
 readonly ACTIVE_GATE_TARGET_URL_REGEX="^https:\/\/[-a-zA-Z0-9@:%._+~=]{1,255}\/e\/[-a-z0-9]{1,36}[\/]{0,1}$"
 
+readonly IS_NUMBER_REGEX="^[0-9]+$"
+readonly LOG_CONTENT_LENGTH_MIN_VALUE=20
+
 function print_help_main_options {
   echo ""
   printf \
@@ -78,9 +81,9 @@ arguments:
                         Enables checking SSL certificate of the target Active Gate. By default (if this option is not provided) certificates aren't validated
   --stack-name STACK_NAME
                         Optional. The name for the CloudFormation stack in which the resources will be deployed. This defaults to \"$DEFAULT_STACK_NAME\"
-  --max-log-length [number]
+  --max-log-length MAX_LOG_CONTENT_LENGTH
                         Optional, defaults to 8192. Defines the max log length after which a log will be truncated.
-                        Requires a cluster side change for values over X - see the doc TODO
+                        Requires a cluster side change for values over 8192 (Manage -> Settings -> Internal -> Indexed Log Storage Settings -> Event content maximum byte size).
 "
   }
 
@@ -224,8 +227,7 @@ EOF
     then echo "Invalid value for parameter --use-existing-active-gate. Provide 'true' or 'false'"; print_help_deploy; exit 1; fi
   if [[ "$USE_EXISTING_ACTIVE_GATE" == "false" ]] && [ -z "$TARGET_PAAS_TOKEN" ];
     then echo "No --target-paas-token"; print_help_deploy; exit 1; fi
-    
-  IS_NUMBER_REGEX="^[0-9]+$"
+
   if ! [[ $MAX_LOG_CONTENT_LENGTH =~ $IS_NUMBER_REGEX ]];
     then echo "Invalid value for parameter --max-log-length. Please provide an integer."; print_help_deploy; exit 1; fi
 

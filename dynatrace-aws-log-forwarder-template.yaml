@@ -32,7 +32,7 @@ Parameters:
     Type: String
   MaxLogContentLength:
     Type: Number
-    MinValue: 1
+    MinValue: 20
     MaxValue: 65536
   UseExistingActiveGate:
     Type: String
