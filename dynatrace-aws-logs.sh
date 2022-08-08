@@ -266,7 +266,7 @@ EOF
 
   echo "Deploying stack $STACK_NAME. This might take up to 10 minutes."
 
-  aws cloudformation deploy --stack "$STACK_NAME" --template-file "$TEMPLATE_FILE" --capabilities CAPABILITY_NAMED_IAM \
+  aws cloudformation deploy --stack "$STACK_NAME" --template-file "$TEMPLATE_FILE" --capabilities CAPABILITY_IAM \
     --parameter-overrides DynatraceEnvironmentUrl="$TARGET_URL" DynatraceApiKey="$TARGET_API_TOKEN" VerifySSLTargetActiveGate="$REQUIRE_VALID_CERTIFICATE" \
     UseExistingActiveGate="$USE_EXISTING_ACTIVE_GATE" TenantId="$TENANT_ID" DynatracePaasToken="$TARGET_PAAS_TOKEN" \
     MaxLogContentLength="$MAX_LOG_CONTENT_LENGTH" --no-fail-on-empty-changeset
