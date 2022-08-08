@@ -83,7 +83,7 @@ arguments:
                         Optional. The name for the CloudFormation stack in which the resources will be deployed. This defaults to \"$DEFAULT_STACK_NAME\"
   --max-log-length MAX_LOG_CONTENT_LENGTH
                         Optional, defaults to 8192. Defines the max log length after which a log will be truncated.
-                        Requires a cluster side change for values over 8192 (Manage -> Settings -> Internal -> Indexed Log Storage Settings -> Event content maximum byte size).
+                        For values over 8192 there's also a change in Dynatrace settings needed. For that you need to contact Dynatrace One.
 "
   }
 
