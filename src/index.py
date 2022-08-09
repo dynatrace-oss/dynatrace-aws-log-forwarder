@@ -16,7 +16,7 @@ import os
 from enum import Enum
 
 from logs import input_records_decoder, main
-from logs.logs_sender import CallThrottlingException
+from logs.logs_sender import CallThrottlingException, DYNATRACE_LOG_INGEST_CONTENT_DEFAULT_MAX_LENGTH
 from logs.models.batch_metadata import BatchMetadata
 from util.context import Context
 from util.logging import log_error_with_stacktrace, log_multiline_message
@@ -71,7 +71,8 @@ def get_context(lambda_context):
     dt_token = os.environ.get('DYNATRACE_API_KEY')
     verify_SSL = os.environ.get('VERIFY_SSL', 'false') == 'true'
     cloud_log_forwarder = os.environ.get('CLOUD_LOG_FORWARDER', "")
-    max_log_content_length = int(os.environ.get("MAX_LOG_CONTENT_LENGTH", 8192))
+    max_log_content_length = \
+        int(os.environ.get("MAX_LOG_CONTENT_LENGTH", DYNATRACE_LOG_INGEST_CONTENT_DEFAULT_MAX_LENGTH))
 
     ensure_credentials_provided(dt_token, dt_url)
 
