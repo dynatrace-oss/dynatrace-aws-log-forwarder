@@ -14,9 +14,8 @@
 
 from unittest import TestCase
 from logs import input_records_decoder
+from logs.logs_sender import DYNATRACE_LOG_INGEST_CONTENT_DEFAULT_MAX_LENGTH
 from util.context import Context
-
-from src.logs.logs_sender import DYNATRACE_LOG_INGEST_CONTENT_DEFAULT_MAX_LENGTH
 
 
 class Test(TestCase):

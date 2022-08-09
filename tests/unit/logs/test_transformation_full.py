@@ -19,9 +19,8 @@ import pytest
 import logs.main
 import logs.transformation
 from logs.models.batch_metadata import BatchMetadata
+from logs.logs_sender import DYNATRACE_LOG_INGEST_CONTENT_DEFAULT_MAX_LENGTH
 from util.context import Context
-
-from src.logs.logs_sender import DYNATRACE_LOG_INGEST_CONTENT_DEFAULT_MAX_LENGTH
 
 BATCH_METADATA = BatchMetadata("444000444", "us-east-1", "aws")
 CONTEXT = Context("fun-name", "dt-url", "dt-token", False, False, "log.forwarder",

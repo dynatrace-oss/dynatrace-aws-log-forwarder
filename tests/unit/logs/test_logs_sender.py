@@ -19,8 +19,6 @@ from unittest import TestCase
 from logs import logs_sender
 from util.context import Context
 
-from src.logs.logs_sender import DYNATRACE_LOG_INGEST_CONTENT_DEFAULT_MAX_LENGTH
-
 DYNATRACE_LOG_INGEST_REQUEST_MAX_SIZE = 1048576
 
 log_message = "WALTHAM, Mass.--(BUSINESS WIRE)-- Software intelligence company Dynatrace (NYSE: DT) announced today its entry into the cloud application security market with the addition of a new module to its industry-leading Software Intelligence Platform. The Dynatrace® Application Security Module provides continuous runtime application self-protection (RASP) capabilities for applications in production as well as preproduction and is optimized for Kubernetes architectures and DevSecOps approaches. This module inherits the automation, AI, scalability, and enterprise-grade robustness of the Dynatrace® Software Intelligence Platform and extends it to modern cloud RASP use cases. Dynatrace customers can launch this module with the flip of a switch, empowering the world’s leading organizations currently using the Dynatrace platform to immediately increase security coverage and precision.;"
@@ -44,7 +42,7 @@ class Test(TestCase):
 
     def test_prepare_serialized_batches(self):
         context = Context("function-name", "dt-url", "dt-token", False, False, "log.forwarder",
-                          DYNATRACE_LOG_INGEST_CONTENT_DEFAULT_MAX_LENGTH)
+                          logs_sender.DYNATRACE_LOG_INGEST_CONTENT_DEFAULT_MAX_LENGTH)
         how_many_logs = 20000
         logs = [create_log_entry_with_random_len_msg() for x in range(how_many_logs)]
 

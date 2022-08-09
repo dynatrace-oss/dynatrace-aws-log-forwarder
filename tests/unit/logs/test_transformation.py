@@ -19,9 +19,8 @@ import logs.main
 import logs.transformation
 from logs.metadata_engine.metadata_engine import MetadataEngine
 from logs.models.batch_metadata import BatchMetadata
+from logs.logs_sender import DYNATRACE_LOG_INGEST_CONTENT_DEFAULT_MAX_LENGTH
 from util.context import Context
-
-from src.logs.logs_sender import DYNATRACE_LOG_INGEST_CONTENT_DEFAULT_MAX_LENGTH
 
 BATCH_METADATA = BatchMetadata("444000444", "us-east-1", "aws")
 
