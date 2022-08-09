@@ -24,7 +24,7 @@ from util.context import Context
 from src.logs.logs_sender import DYNATRACE_LOG_INGEST_CONTENT_DEFAULT_MAX_LENGTH
 
 BATCH_METADATA = BatchMetadata("444000444", "us-east-1", "aws")
-CONTEXT = Context("function-name", "dt-url", "dt-token", False, False, "log.forwarder",
+CONTEXT = Context("fun-name", "dt-url", "dt-token", False, False, "log.forwarder",
                   DYNATRACE_LOG_INGEST_CONTENT_DEFAULT_MAX_LENGTH)
 
 CLOUDTRAIL_USER_IDENTITY = {
