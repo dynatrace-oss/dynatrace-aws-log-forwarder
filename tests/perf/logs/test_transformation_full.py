@@ -20,10 +20,12 @@ import pytest
 import logs.main
 import logs.transformation
 from logs.models.batch_metadata import BatchMetadata
+from logs.logs_sender import DYNATRACE_LOG_INGEST_CONTENT_DEFAULT_MAX_LENGTH
 from util.context import Context
 
 BATCH_METADATA = BatchMetadata("444000444", "us-east-1", "aws")
-CONTEXT = Context("function-name", "dt-url", "dt-token", False, False, "log.forwarder")
+CONTEXT = Context("function-name", "dt-url", "dt-token", False, False, "log.forwarder",
+                  DYNATRACE_LOG_INGEST_CONTENT_DEFAULT_MAX_LENGTH)
 
 CLOUDTRAIL_USER_IDENTITY = {
     "type": "AssumedRole",

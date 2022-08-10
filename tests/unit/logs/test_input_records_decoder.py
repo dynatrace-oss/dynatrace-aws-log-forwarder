@@ -14,6 +14,7 @@
 
 from unittest import TestCase
 from logs import input_records_decoder
+from logs.logs_sender import DYNATRACE_LOG_INGEST_CONTENT_DEFAULT_MAX_LENGTH
 from util.context import Context
 
 
@@ -34,7 +35,8 @@ class Test(TestCase):
         ]
 
         is_logs, decoded_records = input_records_decoder.check_records_list_if_logs_end_decode(
-            records, Context("function-name", "dt-url", "dt-token", False, False, "log.forwarder"))
+            records, Context("function-name", "dt-url", "dt-token", False, False, "log.forwarder",
+                             DYNATRACE_LOG_INGEST_CONTENT_DEFAULT_MAX_LENGTH))
 
         self.assertTrue(is_logs)
 
@@ -45,7 +47,8 @@ class Test(TestCase):
         self.assertEqual(decoded_records[1], expected_second)
 
     def test_check_records_list_if_logs_end_decode_not_logs(self):
-        context = Context("function-name", "dt-url", "dt-token", False, False, "log.forwarder")
+        context = Context("function-name", "dt-url", "dt-token", False, False, "log.forwarder",
+                          DYNATRACE_LOG_INGEST_CONTENT_DEFAULT_MAX_LENGTH)
 
         records = [
             {

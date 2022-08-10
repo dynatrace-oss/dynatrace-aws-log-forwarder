@@ -21,6 +21,9 @@ readonly DEFAULT_STACK_NAME="dynatrace-aws-logs"
 readonly DYNATRACE_TARGET_URL_REGEX="^(https?:\/\/[-a-zA-Z0-9@:%._+~=]{1,255}\/?)(\/e\/[a-z0-9-]{36}\/?)?$"
 readonly ACTIVE_GATE_TARGET_URL_REGEX="^https:\/\/[-a-zA-Z0-9@:%._+~=]{1,255}\/e\/[-a-z0-9]{1,36}[\/]{0,1}$"
 
+readonly IS_NUMBER_REGEX="^[0-9]+$"
+readonly LOG_CONTENT_LENGTH_MIN_VALUE=20
+
 function print_help_main_options {
   echo ""
   printf \
@@ -78,13 +81,16 @@ arguments:
                         Enables checking SSL certificate of the target Active Gate. By default (if this option is not provided) certificates aren't validated
   --stack-name STACK_NAME
                         Optional. The name for the CloudFormation stack in which the resources will be deployed. This defaults to \"$DEFAULT_STACK_NAME\"
+  --max-log-length MAX_LOG_CONTENT_LENGTH
+                        Optional, defaults to 8192. Defines the max log length after which a log will be truncated.
+                        For values over 8192 there's also a change in Dynatrace settings needed. For that you need to contact Dynatrace One.
 "
   }
 
   function print_params_deploy {
     echo
     echo "Deployment script will use following parameters:"
-    echo "TARGET_URL=\"$TARGET_URL\", TARGET_API_TOKEN=*****, USE_EXISTING_ACTIVE_GATE=\"$USE_EXISTING_ACTIVE_GATE\", TARGET_PAAS_TOKEN=*****, REQUIRE_VALID_CERTIFICATE=\"$REQUIRE_VALID_CERTIFICATE\", STACK_NAME=\"$STACK_NAME\""
+    echo "TARGET_URL=\"$TARGET_URL\", TARGET_API_TOKEN=*****, USE_EXISTING_ACTIVE_GATE=\"$USE_EXISTING_ACTIVE_GATE\", TARGET_PAAS_TOKEN=*****, REQUIRE_VALID_CERTIFICATE=\"$REQUIRE_VALID_CERTIFICATE\", STACK_NAME=\"$STACK_NAME\", MAX_LOG_CONTENT_LENGTH=\"$MAX_LOG_CONTENT_LENGTH\""
   }
 
   function ensure_param_value_given {
@@ -191,6 +197,12 @@ EOF
         shift;shift;
       ;;
 
+      "--max-log-length")
+        ensure_param_value_given $1 $2
+        MAX_LOG_CONTENT_LENGTH=$2
+        shift;shift;
+      ;;
+
       "-h" | "--help")
         print_help_deploy
         shift; exit 0
@@ -207,6 +219,7 @@ EOF
   if [ -z "$REQUIRE_VALID_CERTIFICATE" ]; then REQUIRE_VALID_CERTIFICATE="false"; fi
   if [ -z "$STACK_NAME" ]; then STACK_NAME=$DEFAULT_STACK_NAME; fi
   if [ -z "$USE_EXISTING_ACTIVE_GATE" ]; then USE_EXISTING_ACTIVE_GATE="true"; fi
+  if [ -z "$MAX_LOG_CONTENT_LENGTH" ]; then MAX_LOG_CONTENT_LENGTH=8192; fi
 
   if [[ "$REQUIRE_VALID_CERTIFICATE" != "true" ]] && [[ "$REQUIRE_VALID_CERTIFICATE" != "false" ]];
     then echo "Invalid value for parameter --require-valid-certificate. Provide 'true' or 'false'"; print_help_deploy; exit 1; fi
@@ -214,6 +227,9 @@ EOF
     then echo "Invalid value for parameter --use-existing-active-gate. Provide 'true' or 'false'"; print_help_deploy; exit 1; fi
   if [[ "$USE_EXISTING_ACTIVE_GATE" == "false" ]] && [ -z "$TARGET_PAAS_TOKEN" ];
     then echo "No --target-paas-token"; print_help_deploy; exit 1; fi
+
+  if ! [[ $MAX_LOG_CONTENT_LENGTH =~ $IS_NUMBER_REGEX ]];
+    then echo "Invalid value for parameter --max-log-length. Please provide an integer."; print_help_deploy; exit 1; fi
 
   if [[ "$USE_EXISTING_ACTIVE_GATE" == "false" ]]; then
     # extract tenantID: https://<your_environment_ID>.live.dynatrace.com ==> <your_environment_ID>
@@ -253,7 +269,7 @@ EOF
   aws cloudformation deploy --stack "$STACK_NAME" --template-file "$TEMPLATE_FILE" --capabilities CAPABILITY_IAM \
     --parameter-overrides DynatraceEnvironmentUrl="$TARGET_URL" DynatraceApiKey="$TARGET_API_TOKEN" VerifySSLTargetActiveGate="$REQUIRE_VALID_CERTIFICATE" \
     UseExistingActiveGate="$USE_EXISTING_ACTIVE_GATE" TenantId="$TENANT_ID" DynatracePaasToken="$TARGET_PAAS_TOKEN" \
-    --no-fail-on-empty-changeset
+    MaxLogContentLength="$MAX_LOG_CONTENT_LENGTH" --no-fail-on-empty-changeset
 
   LAMBDA_ARN=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" \
      --query "Stacks[0].Outputs[?OutputKey=='LambdaArn'][OutputValue]" --output text)

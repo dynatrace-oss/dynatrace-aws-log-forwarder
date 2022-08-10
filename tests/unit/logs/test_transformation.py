@@ -19,13 +19,15 @@ import logs.main
 import logs.transformation
 from logs.metadata_engine.metadata_engine import MetadataEngine
 from logs.models.batch_metadata import BatchMetadata
+from logs.logs_sender import DYNATRACE_LOG_INGEST_CONTENT_DEFAULT_MAX_LENGTH
 from util.context import Context
 
 BATCH_METADATA = BatchMetadata("444000444", "us-east-1", "aws")
 
 
 def get_context(log_forwarder_setup="log.forwarder"):
-    return Context("function-name", "dt-url", "dt-token", False, False, log_forwarder_setup)
+    return Context("function-name", "dt-url", "dt-token", False, False, log_forwarder_setup,
+                   DYNATRACE_LOG_INGEST_CONTENT_DEFAULT_MAX_LENGTH)
 
 
 @patch.object(MetadataEngine, 'apply')
