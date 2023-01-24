@@ -15,7 +15,7 @@ See the [official project documentation](https://www.dynatrace.com/support/help/
 
 ### Architecture
 
-CloudWatch Log Groups are subscribed to using Subscription Filters. Their target is Kinesis Data Firehose to which logs are streamed. It aggregates them into batches and sends those batches to a Lambda function for processing. The function processes the received logs and forwards them through Active Gate to Dynatrace Logs API.
+CloudWatch Log Groups are subscribed to using Subscription Filters. Their target is Kinesis Data Firehose to which logs are streamed. It aggregates them into batches and sends those batches to a Lambda function for processing. The function processes the received logs and forwards them to Dynatrace Logs API. Alternatively, this last step can be done through an existing environment Active Gate. 
 
 ![Architecture](./img/architecture.png)
 
