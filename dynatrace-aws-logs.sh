@@ -59,7 +59,7 @@ case $MAIN_OPTION in
 
   function print_help_deploy {
     printf "
-usage: dynatrace-aws-logs.sh deploy --target-url TARGET_URL --target-api-token TARGET_API_TOKEN [--use-existing-active-gate {true|false}] [--target-paas-token TARGET_PAAS_TOKEN] [--require-valid-certificate {true|false}] [--stack-name STACK_NAME]
+usage: dynatrace-aws-logs.sh deploy --target-url TARGET_URL --target-api-token TARGET_API_TOKEN [--use-existing-active-gate {true|false}] [--target-paas-token TARGET_PAAS_TOKEN] [--require-valid-certificate {true|false}] [--stack-name STACK_NAME] [--tags <value> [<value>...]  ]
 
 arguments:
   -h, --help            show this help message and exit
@@ -84,6 +84,9 @@ arguments:
   --max-log-length MAX_LOG_CONTENT_LENGTH
                         Optional, defaults to 8192. Defines the max log length after which a log will be truncated.
                         For values over 8192 there's also a change in Dynatrace settings needed. For that you need to contact Dynatrace One.
+  --tags TAGS
+                        Optional. A list of tags to associate with the stack that is created or updated.
+                        Syntax: TagKey1=TagValue1 TagKey2=TagValue2 ...
 "
   }
 
@@ -203,6 +206,18 @@ EOF
         shift;shift;
       ;;
 
+      "--tags")
+        shift;
+        while (( "$#" )); do
+          if [[ $1 == "--"* ]]; then
+            break
+          fi
+          TAGS+=("$1")
+          shift
+        TAGS_LIST=${TAGS[*]}
+        done
+      ;;
+
       "-h" | "--help")
         print_help_deploy
         shift; exit 0
@@ -269,7 +284,7 @@ EOF
   aws cloudformation deploy --stack "$STACK_NAME" --template-file "$TEMPLATE_FILE" --capabilities CAPABILITY_IAM \
     --parameter-overrides DynatraceEnvironmentUrl="$TARGET_URL" DynatraceApiKey="$TARGET_API_TOKEN" VerifySSLTargetActiveGate="$REQUIRE_VALID_CERTIFICATE" \
     UseExistingActiveGate="$USE_EXISTING_ACTIVE_GATE" TenantId="$TENANT_ID" DynatracePaasToken="$TARGET_PAAS_TOKEN" \
-    MaxLogContentLength="$MAX_LOG_CONTENT_LENGTH" --no-fail-on-empty-changeset
+    MaxLogContentLength="$MAX_LOG_CONTENT_LENGTH" --no-fail-on-empty-changeset --tags="$TAGS_LIST"
 
   LAMBDA_ARN=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" \
      --query "Stacks[0].Outputs[?OutputKey=='LambdaArn'][OutputValue]" --output text)
