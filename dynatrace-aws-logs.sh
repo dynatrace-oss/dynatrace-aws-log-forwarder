@@ -235,8 +235,7 @@ EOF
   if [ -z "$STACK_NAME" ]; then STACK_NAME=$DEFAULT_STACK_NAME; fi
   if [ -z "$USE_EXISTING_ACTIVE_GATE" ]; then USE_EXISTING_ACTIVE_GATE="true"; fi
   if [ -z "$MAX_LOG_CONTENT_LENGTH" ]; then MAX_LOG_CONTENT_LENGTH=8192; fi
-  if (( ${#TAGS_LIST[@]} == 0 )); then unset $TAGS; fi
-  if (( ${#TAGS_LIST[@]} != 0 )); then TAGS="--tags $TAGS_LIST"; fi
+  if (( ${#TAGS_LIST[@]} == 0 )); then unset $TAGS; else TAGS="--tags $TAGS_LIST"; fi
 
   if [[ "$REQUIRE_VALID_CERTIFICATE" != "true" ]] && [[ "$REQUIRE_VALID_CERTIFICATE" != "false" ]];
     then echo "Invalid value for parameter --require-valid-certificate. Provide 'true' or 'false'"; print_help_deploy; exit 1; fi
