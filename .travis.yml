@@ -13,6 +13,15 @@ language: shell
 notifications:
   email:
     on_success: never
+  slack:
+    secure: IgW6YdwhIC4UC9klArkVad/ItDKPBKuaPUHP0z7M6NYOnAZKkcJbn6LN/DHHeT8UMgXe2BSmBpRuf2/UjZzCeS6fWYZSlMEK6ynq0fXtaqb6GnEAMquzS+0uHUGD6n/Gow+RmJuOlDpNysqf62X7HoybqDBNNwBRNaqevZCx825IuZ0vXWL46eLJU5CqW/f8URFVMzoxXgw7fXi9dSBnQDbJ+dRohHWFoTEEUZy0Wf5pmiKRBqWAPBOrEKvwUX+vsOob7l94COEW7o8xGS+qhipZv+GyWLAk4eqjJwoO0mBZUxoTq5IhBYmQDGUCgDhXxXORx7gzqkKf9KC/+r4x1pcdEpo320we+7uaDpaQsZFrRUQKeLeLNnlxMO68fBeDMHNv3x6K/yvEDVgwvRwfbLz8o7hkvoDgRo47upsROqz+0AMiAaO5niaHYturvDa0LaxcTGsQZcwF5UFfE76XjX1bIuoMV7uET+lxhM8EoJNg/BVuE6UIvtTtlze2Tl4Sidc4YVJ/Ye5r9EjaZjMI9LcJE6lJq+RyJ9PW/fpQJrXrKeC9xB4xEMff1jm/uzIwYTEcGyFWXpDJjv2hV6Aw3h/2cgtwt0VRTqO0441XnYs7xPm14oOLg5+p9BK+r4pENiLWnmVgU6VEonhzS1kMMjwqMQm33UX7RsDmlUZ/43Y=
+    if: branch = master
+    on_success: never
+    on_failure: always
+    template:
+      - "Build has failed:"
+      - "<%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) by %{author} %{result} in %{duration}"
+      - "With a message: %{message}"
 stages:
 - unit_tests
 - build
