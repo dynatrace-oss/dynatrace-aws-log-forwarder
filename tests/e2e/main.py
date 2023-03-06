@@ -138,7 +138,7 @@ if __name__ == '__main__':
     time_elapsed = 0
     while bool(dynatrace_log_records_search_results) is False:
         print('Waiting for log events to be picked up by the cluster...')
-        time.sleep(20)
+        time.sleep(60)
         time_elapsed = time_elapsed + 20
         dynatrace_log_records_search_results = search_dynatrace_log_records(args.url_prefix,
                                                                             message_content)['results']
