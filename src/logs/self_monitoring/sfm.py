@@ -16,6 +16,7 @@ from collections import defaultdict
 from typing import Union
 
 import boto3
+from botocore.config import Config
 
 
 class SelfMonitoringContext:
@@ -155,7 +156,8 @@ class SelfMonitoringContext:
 
     def push_sfm_to_cloudwatch(self):
         metrics = self._generate_metrics()
-        cloudwatch = boto3.client('cloudwatch')
+        config = Config(connect_timeout=5, retries={'max_attempts': 1})
+        cloudwatch = boto3.client('cloudwatch', config=config)
         try:
             for i in range(0, len(metrics), 20):
                 metrics_batch = metrics[i:(i + 20)]
