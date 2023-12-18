@@ -27,6 +27,10 @@
           "pattern": "format_arn('arn:{}:lambda:{}:{}:function:{}', [partition, region, account_id, function_name])"
         },
         {
+          "key": "faas.id",
+          "pattern": "format_arn('arn:{}:lambda:{}:{}:function:{}', [partition, region, account_id, function_name])"
+        },
+        {
           "key": "severity",
           "pattern": "if( starts_with(log_content, '[ERROR]'), &'ERROR', &'INFO', @)"
         },
