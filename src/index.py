@@ -39,8 +39,8 @@ def handler(event, lambda_context):
 
     try:
         records = event['records']
-    except KeyError:
-        raise BadSchemaError('records')
+    except KeyError as exc:
+        raise BadSchemaError('records') from exc
 
     try:
         is_logs, plaintext_records = input_records_decoder.check_records_list_if_logs_end_decode(records, context)
