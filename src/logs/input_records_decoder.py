@@ -88,7 +88,8 @@ class BadSchemaError(Exception):
     '''BadSchemaError is raised when the received logs do not meet the expected format.'''
 
     def __init__(self, erroneous_field: str) -> None:
-        message = f"""Lambda was called with an event of unrecognized schema.
-        Make sure you have configured everything correctly. Unexpected problem happened when trying to parse field: {erroneous_field}
+        message = f"""Lambda has been called with an event of unrecognized schema.
+        Make sure you have configured your log groups correctly, as in the documentation https://docs.dynatrace.com/docs/shortlink/aws-log-fwd.
+        An unexpected problem happened when trying to parse: {erroneous_field}.
         """
         super().__init__(message)
