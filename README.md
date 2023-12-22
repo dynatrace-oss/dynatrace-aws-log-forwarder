@@ -10,6 +10,7 @@ Please follow these steps:
 
 Thank you! 
 
+
 ## Overview
 See the [official project documentation](https://www.dynatrace.com/support/help/shortlink/aws-log-fwd) for overview and user's manual. This readme contains only additional technical details.
 
