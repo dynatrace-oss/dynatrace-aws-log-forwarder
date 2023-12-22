@@ -83,3 +83,13 @@ def sfm_report_kinesis_records_age(records, context):
     except Exception as e:
         log_error_with_stacktrace(e, "Failed to calculate Kinesis Record Delay Self Monitoring",
                                   "sfm-record-delay-calc-exception")
+
+class BadSchemaError(Exception):
+    '''BadSchemaError is raised when the received logs do not meet the expected format.'''
+
+    def __init__(self, erroneous_field: str) -> None:
+        message = f"""Lambda has been called with an event of unrecognized schema.
+        Make sure you have configured your log groups correctly, as in the documentation https://docs.dynatrace.com/docs/shortlink/aws-log-fwd.
+        An unexpected problem happened when trying to parse: {erroneous_field}.
+        """
+        super().__init__(message)
