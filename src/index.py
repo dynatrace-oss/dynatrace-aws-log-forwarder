@@ -16,10 +16,12 @@ import os
 from enum import Enum
 
 from logs import input_records_decoder, main
+from logs.input_records_decoder import BadSchemaError
 from logs.logs_sender import CallThrottlingException, DYNATRACE_LOG_INGEST_CONTENT_DEFAULT_MAX_LENGTH
 from logs.models.batch_metadata import BatchMetadata
 from util.context import Context
 from util.logging import log_error_with_stacktrace, log_multiline_message
+
 
 
 def handler(event, lambda_context):
@@ -35,7 +37,10 @@ def handler(event, lambda_context):
 
     context = get_context(lambda_context)
 
-    records = event['records']
+    try:
+        records = event['records']
+    except KeyError as exc:
+        raise BadSchemaError('records') from exc
 
     try:
         is_logs, plaintext_records = input_records_decoder.check_records_list_if_logs_end_decode(records, context)
