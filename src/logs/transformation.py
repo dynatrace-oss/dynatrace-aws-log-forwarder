@@ -27,6 +27,7 @@ metadata_engine = MetadataEngine()
 class RecordMetadata:
     log_group: str
     log_stream: str
+    account_id: str
 
 
 def extract_dt_logs_from_single_record(
@@ -37,7 +38,7 @@ def extract_dt_logs_from_single_record(
     if record.get('messageType') == 'CONTROL_MESSAGE':
         return []
 
-    record_metadata = RecordMetadata(record["logGroup"], record["logStream"])
+    record_metadata = RecordMetadata(record["logGroup"], record["logStream"], record["owner"])
 
     for log_event in record["logEvents"]:
         log_entry = transform_single_log_entry(log_event, batch_metadata, record_metadata, context)
@@ -50,12 +51,12 @@ def transform_single_log_entry(log_event, batch_metadata, record_metadata, conte
     parsed_record = {
         'content': log_event["message"],
         'cloud.provider': 'aws',
-        'cloud.account.id': batch_metadata.account_id,
+        'cloud.account.id': record_metadata.account_id,
         'cloud.region': batch_metadata.region,
         'aws.log_group': record_metadata.log_group,
         'aws.log_stream': record_metadata.log_stream,
         'aws.region': batch_metadata.region,
-        'aws.account.id': batch_metadata.account_id,
+        'aws.account.id': record_metadata.account_id,
         'severity': 'INFO',
         'cloud.log_forwarder': context.cloud_log_forwarder
     }
@@ -68,7 +69,7 @@ def transform_single_log_entry(log_event, batch_metadata, record_metadata, conte
         'log_group': record_metadata.log_group,
         'region': batch_metadata.region,
         'partition': batch_metadata.partition,
-        'account_id': batch_metadata.account_id,
+        'account_id': record_metadata.account_id,
     }
 
     # record here is different than Kinesis request record
