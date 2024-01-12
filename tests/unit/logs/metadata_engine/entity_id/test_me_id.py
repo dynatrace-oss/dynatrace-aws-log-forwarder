@@ -83,14 +83,14 @@ def test_meid_in_credentials_v2_core_services__murmurhash_awsseed():
 
 
 def test_meid_credentials_v1_v2_builtin_service_lambda_md5():
-    #arn = "arn:aws:lambda:us-east-1:444652832050:function:metricstreamprocessorinte-CloudWatchStreamFunction-bpIv5lY7e0k8"
-    input = "metricstreamprocessorinte-CloudWatchStreamFunction-bpIv5lY7e0k8" + \
+    # arn: "arn:aws:lambda:us-east-1:444652832050:function:metricstreamprocessorinte-CloudWatchStreamFunction-bpIv5lY7e0k8"
+    id_calc_input = "metricstreamprocessorinte-CloudWatchStreamFunction-bpIv5lY7e0k8" + \
             "us-east-1" + \
             "_" + \
             "444652832050"
 
-    id = me_id._legacy_entity_id_md5(input)
-    meid = me_id.meid_md5("AWS_LAMBDA_FUNCTION", input)
+    id = me_id._legacy_entity_id_md5(id_calc_input)
+    meid = me_id.meid_md5("AWS_LAMBDA_FUNCTION", id_calc_input)
     meid_from_format = me_id.meid_md5("AWS_LAMBDA_FUNCTION", format_required("{}{}_{}", [
         "metricstreamprocessorinte-CloudWatchStreamFunction-bpIv5lY7e0k8", #awsArnParts[6] - name
         "us-east-1",    # awsArnParts[3] - region
@@ -103,10 +103,10 @@ def test_meid_credentials_v1_v2_builtin_service_lambda_md5():
 
 
 def test_meid_credentials_v2_supporting_service_lambda__murmurhash():
-    input = "lambdaarn:aws:lambda:us-east-1:444652832050:function:metricstreamprocessorinte-CloudWatchStreamFunction-bpIv5lY7e0k8"
+    id_calc_input = "lambdaarn:aws:lambda:us-east-1:444652832050:function:metricstreamprocessorinte-CloudWatchStreamFunction-bpIv5lY7e0k8"
 
-    id = me_id._murmurhash2_64A(input)
-    meid = me_id.meid_murmurhash("CUSTOM_DEVICE", input)
+    id = me_id._murmurhash2_64A(id_calc_input)
+    meid = me_id.meid_murmurhash("CUSTOM_DEVICE", id_calc_input)
     meid_from_list = me_id.meid_murmurhash("CUSTOM_DEVICE", format_required("{}{}", [
         "lambda",   ##supporting service id/shortname
         "arn:aws:lambda:us-east-1:444652832050:function:metricstreamprocessorinte-CloudWatchStreamFunction-bpIv5lY7e0k8" #arn
