@@ -35,7 +35,7 @@
           "pattern": "if( starts_with(log_content, '[ERROR]'), &'ERROR', &'INFO', @)"
         },
         {
-          "key": "dt.source_entity",
+          "key": "dt.entity.aws_lambda_function",
           "pattern": "dt_meid_lambda_function(function_name, region, account_id)"
         }
       ]
