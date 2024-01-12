@@ -13,6 +13,6 @@
 #   limitations under the License.
 
 class BatchMetadata:
-    def __init__(self, account_id, region, partition):
+    def __init__(self, region, partition):
         self.region = region
         self.partition = partition
