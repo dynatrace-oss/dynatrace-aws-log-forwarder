@@ -110,7 +110,7 @@ CLOUDTRAIL_USER_IDENTITY = {
             "aws.service": "lambda",
             "aws.resource.id": "dynatrace-aws-logs-Lambda-1K7HG2Q2LIQKU",
             "aws.arn": "arn:aws:lambda:us-east-1:444000444:function:dynatrace-aws-logs-Lambda-1K7HG2Q2LIQKU",
-            "dt.source_entity": "AWS_LAMBDA_FUNCTION-F141CAEAE2BED565",
+            "dt.entity.aws_lambda_function": "AWS_LAMBDA_FUNCTION-F141CAEAE2BED565",
             'content': "LOG MESSAGE",
             'cloud.provider': 'aws',
             'cloud.account.id': "444000444",
@@ -145,7 +145,7 @@ CLOUDTRAIL_USER_IDENTITY = {
             "aws.service": "lambda",
             "aws.resource.id": "dynatrace-aws-logs-Lambda-1K7HG2Q2LIQKU",
             "aws.arn": "arn:aws:lambda:us-east-1:444000444:function:dynatrace-aws-logs-Lambda-1K7HG2Q2LIQKU",
-            "dt.source_entity": "AWS_LAMBDA_FUNCTION-F141CAEAE2BED565",
+            "dt.entity.aws_lambda_function": "AWS_LAMBDA_FUNCTION-F141CAEAE2BED565",
             'content': "[ERROR] UnboundLocalError: local variable 'single_log_entry' referenced before assignment\n"
                        + "Traceback (most recent call last):\n"
                        + "  File \"/var/task/lambda_function.py\", line 101, in lambda_handler\n"
