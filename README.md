@@ -14,7 +14,6 @@ AWS Log Forwarder will soon be replaced with AWS Data Firehose Integration
 **✨ Key Features of the Upcoming Release:**
 - 🚀 **Direct Integration:** Ingest cloud logs directly, eliminating the need for extra infrastructure.
 - 📈 **Higher Throughput:** Experience increased efficiency with enhanced log forwarding capabilities.
-- 🗓️ **Planned Release Date:** Anticipate the official release of Direct AWS Data Firehose Integration at the end of March/April 2024.
 
 **🚨 Important Timeline:**
 - 🏷️ **Deprecation Tagging:** Following the release, the current AWS Log Forwarder repository will be tagged as deprecated.
