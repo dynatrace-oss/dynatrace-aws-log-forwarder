@@ -1,5 +1,35 @@
 # Dynatrace AWS Log Forwarder
 
+<div align="center">
+
+## ⚠️ **Project Deprecation Notice**
+
+</div>
+
+**Dear users and contributors,**
+
+
+AWS Log Forwarder will soon be replaced with AWS Data Firehose Integration
+
+**✨ Key Features of the Upcoming Release:**
+- 🚀 **Direct Integration:** Ingest cloud logs directly, eliminating the need for extra infrastructure.
+- 📈 **Higher Throughput:** Experience increased efficiency with enhanced log forwarding capabilities.
+
+**🚨 Important Timeline:**
+- 🏷️ **Deprecation Tagging:** Following the release, the current AWS Log Forwarder repository will be tagged as deprecated.
+- 📆 **End of Support:** Expect the end of support for the AWS Log Forwarder within the next 6 months post-deprecation.
+
+**👉 What Action Do You Need to Take?**
+- ✔️ **Prepare for Transition:** Be ready for the introduction of Direct AWS Data Firehose Integration.
+- 📢 **Stay Updated:** Watch for announcements regarding the release and deprecation timeline.
+- 🔄 **Plan Migration:** Consider migrating to the new solution to benefit from the latest features and improvements.
+
+
+**👨‍💻 Questions or Concerns?**
+If you have any questions, concerns, or just want to share your thoughts, please reach out.
+
+
+
 ## Contributing
 
 Please follow these steps:
